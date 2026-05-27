@@ -822,83 +822,6 @@ section {
   margin-bottom: 2px;
 }
 
-/* SYNC ACTIVITY */
-.sync-section {
-  display: none;
-  background: var(--deep);
-  border-top: 1px solid var(--edge);
-  border-bottom: 1px solid var(--edge);
-}
-
-.sync-terminal {
-  background: var(--void);
-  border: 1px solid var(--wire);
-  border-radius: 8px;
-  overflow: hidden;
-  margin-top: 40px;
-  max-width: 800px;
-}
-
-.terminal-bar {
-  background: var(--plate);
-  padding: 10px 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border-bottom: 1px solid var(--wire);
-}
-
-.terminal-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-
-.terminal-title {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--fog);
-  margin-left: 8px;
-  letter-spacing: 0.06em;
-}
-
-.terminal-body {
-  padding: 20px;
-  font-family: var(--mono);
-  font-size: 12px;
-  line-height: 2;
-}
-
-.log-line {
-  display: flex;
-  gap: 12px;
-  align-items: baseline;
-}
-
-.log-time { color: var(--fog); font-size: 10px; min-width: 60px; }
-.log-type { font-size: 10px; min-width: 70px; font-weight: 700; }
-.log-type.sync { color: var(--zaza); }
-.log-type.update { color: var(--ice); }
-.log-type.alert { color: var(--amber); }
-.log-type.error { color: var(--danger); }
-.log-msg { color: var(--mist); font-size: 11px; }
-.log-msg .highlight { color: var(--paper); }
-
-.cursor-blink {
-  display: inline-block;
-  width: 8px;
-  height: 14px;
-  background: var(--zaza);
-  animation: cursor 1s step-end infinite;
-  vertical-align: middle;
-  margin-left: 4px;
-}
-
-@keyframes cursor {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
 /* MARKET INSIGHTS */
 .insights-section { padding: 100px 48px; }
 
@@ -1042,84 +965,6 @@ section {
   color: var(--mist);
 }
 
-/* API SECTION */
-.api-section {
-  display: none;
-  padding: 100px 48px;
-  background: var(--deep);
-  border-top: 1px solid var(--edge);
-}
-
-.api-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 48px;
-  align-items: center;
-  margin-top: 48px;
-}
-
-.api-code {
-  background: var(--void);
-  border: 1px solid var(--wire);
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.code-bar {
-  background: var(--plate);
-  padding: 8px 14px;
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--fog);
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--wire);
-}
-
-.code-body {
-  padding: 20px;
-  font-family: var(--mono);
-  font-size: 12px;
-  line-height: 1.8;
-}
-
-.code-key { color: var(--ice); }
-.code-str { color: var(--zaza); }
-.code-num { color: var(--amber); }
-.code-punc { color: var(--fog); }
-.code-comment { color: var(--fog); font-style: italic; }
-
-.api-features { display: flex; flex-direction: column; gap: 20px; }
-
-.api-feature {
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--edge);
-}
-
-.api-feature:last-child { border-bottom: none; }
-
-.api-icon {
-  width: 36px;
-  height: 36px;
-  border: 1px solid var(--wire);
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  flex-shrink: 0;
-  background: var(--plate);
-  color: var(--zaza);
-  font-family: var(--mono);
-  font-weight: 700;
-}
-
-.api-feature-title { font-size: 14px; font-weight: 500; color: var(--white); margin-bottom: 4px; }
-.api-feature-desc { font-size: 12px; color: var(--mist); line-height: 1.6; }
-
 /* FOOTER */
 footer {
   padding: 48px;
@@ -1179,7 +1024,6 @@ footer {
   .live-stats { grid-template-columns: repeat(2, 1fr); }
   .hero-visual { display: none; }
   .insights-grid { grid-template-columns: 1fr; }
-  .api-grid { grid-template-columns: 1fr; }
   footer { flex-direction: column; gap: 20px; text-align: center; }
 }
 </style>
@@ -1216,10 +1060,10 @@ footer {
   </div>
   <div class="hero-title-sub">Real-time. Verified. Live.</div>
   <p class="hero-desc">
-    ZazaSync continuously pulls live product data from every SQDC location in Quebec — giving you real-time availability, pricing intelligence, and market analytics in one terminal.
+    ZazaSync continuously pulls live product data from every SQDC location in Quebec — giving you real-time availability, pricing intelligence, and market analytics in one dashboard.
   </p>
   <div class="hero-actions">
-    <button class="btn-primary">Launch Terminal →</button>
+    <button class="btn-primary">Explore Products</button>
     <button class="btn-ghost">View Market Insights</button>
   </div>
 
@@ -1585,78 +1429,6 @@ footer {
       <div class="big-number-label">Products in stock right now</div>
     </div>
 
-  </div>
-</section>
-
-<!-- API SECTION -->
-<section class="api-section" id="api">
-  <div class="section-header reveal">
-    <div class="section-tag">Developer Access</div>
-    <div class="section-title">BUILD ON<br>ZAZASYNC</div>
-  </div>
-
-  <div class="api-grid reveal">
-    <div class="api-code">
-      <div class="code-bar">
-        <span>zazasync-api — example request</span>
-        <span style="color:var(--zaza);">REST · JSON</span>
-      </div>
-      <div class="code-body">
-        <div><span class="code-comment">// Get live product availability</span></div>
-        <div><span class="code-key">GET</span> <span class="code-str">/v1/products</span></div>
-        <div style="margin-top:8px;"><span class="code-punc">{</span></div>
-        <div>&nbsp;&nbsp;<span class="code-key">"category"</span><span class="code-punc">:</span> <span class="code-str">"flower"</span><span class="code-punc">,</span></div>
-        <div>&nbsp;&nbsp;<span class="code-key">"region"</span><span class="code-punc">:</span> <span class="code-str">"montreal"</span><span class="code-punc">,</span></div>
-        <div>&nbsp;&nbsp;<span class="code-key">"in_stock"</span><span class="code-punc">:</span> <span class="code-num">true</span><span class="code-punc">,</span></div>
-        <div>&nbsp;&nbsp;<span class="code-key">"limit"</span><span class="code-punc">:</span> <span class="code-num">50</span></div>
-        <div><span class="code-punc">}</span></div>
-        <div style="margin-top:12px;"><span class="code-comment">// Response</span></div>
-        <div><span class="code-punc">{</span></div>
-        <div>&nbsp;&nbsp;<span class="code-key">"sync_timestamp"</span><span class="code-punc">:</span> <span class="code-str">"2026-05-27T11:42:31Z"</span><span class="code-punc">,</span></div>
-        <div>&nbsp;&nbsp;<span class="code-key">"total"</span><span class="code-punc">:</span> <span class="code-num">312</span><span class="code-punc">,</span></div>
-        <div>&nbsp;&nbsp;<span class="code-key">"products"</span><span class="code-punc">: [</span></div>
-        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-punc">{</span></div>
-        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"name"</span><span class="code-punc">:</span> <span class="code-str">"Moby Dick #4"</span><span class="code-punc">,</span></div>
-        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"brand"</span><span class="code-punc">:</span> <span class="code-str">"Tantalus Labs"</span><span class="code-punc">,</span></div>
-        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"price"</span><span class="code-punc">:</span> <span class="code-num">34.95</span><span class="code-punc">,</span></div>
-        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"thc"</span><span class="code-punc">:</span> <span class="code-num">22.4</span><span class="code-punc">,</span></div>
-        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"stores_available"</span><span class="code-punc">:</span> <span class="code-num">47</span></div>
-        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-punc">}</span></div>
-        <div>&nbsp;&nbsp;<span class="code-punc">]</span></div>
-        <div><span class="code-punc">}</span></div>
-      </div>
-    </div>
-
-    <div class="api-features">
-      <div class="api-feature">
-        <div class="api-icon">⚡</div>
-        <div>
-          <div class="api-feature-title">Real-time sync webhooks</div>
-          <div class="api-feature-desc">Get notified instantly when any product changes availability, price, or stock status across all 107 SQDC locations.</div>
-        </div>
-      </div>
-      <div class="api-feature">
-        <div class="api-icon">📊</div>
-        <div>
-          <div class="api-feature-title">Historical market data</div>
-          <div class="api-feature-desc">Access full price and availability history going back to platform launch. Track market trends, seasonal patterns, and pricing shifts.</div>
-        </div>
-      </div>
-      <div class="api-feature">
-        <div class="api-icon">🗺</div>
-        <div>
-          <div class="api-feature-title">Location-aware queries</div>
-          <div class="api-feature-desc">Filter by specific SQDC location, city, or region. Find which store nearest to you has a specific product in stock right now.</div>
-        </div>
-      </div>
-      <div class="api-feature">
-        <div class="api-icon">🔔</div>
-        <div>
-          <div class="api-feature-title">Restock alerts</div>
-          <div class="api-feature-desc">Subscribe to any product and get notified the moment it comes back in stock at any Quebec location. Never miss a drop.</div>
-        </div>
-      </div>
-    </div>
   </div>
 </section>
 
