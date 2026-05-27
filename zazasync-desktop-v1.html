@@ -1,0 +1,1767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZazaSync — Quebec Cannabis Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void: #080A08;
+  --deep: #0D100D;
+  --surface: #121612;
+  --plate: #181D18;
+  --edge: #1E251E;
+  --wire: #243024;
+  --zaza: #39FF14;
+  --zaza-dim: #1A7A09;
+  --zaza-ghost: rgba(57,255,20,0.06);
+  --zaza-glow: rgba(57,255,20,0.15);
+  --amber: #F5A623;
+  --ice: #A8C5DA;
+  --fog: #4A5A4A;
+  --mist: #6B7D6B;
+  --paper: #C8D4C8;
+  --white: #E8F0E8;
+  --danger: #FF4444;
+  --mono: 'Space Mono', monospace;
+  --display: 'Bebas Neue', sans-serif;
+  --body: 'DM Sans', sans-serif;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--void);
+  color: var(--paper);
+  font-family: var(--body);
+  overflow-x: hidden;
+  cursor: crosshair;
+}
+
+/* GRID BACKGROUND */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(57,255,20,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(57,255,20,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* SCAN LINE */
+body::after {
+  content: '';
+  position: fixed;
+  top: -100%;
+  left: 0;
+  right: 0;
+  height: 200px;
+  background: linear-gradient(transparent, rgba(57,255,20,0.04), transparent);
+  animation: scanline 8s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes scanline {
+  0% { top: -200px; }
+  100% { top: 100vh; }
+}
+
+/* NAV */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 16px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(57,255,20,0.08);
+  background: rgba(8,10,8,0.85);
+  backdrop-filter: blur(20px);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-mark {
+  width: 32px;
+  height: 32px;
+  border: 1.5px solid var(--zaza);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.logo-mark::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  background: var(--zaza-ghost);
+  border-radius: 3px;
+}
+
+.logo-mark-inner {
+  width: 12px;
+  height: 12px;
+  background: var(--zaza);
+  border-radius: 2px;
+  animation: pulse-logo 2s ease-in-out infinite;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes pulse-logo {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.85); }
+}
+
+.logo-text {
+  font-family: var(--display);
+  font-size: 22px;
+  letter-spacing: 0.08em;
+  color: var(--white);
+}
+
+.logo-text span { color: var(--zaza); }
+
+.nav-center {
+  display: flex;
+  gap: 32px;
+}
+
+.nav-link {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--mist);
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--zaza);
+  transition: width 0.2s;
+}
+
+.nav-link:hover { color: var(--zaza); }
+.nav-link:hover::after { width: 100%; }
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sync-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--zaza);
+  padding: 5px 10px;
+  border: 1px solid rgba(57,255,20,0.2);
+  border-radius: 4px;
+  background: var(--zaza-ghost);
+}
+
+.sync-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--zaza);
+  border-radius: 50%;
+  animation: blink 1.5s ease-in-out infinite;
+  box-shadow: 0 0 6px var(--zaza);
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+.btn-primary {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  padding: 8px 18px;
+  background: var(--zaza);
+  color: var(--void);
+  border: none;
+  border-radius: 4px;
+  cursor: crosshair;
+  font-weight: 700;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+
+.btn-primary:hover {
+  background: #4fff2a;
+  box-shadow: 0 0 20px rgba(57,255,20,0.4);
+}
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 120px 48px 80px;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--zaza);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hero-eyebrow::before {
+  content: '';
+  display: block;
+  width: 32px;
+  height: 1px;
+  background: var(--zaza);
+}
+
+.hero-title {
+  font-family: var(--display);
+  font-size: clamp(72px, 10vw, 140px);
+  line-height: 0.9;
+  letter-spacing: 0.02em;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+
+.hero-title .accent { color: var(--zaza); text-shadow: 0 0 40px rgba(57,255,20,0.4); }
+
+.hero-title-sub {
+  font-family: var(--display);
+  font-size: clamp(28px, 4vw, 56px);
+  color: var(--fog);
+  letter-spacing: 0.06em;
+  margin-bottom: 32px;
+}
+
+.hero-desc {
+  font-size: 16px;
+  color: var(--mist);
+  max-width: 480px;
+  line-height: 1.7;
+  margin-bottom: 48px;
+  font-weight: 300;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 80px;
+}
+
+.btn-ghost {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  padding: 8px 18px;
+  background: transparent;
+  color: var(--mist);
+  border: 1px solid var(--wire);
+  border-radius: 4px;
+  cursor: crosshair;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+
+.btn-ghost:hover {
+  border-color: var(--zaza);
+  color: var(--zaza);
+}
+
+/* LIVE STATS BAR */
+.live-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: rgba(57,255,20,0.08);
+  border: 1px solid rgba(57,255,20,0.12);
+  border-radius: 8px;
+  overflow: hidden;
+  max-width: 800px;
+}
+
+.stat-cell {
+  background: var(--surface);
+  padding: 16px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-cell::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--zaza), transparent);
+  opacity: 0;
+  animation: stat-flash 4s ease-in-out infinite;
+}
+
+.stat-cell:nth-child(1)::before { animation-delay: 0s; }
+.stat-cell:nth-child(2)::before { animation-delay: 1s; }
+.stat-cell:nth-child(3)::before { animation-delay: 2s; }
+.stat-cell:nth-child(4)::before { animation-delay: 3s; }
+
+@keyframes stat-flash {
+  0%, 80%, 100% { opacity: 0; }
+  40% { opacity: 1; }
+}
+
+.stat-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--fog);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.stat-value {
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--zaza);
+  margin-bottom: 2px;
+}
+
+.stat-sub {
+  font-size: 10px;
+  color: var(--fog);
+  font-family: var(--mono);
+}
+
+/* HERO VISUAL */
+.hero-visual {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 45%;
+  overflow: hidden;
+  opacity: 0.4;
+}
+
+.radar-container {
+  position: absolute;
+  top: 50%;
+  right: 10%;
+  transform: translateY(-50%);
+  width: 400px;
+  height: 400px;
+}
+
+.radar-ring {
+  position: absolute;
+  border: 1px solid rgba(57,255,20,0.3);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.radar-ring:nth-child(1) { width: 80px; height: 80px; }
+.radar-ring:nth-child(2) { width: 160px; height: 160px; opacity: 0.7; }
+.radar-ring:nth-child(3) { width: 240px; height: 240px; opacity: 0.5; }
+.radar-ring:nth-child(4) { width: 320px; height: 320px; opacity: 0.3; }
+.radar-ring:nth-child(5) { width: 400px; height: 400px; opacity: 0.2; }
+
+.radar-sweep {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200px;
+  height: 200px;
+  transform-origin: 0 0;
+  animation: sweep 4s linear infinite;
+}
+
+.radar-sweep::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 200px;
+  background: conic-gradient(from 0deg, transparent 300deg, rgba(57,255,20,0.3) 360deg);
+  border-radius: 0 0 0 100%;
+}
+
+@keyframes sweep {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.radar-cross {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.radar-cross::before, .radar-cross::after {
+  content: '';
+  position: absolute;
+  background: rgba(57,255,20,0.3);
+}
+
+.radar-cross::before { width: 400px; height: 1px; top: 0; left: -200px; }
+.radar-cross::after { width: 1px; height: 400px; top: -200px; left: 0; }
+
+.radar-blip {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: var(--zaza);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--zaza);
+  animation: blip-fade 4s ease-out infinite;
+}
+
+@keyframes blip-fade {
+  0% { opacity: 1; }
+  70% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* SECTION BASE */
+section {
+  position: relative;
+  z-index: 2;
+  padding: 100px 48px;
+}
+
+.section-header {
+  margin-bottom: 48px;
+}
+
+.section-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--zaza);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-tag::before {
+  content: '//';
+  color: var(--fog);
+}
+
+.section-title {
+  font-family: var(--display);
+  font-size: clamp(36px, 5vw, 64px);
+  letter-spacing: 0.04em;
+  color: var(--white);
+  line-height: 1;
+}
+
+/* PRODUCT DISCOVERY */
+.discovery-section {
+  background: var(--deep);
+  border-top: 1px solid var(--edge);
+  border-bottom: 1px solid var(--edge);
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface);
+  border: 1px solid var(--wire);
+  border-radius: 6px;
+  padding: 14px 20px;
+  max-width: 700px;
+  margin-bottom: 32px;
+  transition: border-color 0.2s;
+}
+
+.search-bar:focus-within {
+  border-color: rgba(57,255,20,0.4);
+  box-shadow: 0 0 20px rgba(57,255,20,0.08);
+}
+
+.search-icon {
+  color: var(--fog);
+  font-size: 14px;
+  font-family: var(--mono);
+}
+
+.search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--paper);
+  caret-color: var(--zaza);
+}
+
+.search-input::placeholder { color: var(--fog); }
+
+.search-shortcut {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--fog);
+  border: 1px solid var(--wire);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.filter-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+
+.filter-chip {
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 5px 12px;
+  border: 1px solid var(--wire);
+  border-radius: 20px;
+  color: var(--mist);
+  cursor: crosshair;
+  transition: all 0.15s;
+  letter-spacing: 0.06em;
+}
+
+.filter-chip:hover, .filter-chip.active {
+  border-color: var(--zaza);
+  color: var(--zaza);
+  background: var(--zaza-ghost);
+}
+
+/* PRODUCT CARDS */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.product-card {
+  background: var(--surface);
+  border: 1px solid var(--edge);
+  border-radius: 8px;
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s;
+  cursor: crosshair;
+}
+
+.product-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--zaza), transparent);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.product-card:hover {
+  border-color: rgba(57,255,20,0.25);
+  background: var(--plate);
+  transform: translateY(-2px);
+}
+
+.product-card:hover::before { opacity: 1; }
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.card-category {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--fog);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.availability-badge {
+  font-family: var(--mono);
+  font-size: 9px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  font-weight: 700;
+}
+
+.avail-yes { background: rgba(57,255,20,0.12); color: var(--zaza); }
+.avail-low { background: rgba(245,166,35,0.12); color: var(--amber); }
+.avail-no { background: rgba(255,68,68,0.12); color: var(--danger); }
+
+.card-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--white);
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+.card-brand {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--fog);
+  margin-bottom: 12px;
+}
+
+.card-meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.meta-tag {
+  font-family: var(--mono);
+  font-size: 9px;
+  padding: 2px 6px;
+  border: 1px solid var(--wire);
+  border-radius: 3px;
+  color: var(--mist);
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--edge);
+  padding-top: 10px;
+}
+
+.card-price {
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--zaza);
+}
+
+.card-thc {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ice);
+}
+
+.card-stores {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--fog);
+}
+
+/* MAP SECTION */
+.map-section {
+  padding: 100px 48px;
+}
+
+.map-container {
+  background: var(--surface);
+  border: 1px solid var(--edge);
+  border-radius: 10px;
+  height: 480px;
+  position: relative;
+  overflow: hidden;
+  margin-top: 40px;
+}
+
+.map-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 600px 400px at 35% 45%, rgba(57,255,20,0.04) 0%, transparent 70%),
+    linear-gradient(rgba(57,255,20,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(57,255,20,0.02) 1px, transparent 1px);
+  background-size: auto, 24px 24px, 24px 24px;
+}
+
+.map-label {
+  position: absolute;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--fog);
+  letter-spacing: 0.06em;
+}
+
+.store-pin {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  cursor: crosshair;
+  transform: translate(-50%, -50%);
+}
+
+.pin-active {
+  background: var(--zaza);
+  box-shadow: 0 0 12px var(--zaza);
+  animation: pin-pulse 2s ease-in-out infinite;
+}
+
+.pin-low {
+  background: var(--amber);
+  box-shadow: 0 0 8px var(--amber);
+}
+
+.pin-out {
+  background: var(--danger);
+  box-shadow: 0 0 6px var(--danger);
+  opacity: 0.6;
+}
+
+@keyframes pin-pulse {
+  0%, 100% { box-shadow: 0 0 8px var(--zaza); }
+  50% { box-shadow: 0 0 20px var(--zaza), 0 0 40px rgba(57,255,20,0.3); }
+}
+
+.map-legend {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(8,10,8,0.85);
+  border: 1px solid var(--edge);
+  border-radius: 6px;
+  padding: 12px 16px;
+  backdrop-filter: blur(10px);
+}
+
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--mist);
+  margin-bottom: 6px;
+}
+
+.legend-row:last-child { margin-bottom: 0; }
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.map-stats {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.map-stat-chip {
+  background: rgba(8,10,8,0.85);
+  border: 1px solid var(--edge);
+  border-radius: 5px;
+  padding: 8px 12px;
+  backdrop-filter: blur(10px);
+  font-family: var(--mono);
+  font-size: 10px;
+}
+
+.map-stat-num {
+  color: var(--zaza);
+  font-size: 16px;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 2px;
+}
+
+/* SYNC ACTIVITY */
+.sync-section {
+  background: var(--deep);
+  border-top: 1px solid var(--edge);
+  border-bottom: 1px solid var(--edge);
+}
+
+.sync-terminal {
+  background: var(--void);
+  border: 1px solid var(--wire);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 40px;
+  max-width: 800px;
+}
+
+.terminal-bar {
+  background: var(--plate);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--wire);
+}
+
+.terminal-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.terminal-title {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--fog);
+  margin-left: 8px;
+  letter-spacing: 0.06em;
+}
+
+.terminal-body {
+  padding: 20px;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 2;
+}
+
+.log-line {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.log-time { color: var(--fog); font-size: 10px; min-width: 60px; }
+.log-type { font-size: 10px; min-width: 70px; font-weight: 700; }
+.log-type.sync { color: var(--zaza); }
+.log-type.update { color: var(--ice); }
+.log-type.alert { color: var(--amber); }
+.log-type.error { color: var(--danger); }
+.log-msg { color: var(--mist); font-size: 11px; }
+.log-msg .highlight { color: var(--paper); }
+
+.cursor-blink {
+  display: inline-block;
+  width: 8px;
+  height: 14px;
+  background: var(--zaza);
+  animation: cursor 1s step-end infinite;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+
+@keyframes cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* MARKET INSIGHTS */
+.insights-section { padding: 100px 48px; }
+
+.insights-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 12px;
+  margin-top: 40px;
+}
+
+.insight-card {
+  background: var(--surface);
+  border: 1px solid var(--edge);
+  border-radius: 8px;
+  padding: 20px 22px;
+}
+
+.insight-card.tall { grid-row: span 2; }
+
+.insight-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--fog);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.live-tag {
+  font-family: var(--mono);
+  font-size: 8px;
+  color: var(--zaza);
+  background: var(--zaza-ghost);
+  border: 1px solid rgba(57,255,20,0.2);
+  padding: 1px 6px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* CHART BARS */
+.chart-bars {
+  display: flex;
+  gap: 6px;
+  align-items: flex-end;
+  height: 120px;
+  margin-bottom: 12px;
+}
+
+.bar-col { display: flex; flex-direction: column; gap: 4px; align-items: center; flex: 1; }
+
+.bar {
+  width: 100%;
+  border-radius: 2px 2px 0 0;
+  background: var(--wire);
+  transition: background 0.2s;
+  position: relative;
+}
+
+.bar.active { background: var(--zaza); }
+.bar.medium { background: var(--zaza-dim); }
+
+.bar-label {
+  font-family: var(--mono);
+  font-size: 8px;
+  color: var(--fog);
+  text-align: center;
+}
+
+/* TREND LIST */
+.trend-list { display: flex; flex-direction: column; gap: 10px; }
+
+.trend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--edge);
+}
+
+.trend-item:last-child { border-bottom: none; }
+
+.trend-rank {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--fog);
+  min-width: 20px;
+}
+
+.trend-name {
+  flex: 1;
+  font-size: 12px;
+  color: var(--paper);
+}
+
+.trend-change {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--zaza);
+}
+
+.trend-change.down { color: var(--danger); }
+
+/* CATEGORY PILLS */
+.category-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.cat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  background: var(--plate);
+  border-radius: 5px;
+  border: 1px solid var(--edge);
+}
+
+.cat-name { font-size: 11px; color: var(--paper); }
+.cat-count { font-family: var(--mono); font-size: 10px; color: var(--zaza); }
+
+/* BIG NUMBER */
+.big-number {
+  font-family: var(--display);
+  font-size: 56px;
+  color: var(--zaza);
+  line-height: 1;
+  margin-bottom: 4px;
+  text-shadow: 0 0 30px rgba(57,255,20,0.3);
+}
+
+.big-number-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--mist);
+}
+
+/* API SECTION */
+.api-section {
+  padding: 100px 48px;
+  background: var(--deep);
+  border-top: 1px solid var(--edge);
+}
+
+.api-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+  margin-top: 48px;
+}
+
+.api-code {
+  background: var(--void);
+  border: 1px solid var(--wire);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.code-bar {
+  background: var(--plate);
+  padding: 8px 14px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--fog);
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--wire);
+}
+
+.code-body {
+  padding: 20px;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.code-key { color: var(--ice); }
+.code-str { color: var(--zaza); }
+.code-num { color: var(--amber); }
+.code-punc { color: var(--fog); }
+.code-comment { color: var(--fog); font-style: italic; }
+
+.api-features { display: flex; flex-direction: column; gap: 20px; }
+
+.api-feature {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--edge);
+}
+
+.api-feature:last-child { border-bottom: none; }
+
+.api-icon {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--wire);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+  background: var(--plate);
+  color: var(--zaza);
+  font-family: var(--mono);
+  font-weight: 700;
+}
+
+.api-feature-title { font-size: 14px; font-weight: 500; color: var(--white); margin-bottom: 4px; }
+.api-feature-desc { font-size: 12px; color: var(--mist); line-height: 1.6; }
+
+/* FOOTER */
+footer {
+  padding: 48px;
+  border-top: 1px solid var(--edge);
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-left { }
+
+.footer-tagline {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--fog);
+  margin-top: 8px;
+  letter-spacing: 0.1em;
+}
+
+.footer-right {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--fog);
+  text-align: right;
+  line-height: 1.8;
+}
+
+/* DIVIDER LINE */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(57,255,20,0.2), transparent);
+  margin: 0 48px;
+  position: relative;
+  z-index: 2;
+}
+
+/* SCROLL REVEAL */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  nav { padding: 14px 20px; }
+  .nav-center { display: none; }
+  .hero { padding: 100px 20px 60px; }
+  section { padding: 60px 20px; }
+  .live-stats { grid-template-columns: repeat(2, 1fr); }
+  .hero-visual { display: none; }
+  .insights-grid { grid-template-columns: 1fr; }
+  .api-grid { grid-template-columns: 1fr; }
+  footer { flex-direction: column; gap: 20px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="logo-mark"><div class="logo-mark-inner"></div></div>
+    <div class="logo-text">ZAZA<span>SYNC</span></div>
+  </div>
+  <div class="nav-center">
+    <a href="#discover" class="nav-link">Discover</a>
+    <a href="#map" class="nav-link">Availability</a>
+    <a href="#market" class="nav-link">Analytics</a>
+    <a href="#api" class="nav-link">API</a>
+  </div>
+  <div class="nav-right">
+    <div class="sync-indicator">
+      <div class="sync-dot"></div>
+      LIVE SYNC
+    </div>
+    <button class="btn-primary">Early Access</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">Quebec Cannabis Intelligence Platform</div>
+  <div class="hero-title">
+    QUEBEC<br>
+    CANNABIS.<br>
+    <span class="accent">SYNC'D.</span>
+  </div>
+  <div class="hero-title-sub">Real-time. Verified. Live.</div>
+  <p class="hero-desc">
+    ZazaSync continuously pulls live product data from every SQDC location in Quebec — giving you real-time availability, pricing intelligence, and market analytics in one terminal.
+  </p>
+  <div class="hero-actions">
+    <button class="btn-primary">Launch Terminal →</button>
+    <button class="btn-ghost">View API Docs</button>
+  </div>
+
+  <div class="live-stats">
+    <div class="stat-cell">
+      <div class="stat-label">Products tracked</div>
+      <div class="stat-value" id="stat1">847</div>
+      <div class="stat-sub">↑ 12 this week</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">SQDC Locations</div>
+      <div class="stat-value">107</div>
+      <div class="stat-sub">Across Quebec</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">Last sync</div>
+      <div class="stat-value" id="syncTime">0:42</div>
+      <div class="stat-sub">ago</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">Uptime</div>
+      <div class="stat-value">99.9<span style="font-size:14px;">%</span></div>
+      <div class="stat-sub">30-day average</div>
+    </div>
+  </div>
+
+  <!-- RADAR -->
+  <div class="hero-visual">
+    <div class="radar-container">
+      <div class="radar-ring"></div>
+      <div class="radar-ring"></div>
+      <div class="radar-ring"></div>
+      <div class="radar-ring"></div>
+      <div class="radar-ring"></div>
+      <div class="radar-cross"></div>
+      <div class="radar-sweep"></div>
+      <div class="radar-blip" style="top:42%;left:55%;animation-delay:0s;"></div>
+      <div class="radar-blip" style="top:35%;left:48%;animation-delay:1s;"></div>
+      <div class="radar-blip" style="top:55%;left:60%;animation-delay:2s;"></div>
+      <div class="radar-blip" style="top:48%;left:38%;animation-delay:0.5s;"></div>
+      <div class="radar-blip" style="top:30%;left:55%;animation-delay:1.5s;"></div>
+      <div class="radar-blip" style="top:60%;left:45%;animation-delay:2.5s;"></div>
+      <div class="radar-blip" style="top:38%;left:62%;animation-delay:3s;"></div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- PRODUCT DISCOVERY -->
+<section class="discovery-section" id="discover">
+  <div class="section-header reveal">
+    <div class="section-tag">Product Discovery</div>
+    <div class="section-title">FIND YOUR<br>NEXT PRODUCT</div>
+  </div>
+
+  <div class="search-bar reveal">
+    <div class="search-icon">⌕</div>
+    <input class="search-input" placeholder="Search by product, brand, strain, or SKU..." readonly>
+    <div class="search-shortcut">⌘K</div>
+  </div>
+
+  <div class="filter-row reveal">
+    <div class="filter-chip active">All</div>
+    <div class="filter-chip">Flower</div>
+    <div class="filter-chip">Pre-rolls</div>
+    <div class="filter-chip">Vape</div>
+    <div class="filter-chip">Edibles</div>
+    <div class="filter-chip">Concentrates</div>
+    <div class="filter-chip">Beverages</div>
+    <div class="filter-chip">Topicals</div>
+    <div class="filter-chip">Sativa</div>
+    <div class="filter-chip">Indica</div>
+    <div class="filter-chip">Hybrid</div>
+    <div class="filter-chip">In Stock ◉</div>
+  </div>
+
+  <div class="products-grid reveal">
+    <div class="product-card">
+      <div class="card-header">
+        <div class="card-category">Flower · Sativa</div>
+        <div class="availability-badge avail-yes">IN STOCK</div>
+      </div>
+      <div class="card-name">Moby Dick #4</div>
+      <div class="card-brand">Tantalus Labs</div>
+      <div class="card-meta">
+        <span class="meta-tag">3.5g</span>
+        <span class="meta-tag">Sativa</span>
+        <span class="meta-tag">Citrus</span>
+      </div>
+      <div class="card-footer">
+        <div class="card-price">$34.95</div>
+        <div>
+          <div class="card-thc">THC 22.4%</div>
+          <div class="card-stores">47 stores</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="card-header">
+        <div class="card-category">Pre-roll · Hybrid</div>
+        <div class="availability-badge avail-low">LOW STOCK</div>
+      </div>
+      <div class="card-name">Pink Kush Infused 1g</div>
+      <div class="card-brand">Weed Me</div>
+      <div class="card-meta">
+        <span class="meta-tag">1g × 3</span>
+        <span class="meta-tag">Hybrid</span>
+        <span class="meta-tag">Infused</span>
+      </div>
+      <div class="card-footer">
+        <div class="card-price">$22.50</div>
+        <div>
+          <div class="card-thc">THC 38.1%</div>
+          <div class="card-stores">8 stores</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="card-header">
+        <div class="card-category">Vape · Indica</div>
+        <div class="availability-badge avail-yes">IN STOCK</div>
+      </div>
+      <div class="card-name">Blue Dream 510 Cart</div>
+      <div class="card-brand">Kolab Project</div>
+      <div class="card-meta">
+        <span class="meta-tag">0.5g</span>
+        <span class="meta-tag">510 thread</span>
+        <span class="meta-tag">Terpene</span>
+      </div>
+      <div class="card-footer">
+        <div class="card-price">$44.00</div>
+        <div>
+          <div class="card-thc">THC 85.2%</div>
+          <div class="card-stores">62 stores</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="card-header">
+        <div class="card-category">Edible · Hybrid</div>
+        <div class="availability-badge avail-no">OUT OF STOCK</div>
+      </div>
+      <div class="card-name">Sour Watermelon Gummies</div>
+      <div class="card-brand">Wyld</div>
+      <div class="card-meta">
+        <span class="meta-tag">10mg × 10</span>
+        <span class="meta-tag">Gummies</span>
+        <span class="meta-tag">Vegan</span>
+      </div>
+      <div class="card-footer">
+        <div class="card-price">$19.99</div>
+        <div>
+          <div class="card-thc">THC 10mg</div>
+          <div class="card-stores">0 stores</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="card-header">
+        <div class="card-category">Flower · Indica</div>
+        <div class="availability-badge avail-yes">IN STOCK</div>
+      </div>
+      <div class="card-name">Death Bubba AAAA</div>
+      <div class="card-brand">Msiku</div>
+      <div class="card-meta">
+        <span class="meta-tag">7g</span>
+        <span class="meta-tag">Indica</span>
+        <span class="meta-tag">Earthy</span>
+      </div>
+      <div class="card-footer">
+        <div class="card-price">$54.99</div>
+        <div>
+          <div class="card-thc">THC 27.8%</div>
+          <div class="card-stores">31 stores</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="card-header">
+        <div class="card-category">Concentrate · Sativa</div>
+        <div class="availability-badge avail-yes">IN STOCK</div>
+      </div>
+      <div class="card-name">Lemon Haze Live Resin</div>
+      <div class="card-brand">Redecan</div>
+      <div class="card-meta">
+        <span class="meta-tag">1g</span>
+        <span class="meta-tag">Live Resin</span>
+        <span class="meta-tag">Lemon</span>
+      </div>
+      <div class="card-footer">
+        <div class="card-price">$49.95</div>
+        <div>
+          <div class="card-thc">THC 76.4%</div>
+          <div class="card-stores">19 stores</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAP -->
+<section class="map-section" id="map">
+  <div class="section-header reveal">
+    <div class="section-tag">Live Availability</div>
+    <div class="section-title">QUEBEC<br>COVERAGE MAP</div>
+  </div>
+
+  <div class="map-container reveal">
+    <div class="map-bg"></div>
+
+    <div class="map-stats">
+      <div class="map-stat-chip">
+        <span class="map-stat-num">94</span>
+        <span style="font-family:var(--mono);font-size:9px;color:var(--fog);">IN STOCK</span>
+      </div>
+      <div class="map-stat-chip">
+        <span class="map-stat-num" style="color:var(--amber);">8</span>
+        <span style="font-family:var(--mono);font-size:9px;color:var(--fog);">LOW STOCK</span>
+      </div>
+      <div class="map-stat-chip">
+        <span class="map-stat-num" style="color:var(--danger);">5</span>
+        <span style="font-family:var(--mono);font-size:9px;color:var(--fog);">OUT OF STOCK</span>
+      </div>
+    </div>
+
+    <!-- Quebec outline suggestion via pins -->
+    <!-- Montreal area -->
+    <div class="store-pin pin-active" style="top:62%;left:38%;"></div>
+    <div class="store-pin pin-active" style="top:60%;left:40%;"></div>
+    <div class="store-pin pin-active" style="top:64%;left:37%;"></div>
+    <div class="store-pin pin-active" style="top:61%;left:42%;"></div>
+    <div class="store-pin pin-low" style="top:63%;left:41%;"></div>
+    <!-- Quebec City area -->
+    <div class="store-pin pin-active" style="top:48%;left:58%;"></div>
+    <div class="store-pin pin-active" style="top:50%;left:60%;"></div>
+    <div class="store-pin pin-low" style="top:47%;left:57%;"></div>
+    <!-- Sherbrooke area -->
+    <div class="store-pin pin-active" style="top:68%;left:50%;"></div>
+    <div class="store-pin pin-out" style="top:69%;left:48%;"></div>
+    <!-- Gatineau area -->
+    <div class="store-pin pin-active" style="top:55%;left:32%;"></div>
+    <div class="store-pin pin-active" style="top:57%;left:30%;"></div>
+    <!-- Saguenay -->
+    <div class="store-pin pin-active" style="top:35%;left:55%;"></div>
+    <div class="store-pin pin-low" style="top:33%;left:57%;"></div>
+    <!-- Trois-Rivières -->
+    <div class="store-pin pin-active" style="top:54%;left:48%;"></div>
+    <!-- Laval -->
+    <div class="store-pin pin-active" style="top:59%;left:39%;"></div>
+    <!-- Longueuil -->
+    <div class="store-pin pin-active" style="top:65%;left:39%;"></div>
+    <!-- Various -->
+    <div class="store-pin pin-active" style="top:58%;left:44%;"></div>
+    <div class="store-pin pin-out" style="top:45%;left:65%;"></div>
+    <div class="store-pin pin-active" style="top:72%;left:42%;"></div>
+    <div class="store-pin pin-active" style="top:40%;left:48%;"></div>
+    <div class="store-pin pin-low" style="top:52%;left:35%;"></div>
+    <div class="store-pin pin-active" style="top:56%;left:52%;"></div>
+    <div class="store-pin pin-active" style="top:30%;left:50%;"></div>
+    <div class="store-pin pin-active" style="top:25%;left:60%;"></div>
+    <div class="store-pin pin-out" style="top:43%;left:58%;"></div>
+    <div class="store-pin pin-active" style="top:66%;left:55%;"></div>
+
+    <!-- Labels -->
+    <div class="map-label" style="top:56%;left:35%;">MONTRÉAL</div>
+    <div class="map-label" style="top:44%;left:61%;">QUÉBEC CITY</div>
+    <div class="map-label" style="top:51%;left:44%;">TROIS-RIVIÈRES</div>
+    <div class="map-label" style="top:52%;left:27%;">GATINEAU</div>
+    <div class="map-label" style="top:31%;left:52%;">SAGUENAY</div>
+
+    <div class="map-legend">
+      <div class="legend-row"><div class="legend-dot" style="background:var(--zaza);box-shadow:0 0 6px var(--zaza);"></div>In stock</div>
+      <div class="legend-row"><div class="legend-dot" style="background:var(--amber);"></div>Low stock</div>
+      <div class="legend-row"><div class="legend-dot" style="background:var(--danger);"></div>Out of stock</div>
+    </div>
+  </div>
+</section>
+
+<!-- SYNC ACTIVITY -->
+<section class="sync-section">
+  <div class="section-header reveal">
+    <div class="section-tag">Live Sync Activity</div>
+    <div class="section-title">SYNC<br>TERMINAL</div>
+  </div>
+
+  <div class="sync-terminal reveal">
+    <div class="terminal-bar">
+      <div class="terminal-dot" style="background:#FF5F56;"></div>
+      <div class="terminal-dot" style="background:#FFBD2E;"></div>
+      <div class="terminal-dot" style="background:#27C93F;"></div>
+      <div class="terminal-title">zazasync-daemon v2.4.1 — live feed</div>
+    </div>
+    <div class="terminal-body" id="terminal">
+      <div class="log-line"><span class="log-time">11:42:07</span><span class="log-type sync">SYNC</span><span class="log-msg">Pulling inventory from <span class="highlight">SQDC Montréal Centre</span> — 247 products scanned</span></div>
+      <div class="log-line"><span class="log-time">11:42:09</span><span class="log-type update">UPDATE</span><span class="log-msg"><span class="highlight">Moby Dick #4</span> — availability changed: 12 → 9 units</span></div>
+      <div class="log-line"><span class="log-time">11:42:11</span><span class="log-type sync">SYNC</span><span class="log-msg">Pulling inventory from <span class="highlight">SQDC Laval Centropolis</span> — 189 products scanned</span></div>
+      <div class="log-line"><span class="log-time">11:42:14</span><span class="log-type alert">ALERT</span><span class="log-msg"><span class="highlight">Pink Kush Infused</span> — LOW STOCK detected across 8 locations</span></div>
+      <div class="log-line"><span class="log-time">11:42:17</span><span class="log-type update">UPDATE</span><span class="log-msg">New product added: <span class="highlight">Grizzly Purple Punch 3.5g</span> — Organigram</span></div>
+      <div class="log-line"><span class="log-time">11:42:19</span><span class="log-type sync">SYNC</span><span class="log-msg">Pulling inventory from <span class="highlight">SQDC Québec Sainte-Foy</span> — 312 products scanned</span></div>
+      <div class="log-line"><span class="log-time">11:42:22</span><span class="log-type update">UPDATE</span><span class="log-msg"><span class="highlight">Sour Watermelon Gummies</span> — status changed: LOW → OUT OF STOCK</span></div>
+      <div class="log-line"><span class="log-time">11:42:25</span><span class="log-type sync">SYNC</span><span class="log-msg">Pulling inventory from <span class="highlight">SQDC Gatineau Promenade</span> — 198 products scanned</span></div>
+      <div class="log-line"><span class="log-time">11:42:28</span><span class="log-type update">UPDATE</span><span class="log-msg">Price update: <span class="highlight">Death Bubba AAAA 7g</span> — $57.99 → $54.99</span></div>
+      <div class="log-line"><span class="log-time">11:42:31</span><span class="log-type sync">SYNC</span><span class="log-msg">Cycle complete — <span class="highlight">107 locations</span> synchronized — 847 products validated<span class="cursor-blink"></span></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- MARKET INSIGHTS -->
+<section class="insights-section" id="market">
+  <div class="section-header reveal">
+    <div class="section-tag">Market Intelligence</div>
+    <div class="section-title">LIVE MARKET<br>ANALYTICS</div>
+  </div>
+
+  <div class="insights-grid reveal">
+
+    <div class="insight-card tall">
+      <div class="insight-label">
+        Weekly product volume by category
+        <span class="live-tag"><span style="width:5px;height:5px;background:var(--zaza);border-radius:50%;display:inline-block;"></span>LIVE</span>
+      </div>
+      <div class="chart-bars">
+        <div class="bar-col">
+          <div class="bar active" style="height:85%;"></div>
+          <div class="bar-label">Flower</div>
+        </div>
+        <div class="bar-col">
+          <div class="bar medium" style="height:60%;"></div>
+          <div class="bar-label">Pre-roll</div>
+        </div>
+        <div class="bar-col">
+          <div class="bar medium" style="height:45%;"></div>
+          <div class="bar-label">Vape</div>
+        </div>
+        <div class="bar-col">
+          <div class="bar" style="height:30%;"></div>
+          <div class="bar-label">Edible</div>
+        </div>
+        <div class="bar-col">
+          <div class="bar" style="height:20%;"></div>
+          <div class="bar-label">Conc.</div>
+        </div>
+        <div class="bar-col">
+          <div class="bar" style="height:15%;"></div>
+          <div class="bar-label">Bev.</div>
+        </div>
+      </div>
+
+      <div class="insight-label" style="margin-top:20px;">Category breakdown</div>
+      <div class="category-grid">
+        <div class="cat-item"><span class="cat-name">Flower</span><span class="cat-count">312</span></div>
+        <div class="cat-item"><span class="cat-name">Pre-rolls</span><span class="cat-count">198</span></div>
+        <div class="cat-item"><span class="cat-name">Vape</span><span class="cat-count">147</span></div>
+        <div class="cat-item"><span class="cat-name">Edibles</span><span class="cat-count">89</span></div>
+        <div class="cat-item"><span class="cat-name">Concentrates</span><span class="cat-count">64</span></div>
+        <div class="cat-item"><span class="cat-name">Beverages</span><span class="cat-count">37</span></div>
+      </div>
+    </div>
+
+    <div class="insight-card">
+      <div class="insight-label">Trending products<span class="live-tag"><span style="width:5px;height:5px;background:var(--zaza);border-radius:50%;display:inline-block;"></span>LIVE</span></div>
+      <div class="trend-list">
+        <div class="trend-item"><span class="trend-rank">01</span><span class="trend-name">Moby Dick #4</span><span class="trend-change">↑ 42%</span></div>
+        <div class="trend-item"><span class="trend-rank">02</span><span class="trend-name">Pink Kush Infused</span><span class="trend-change">↑ 38%</span></div>
+        <div class="trend-item"><span class="trend-rank">03</span><span class="trend-name">Death Bubba AAAA</span><span class="trend-change">↑ 21%</span></div>
+        <div class="trend-item"><span class="trend-rank">04</span><span class="trend-name">Blue Dream 510</span><span class="trend-change">↑ 17%</span></div>
+        <div class="trend-item"><span class="trend-rank">05</span><span class="trend-name">Sour Watermelon</span><span class="trend-change down">↓ 8%</span></div>
+      </div>
+    </div>
+
+    <div class="insight-card">
+      <div class="insight-label">Total products live</div>
+      <div class="big-number">847</div>
+      <div class="big-number-label">Active SQDC listings</div>
+    </div>
+
+    <div class="insight-card">
+      <div class="insight-label">Avg. price — Flower 3.5g</div>
+      <div class="big-number">$36<span style="font-size:28px;">.42</span></div>
+      <div class="big-number-label" style="color:var(--zaza);">↓ $1.20 vs last week</div>
+    </div>
+
+    <div class="insight-card">
+      <div class="insight-label">Market availability rate</div>
+      <div class="big-number">88<span style="font-size:28px;">%</span></div>
+      <div class="big-number-label">Products in stock right now</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- API SECTION -->
+<section class="api-section" id="api">
+  <div class="section-header reveal">
+    <div class="section-tag">Developer Access</div>
+    <div class="section-title">BUILD ON<br>ZAZASYNC</div>
+  </div>
+
+  <div class="api-grid reveal">
+    <div class="api-code">
+      <div class="code-bar">
+        <span>zazasync-api — example request</span>
+        <span style="color:var(--zaza);">REST · JSON</span>
+      </div>
+      <div class="code-body">
+        <div><span class="code-comment">// Get live product availability</span></div>
+        <div><span class="code-key">GET</span> <span class="code-str">/v1/products</span></div>
+        <div style="margin-top:8px;"><span class="code-punc">{</span></div>
+        <div>&nbsp;&nbsp;<span class="code-key">"category"</span><span class="code-punc">:</span> <span class="code-str">"flower"</span><span class="code-punc">,</span></div>
+        <div>&nbsp;&nbsp;<span class="code-key">"region"</span><span class="code-punc">:</span> <span class="code-str">"montreal"</span><span class="code-punc">,</span></div>
+        <div>&nbsp;&nbsp;<span class="code-key">"in_stock"</span><span class="code-punc">:</span> <span class="code-num">true</span><span class="code-punc">,</span></div>
+        <div>&nbsp;&nbsp;<span class="code-key">"limit"</span><span class="code-punc">:</span> <span class="code-num">50</span></div>
+        <div><span class="code-punc">}</span></div>
+        <div style="margin-top:12px;"><span class="code-comment">// Response</span></div>
+        <div><span class="code-punc">{</span></div>
+        <div>&nbsp;&nbsp;<span class="code-key">"sync_timestamp"</span><span class="code-punc">:</span> <span class="code-str">"2026-05-27T11:42:31Z"</span><span class="code-punc">,</span></div>
+        <div>&nbsp;&nbsp;<span class="code-key">"total"</span><span class="code-punc">:</span> <span class="code-num">312</span><span class="code-punc">,</span></div>
+        <div>&nbsp;&nbsp;<span class="code-key">"products"</span><span class="code-punc">: [</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-punc">{</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"name"</span><span class="code-punc">:</span> <span class="code-str">"Moby Dick #4"</span><span class="code-punc">,</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"brand"</span><span class="code-punc">:</span> <span class="code-str">"Tantalus Labs"</span><span class="code-punc">,</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"price"</span><span class="code-punc">:</span> <span class="code-num">34.95</span><span class="code-punc">,</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"thc"</span><span class="code-punc">:</span> <span class="code-num">22.4</span><span class="code-punc">,</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"stores_available"</span><span class="code-punc">:</span> <span class="code-num">47</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-punc">}</span></div>
+        <div>&nbsp;&nbsp;<span class="code-punc">]</span></div>
+        <div><span class="code-punc">}</span></div>
+      </div>
+    </div>
+
+    <div class="api-features">
+      <div class="api-feature">
+        <div class="api-icon">⚡</div>
+        <div>
+          <div class="api-feature-title">Real-time sync webhooks</div>
+          <div class="api-feature-desc">Get notified instantly when any product changes availability, price, or stock status across all 107 SQDC locations.</div>
+        </div>
+      </div>
+      <div class="api-feature">
+        <div class="api-icon">📊</div>
+        <div>
+          <div class="api-feature-title">Historical market data</div>
+          <div class="api-feature-desc">Access full price and availability history going back to platform launch. Track market trends, seasonal patterns, and pricing shifts.</div>
+        </div>
+      </div>
+      <div class="api-feature">
+        <div class="api-icon">🗺</div>
+        <div>
+          <div class="api-feature-title">Location-aware queries</div>
+          <div class="api-feature-desc">Filter by specific SQDC location, city, or region. Find which store nearest to you has a specific product in stock right now.</div>
+        </div>
+      </div>
+      <div class="api-feature">
+        <div class="api-icon">🔔</div>
+        <div>
+          <div class="api-feature-title">Restock alerts</div>
+          <div class="api-feature-desc">Subscribe to any product and get notified the moment it comes back in stock at any Quebec location. Never miss a drop.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">
+    <div class="nav-logo">
+      <div class="logo-mark"><div class="logo-mark-inner"></div></div>
+      <div class="logo-text">ZAZA<span>SYNC</span></div>
+    </div>
+    <div class="footer-tagline">Quebec Cannabis. Synchronized.</div>
+  </div>
+  <div class="footer-right">
+    <div>Data sourced from publicly available SQDC information</div>
+    <div>Built in Quebec · Not affiliated with SQDC or SAQ</div>
+    <div style="margin-top:8px; color:var(--zaza);">© 2026 ZazaSync Intelligence Platform</div>
+  </div>
+</footer>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Live sync timer
+let seconds = 42;
+setInterval(() => {
+  seconds++;
+  if (seconds >= 180) seconds = 0;
+  const el = document.getElementById('syncTime');
+  if (el) {
+    if (seconds < 60) el.textContent = `0:${seconds.toString().padStart(2,'0')}`;
+    else el.textContent = `${Math.floor(seconds/60)}:${(seconds%60).toString().padStart(2,'0')}`;
+  }
+}, 1000);
+
+// Filter chips
+document.querySelectorAll('.filter-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+  });
+});
+
+// Animated terminal - add new lines periodically
+const logMessages = [
+  ['SYNC', 'var(--zaza)', 'Pulling inventory from <span class="highlight">SQDC Sherbrooke Jacques-Cartier</span> — 201 products scanned'],
+  ['UPDATE', 'var(--ice)', '<span class="highlight">Lemon Haze Live Resin</span> — stock update: 3 locations restocked'],
+  ['SYNC', 'var(--zaza)', 'Pulling inventory from <span class="highlight">SQDC Longueuil</span> — 178 products scanned'],
+  ['ALERT', 'var(--amber)', '<span class="highlight">Blue Dream 510</span> — price drop detected: $47.00 → $44.00'],
+  ['UPDATE', 'var(--ice)', 'New product added: <span class="highlight">Atomic Zkittlez 1g</span> — Pure Sunfarms'],
+];
+
+let msgIndex = 0;
+setInterval(() => {
+  const terminal = document.getElementById('terminal');
+  if (!terminal) return;
+  const now = new Date();
+  const time = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
+  const msg = logMessages[msgIndex % logMessages.length];
+  const line = document.createElement('div');
+  line.className = 'log-line';
+  line.innerHTML = `<span class="log-time">${time}</span><span class="log-type" style="color:${msg[1]};">${msg[0]}</span><span class="log-msg">${msg[2]}</span>`;
+  terminal.appendChild(line);
+  terminal.scrollTop = terminal.scrollHeight;
+  // Remove old lines
+  const lines = terminal.querySelectorAll('.log-line');
+  if (lines.length > 12) lines[0].remove();
+  msgIndex++;
+}, 3000);
+</script>
+</body>
+</html>
