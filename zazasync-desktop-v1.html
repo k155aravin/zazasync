@@ -824,6 +824,7 @@ section {
 
 /* SYNC ACTIVITY */
 .sync-section {
+  display: none;
   background: var(--deep);
   border-top: 1px solid var(--edge);
   border-bottom: 1px solid var(--edge);
@@ -1043,6 +1044,7 @@ section {
 
 /* API SECTION */
 .api-section {
+  display: none;
   padding: 100px 48px;
   background: var(--deep);
   border-top: 1px solid var(--edge);
@@ -1194,7 +1196,6 @@ footer {
     <a href="#discover" class="nav-link">Discover</a>
     <a href="#map" class="nav-link">Availability</a>
     <a href="#market" class="nav-link">Analytics</a>
-    <a href="#api" class="nav-link">API</a>
   </div>
   <div class="nav-right">
     <div class="sync-indicator">
@@ -1219,7 +1220,7 @@ footer {
   </p>
   <div class="hero-actions">
     <button class="btn-primary">Launch Terminal →</button>
-    <button class="btn-ghost">View API Docs</button>
+    <button class="btn-ghost">View Market Insights</button>
   </div>
 
   <div class="live-stats">
@@ -1503,35 +1504,6 @@ footer {
   </div>
 </section>
 
-<!-- SYNC ACTIVITY -->
-<section class="sync-section">
-  <div class="section-header reveal">
-    <div class="section-tag">Live Sync Activity</div>
-    <div class="section-title">SYNC<br>TERMINAL</div>
-  </div>
-
-  <div class="sync-terminal reveal">
-    <div class="terminal-bar">
-      <div class="terminal-dot" style="background:#FF5F56;"></div>
-      <div class="terminal-dot" style="background:#FFBD2E;"></div>
-      <div class="terminal-dot" style="background:#27C93F;"></div>
-      <div class="terminal-title">zazasync-daemon v2.4.1 — live feed</div>
-    </div>
-    <div class="terminal-body" id="terminal">
-      <div class="log-line"><span class="log-time">11:42:07</span><span class="log-type sync">SYNC</span><span class="log-msg">Pulling inventory from <span class="highlight">SQDC Montréal Centre</span> — 247 products scanned</span></div>
-      <div class="log-line"><span class="log-time">11:42:09</span><span class="log-type update">UPDATE</span><span class="log-msg"><span class="highlight">Moby Dick #4</span> — availability changed: 12 → 9 units</span></div>
-      <div class="log-line"><span class="log-time">11:42:11</span><span class="log-type sync">SYNC</span><span class="log-msg">Pulling inventory from <span class="highlight">SQDC Laval Centropolis</span> — 189 products scanned</span></div>
-      <div class="log-line"><span class="log-time">11:42:14</span><span class="log-type alert">ALERT</span><span class="log-msg"><span class="highlight">Pink Kush Infused</span> — LOW STOCK detected across 8 locations</span></div>
-      <div class="log-line"><span class="log-time">11:42:17</span><span class="log-type update">UPDATE</span><span class="log-msg">New product added: <span class="highlight">Grizzly Purple Punch 3.5g</span> — Organigram</span></div>
-      <div class="log-line"><span class="log-time">11:42:19</span><span class="log-type sync">SYNC</span><span class="log-msg">Pulling inventory from <span class="highlight">SQDC Québec Sainte-Foy</span> — 312 products scanned</span></div>
-      <div class="log-line"><span class="log-time">11:42:22</span><span class="log-type update">UPDATE</span><span class="log-msg"><span class="highlight">Sour Watermelon Gummies</span> — status changed: LOW → OUT OF STOCK</span></div>
-      <div class="log-line"><span class="log-time">11:42:25</span><span class="log-type sync">SYNC</span><span class="log-msg">Pulling inventory from <span class="highlight">SQDC Gatineau Promenade</span> — 198 products scanned</span></div>
-      <div class="log-line"><span class="log-time">11:42:28</span><span class="log-type update">UPDATE</span><span class="log-msg">Price update: <span class="highlight">Death Bubba AAAA 7g</span> — $57.99 → $54.99</span></div>
-      <div class="log-line"><span class="log-time">11:42:31</span><span class="log-type sync">SYNC</span><span class="log-msg">Cycle complete — <span class="highlight">107 locations</span> synchronized — 847 products validated<span class="cursor-blink"></span></span></div>
-    </div>
-  </div>
-</section>
-
 <!-- MARKET INSIGHTS -->
 <section class="insights-section" id="market">
   <div class="section-header reveal">
@@ -1736,32 +1708,6 @@ document.querySelectorAll('.filter-chip').forEach(chip => {
   });
 });
 
-// Animated terminal - add new lines periodically
-const logMessages = [
-  ['SYNC', 'var(--zaza)', 'Pulling inventory from <span class="highlight">SQDC Sherbrooke Jacques-Cartier</span> — 201 products scanned'],
-  ['UPDATE', 'var(--ice)', '<span class="highlight">Lemon Haze Live Resin</span> — stock update: 3 locations restocked'],
-  ['SYNC', 'var(--zaza)', 'Pulling inventory from <span class="highlight">SQDC Longueuil</span> — 178 products scanned'],
-  ['ALERT', 'var(--amber)', '<span class="highlight">Blue Dream 510</span> — price drop detected: $47.00 → $44.00'],
-  ['UPDATE', 'var(--ice)', 'New product added: <span class="highlight">Atomic Zkittlez 1g</span> — Pure Sunfarms'],
-];
-
-let msgIndex = 0;
-setInterval(() => {
-  const terminal = document.getElementById('terminal');
-  if (!terminal) return;
-  const now = new Date();
-  const time = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
-  const msg = logMessages[msgIndex % logMessages.length];
-  const line = document.createElement('div');
-  line.className = 'log-line';
-  line.innerHTML = `<span class="log-time">${time}</span><span class="log-type" style="color:${msg[1]};">${msg[0]}</span><span class="log-msg">${msg[2]}</span>`;
-  terminal.appendChild(line);
-  terminal.scrollTop = terminal.scrollHeight;
-  // Remove old lines
-  const lines = terminal.querySelectorAll('.log-line');
-  if (lines.length > 12) lines[0].remove();
-  msgIndex++;
-}, 3000);
 </script>
 </body>
 </html>

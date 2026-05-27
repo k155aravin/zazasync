@@ -1,1767 +1,1329 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ZazaSync — Quebec Cannabis Intelligence</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-:root {
-  --void: #080A08;
-  --deep: #0D100D;
-  --surface: #121612;
-  --plate: #181D18;
-  --edge: #1E251E;
-  --wire: #243024;
-  --zaza: #39FF14;
-  --zaza-dim: #1A7A09;
-  --zaza-ghost: rgba(57,255,20,0.06);
-  --zaza-glow: rgba(57,255,20,0.15);
-  --amber: #F5A623;
-  --ice: #A8C5DA;
-  --fog: #4A5A4A;
-  --mist: #6B7D6B;
-  --paper: #C8D4C8;
-  --white: #E8F0E8;
-  --danger: #FF4444;
-  --mono: 'Space Mono', monospace;
-  --display: 'Bebas Neue', sans-serif;
-  --body: 'DM Sans', sans-serif;
-}
-
-* { margin:0; padding:0; box-sizing:border-box; }
-
-html { scroll-behavior: smooth; }
-
-body {
-  background: var(--void);
-  color: var(--paper);
-  font-family: var(--body);
-  overflow-x: hidden;
-  cursor: crosshair;
-}
-
-/* GRID BACKGROUND */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(57,255,20,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(57,255,20,0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* SCAN LINE */
-body::after {
-  content: '';
-  position: fixed;
-  top: -100%;
-  left: 0;
-  right: 0;
-  height: 200px;
-  background: linear-gradient(transparent, rgba(57,255,20,0.04), transparent);
-  animation: scanline 8s linear infinite;
-  pointer-events: none;
-  z-index: 1;
-}
-
-@keyframes scanline {
-  0% { top: -200px; }
-  100% { top: 100vh; }
-}
-
-/* NAV */
-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  padding: 16px 48px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid rgba(57,255,20,0.08);
-  background: rgba(8,10,8,0.85);
-  backdrop-filter: blur(20px);
-}
-
-.nav-logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.logo-mark {
-  width: 32px;
-  height: 32px;
-  border: 1.5px solid var(--zaza);
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.logo-mark::before {
-  content: '';
-  position: absolute;
-  inset: 2px;
-  background: var(--zaza-ghost);
-  border-radius: 3px;
-}
-
-.logo-mark-inner {
-  width: 12px;
-  height: 12px;
-  background: var(--zaza);
-  border-radius: 2px;
-  animation: pulse-logo 2s ease-in-out infinite;
-  position: relative;
-  z-index: 1;
-}
-
-@keyframes pulse-logo {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.6; transform: scale(0.85); }
-}
-
-.logo-text {
-  font-family: var(--display);
-  font-size: 22px;
-  letter-spacing: 0.08em;
-  color: var(--white);
-}
-
-.logo-text span { color: var(--zaza); }
-
-.nav-center {
-  display: flex;
-  gap: 32px;
-}
-
-.nav-link {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--mist);
-  text-decoration: none;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  transition: color 0.2s;
-  position: relative;
-}
-
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 0;
-  height: 1px;
-  background: var(--zaza);
-  transition: width 0.2s;
-}
-
-.nav-link:hover { color: var(--zaza); }
-.nav-link:hover::after { width: 100%; }
-
-.nav-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.sync-indicator {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--zaza);
-  padding: 5px 10px;
-  border: 1px solid rgba(57,255,20,0.2);
-  border-radius: 4px;
-  background: var(--zaza-ghost);
-}
-
-.sync-dot {
-  width: 6px;
-  height: 6px;
-  background: var(--zaza);
-  border-radius: 50%;
-  animation: blink 1.5s ease-in-out infinite;
-  box-shadow: 0 0 6px var(--zaza);
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.2; }
-}
-
-.btn-primary {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  padding: 8px 18px;
-  background: var(--zaza);
-  color: var(--void);
-  border: none;
-  border-radius: 4px;
-  cursor: crosshair;
-  font-weight: 700;
-  text-transform: uppercase;
-  transition: all 0.2s;
-}
-
-.btn-primary:hover {
-  background: #4fff2a;
-  box-shadow: 0 0 20px rgba(57,255,20,0.4);
-}
-
-/* HERO */
-.hero {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 120px 48px 80px;
-  position: relative;
-  z-index: 2;
-}
-
-.hero-eyebrow {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--zaza);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  margin-bottom: 24px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.hero-eyebrow::before {
-  content: '';
-  display: block;
-  width: 32px;
-  height: 1px;
-  background: var(--zaza);
-}
-
-.hero-title {
-  font-family: var(--display);
-  font-size: clamp(72px, 10vw, 140px);
-  line-height: 0.9;
-  letter-spacing: 0.02em;
-  color: var(--white);
-  margin-bottom: 8px;
-}
-
-.hero-title .accent { color: var(--zaza); text-shadow: 0 0 40px rgba(57,255,20,0.4); }
-
-.hero-title-sub {
-  font-family: var(--display);
-  font-size: clamp(28px, 4vw, 56px);
-  color: var(--fog);
-  letter-spacing: 0.06em;
-  margin-bottom: 32px;
-}
-
-.hero-desc {
-  font-size: 16px;
-  color: var(--mist);
-  max-width: 480px;
-  line-height: 1.7;
-  margin-bottom: 48px;
-  font-weight: 300;
-}
-
-.hero-actions {
-  display: flex;
-  gap: 14px;
-  align-items: center;
-  margin-bottom: 80px;
-}
-
-.btn-ghost {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  padding: 8px 18px;
-  background: transparent;
-  color: var(--mist);
-  border: 1px solid var(--wire);
-  border-radius: 4px;
-  cursor: crosshair;
-  text-transform: uppercase;
-  transition: all 0.2s;
-}
-
-.btn-ghost:hover {
-  border-color: var(--zaza);
-  color: var(--zaza);
-}
-
-/* LIVE STATS BAR */
-.live-stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  background: rgba(57,255,20,0.08);
-  border: 1px solid rgba(57,255,20,0.12);
-  border-radius: 8px;
-  overflow: hidden;
-  max-width: 800px;
-}
-
-.stat-cell {
-  background: var(--surface);
-  padding: 16px 20px;
-  position: relative;
-  overflow: hidden;
-}
-
-.stat-cell::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--zaza), transparent);
-  opacity: 0;
-  animation: stat-flash 4s ease-in-out infinite;
-}
-
-.stat-cell:nth-child(1)::before { animation-delay: 0s; }
-.stat-cell:nth-child(2)::before { animation-delay: 1s; }
-.stat-cell:nth-child(3)::before { animation-delay: 2s; }
-.stat-cell:nth-child(4)::before { animation-delay: 3s; }
-
-@keyframes stat-flash {
-  0%, 80%, 100% { opacity: 0; }
-  40% { opacity: 1; }
-}
-
-.stat-label {
-  font-family: var(--mono);
-  font-size: 9px;
-  color: var(--fog);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
-
-.stat-value {
-  font-family: var(--mono);
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--zaza);
-  margin-bottom: 2px;
-}
-
-.stat-sub {
-  font-size: 10px;
-  color: var(--fog);
-  font-family: var(--mono);
-}
-
-/* HERO VISUAL */
-.hero-visual {
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 45%;
-  overflow: hidden;
-  opacity: 0.4;
-}
-
-.radar-container {
-  position: absolute;
-  top: 50%;
-  right: 10%;
-  transform: translateY(-50%);
-  width: 400px;
-  height: 400px;
-}
-
-.radar-ring {
-  position: absolute;
-  border: 1px solid rgba(57,255,20,0.3);
-  border-radius: 50%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.radar-ring:nth-child(1) { width: 80px; height: 80px; }
-.radar-ring:nth-child(2) { width: 160px; height: 160px; opacity: 0.7; }
-.radar-ring:nth-child(3) { width: 240px; height: 240px; opacity: 0.5; }
-.radar-ring:nth-child(4) { width: 320px; height: 320px; opacity: 0.3; }
-.radar-ring:nth-child(5) { width: 400px; height: 400px; opacity: 0.2; }
-
-.radar-sweep {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 200px;
-  height: 200px;
-  transform-origin: 0 0;
-  animation: sweep 4s linear infinite;
-}
-
-.radar-sweep::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 200px;
-  height: 200px;
-  background: conic-gradient(from 0deg, transparent 300deg, rgba(57,255,20,0.3) 360deg);
-  border-radius: 0 0 0 100%;
-}
-
-@keyframes sweep {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.radar-cross {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.radar-cross::before, .radar-cross::after {
-  content: '';
-  position: absolute;
-  background: rgba(57,255,20,0.3);
-}
-
-.radar-cross::before { width: 400px; height: 1px; top: 0; left: -200px; }
-.radar-cross::after { width: 1px; height: 400px; top: -200px; left: 0; }
-
-.radar-blip {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  background: var(--zaza);
-  border-radius: 50%;
-  box-shadow: 0 0 8px var(--zaza);
-  animation: blip-fade 4s ease-out infinite;
-}
-
-@keyframes blip-fade {
-  0% { opacity: 1; }
-  70% { opacity: 1; }
-  100% { opacity: 0; }
-}
-
-/* SECTION BASE */
-section {
-  position: relative;
-  z-index: 2;
-  padding: 100px 48px;
-}
-
-.section-header {
-  margin-bottom: 48px;
-}
-
-.section-tag {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--zaza);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.section-tag::before {
-  content: '//';
-  color: var(--fog);
-}
-
-.section-title {
-  font-family: var(--display);
-  font-size: clamp(36px, 5vw, 64px);
-  letter-spacing: 0.04em;
-  color: var(--white);
-  line-height: 1;
-}
-
-/* PRODUCT DISCOVERY */
-.discovery-section {
-  background: var(--deep);
-  border-top: 1px solid var(--edge);
-  border-bottom: 1px solid var(--edge);
-}
-
-.search-bar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: var(--surface);
-  border: 1px solid var(--wire);
-  border-radius: 6px;
-  padding: 14px 20px;
-  max-width: 700px;
-  margin-bottom: 32px;
-  transition: border-color 0.2s;
-}
-
-.search-bar:focus-within {
-  border-color: rgba(57,255,20,0.4);
-  box-shadow: 0 0 20px rgba(57,255,20,0.08);
-}
-
-.search-icon {
-  color: var(--fog);
-  font-size: 14px;
-  font-family: var(--mono);
-}
-
-.search-input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
-  font-family: var(--mono);
-  font-size: 13px;
-  color: var(--paper);
-  caret-color: var(--zaza);
-}
-
-.search-input::placeholder { color: var(--fog); }
-
-.search-shortcut {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--fog);
-  border: 1px solid var(--wire);
-  padding: 2px 6px;
-  border-radius: 3px;
-}
-
-.filter-row {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 32px;
-}
-
-.filter-chip {
-  font-family: var(--mono);
-  font-size: 10px;
-  padding: 5px 12px;
-  border: 1px solid var(--wire);
-  border-radius: 20px;
-  color: var(--mist);
-  cursor: crosshair;
-  transition: all 0.15s;
-  letter-spacing: 0.06em;
-}
-
-.filter-chip:hover, .filter-chip.active {
-  border-color: var(--zaza);
-  color: var(--zaza);
-  background: var(--zaza-ghost);
-}
-
-/* PRODUCT CARDS */
-.products-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 12px;
-}
-
-.product-card {
-  background: var(--surface);
-  border: 1px solid var(--edge);
-  border-radius: 8px;
-  padding: 16px;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.2s;
-  cursor: crosshair;
-}
-
-.product-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--zaza), transparent);
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-
-.product-card:hover {
-  border-color: rgba(57,255,20,0.25);
-  background: var(--plate);
-  transform: translateY(-2px);
-}
-
-.product-card:hover::before { opacity: 1; }
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 12px;
-}
-
-.card-category {
-  font-family: var(--mono);
-  font-size: 9px;
-  color: var(--fog);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.availability-badge {
-  font-family: var(--mono);
-  font-size: 9px;
-  padding: 2px 7px;
-  border-radius: 3px;
-  font-weight: 700;
-}
-
-.avail-yes { background: rgba(57,255,20,0.12); color: var(--zaza); }
-.avail-low { background: rgba(245,166,35,0.12); color: var(--amber); }
-.avail-no { background: rgba(255,68,68,0.12); color: var(--danger); }
-
-.card-name {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--white);
-  margin-bottom: 4px;
-  line-height: 1.3;
-}
-
-.card-brand {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--fog);
-  margin-bottom: 12px;
-}
-
-.card-meta {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 12px;
-}
-
-.meta-tag {
-  font-family: var(--mono);
-  font-size: 9px;
-  padding: 2px 6px;
-  border: 1px solid var(--wire);
-  border-radius: 3px;
-  color: var(--mist);
-}
-
-.card-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-top: 1px solid var(--edge);
-  padding-top: 10px;
-}
-
-.card-price {
-  font-family: var(--mono);
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--zaza);
-}
-
-.card-thc {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--ice);
-}
-
-.card-stores {
-  font-family: var(--mono);
-  font-size: 9px;
-  color: var(--fog);
-}
-
-/* MAP SECTION */
-.map-section {
-  padding: 100px 48px;
-}
-
-.map-container {
-  background: var(--surface);
-  border: 1px solid var(--edge);
-  border-radius: 10px;
-  height: 480px;
-  position: relative;
-  overflow: hidden;
-  margin-top: 40px;
-}
-
-.map-bg {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 600px 400px at 35% 45%, rgba(57,255,20,0.04) 0%, transparent 70%),
-    linear-gradient(rgba(57,255,20,0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(57,255,20,0.02) 1px, transparent 1px);
-  background-size: auto, 24px 24px, 24px 24px;
-}
-
-.map-label {
-  position: absolute;
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--fog);
-  letter-spacing: 0.06em;
-}
-
-.store-pin {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  cursor: crosshair;
-  transform: translate(-50%, -50%);
-}
-
-.pin-active {
-  background: var(--zaza);
-  box-shadow: 0 0 12px var(--zaza);
-  animation: pin-pulse 2s ease-in-out infinite;
-}
-
-.pin-low {
-  background: var(--amber);
-  box-shadow: 0 0 8px var(--amber);
-}
-
-.pin-out {
-  background: var(--danger);
-  box-shadow: 0 0 6px var(--danger);
-  opacity: 0.6;
-}
-
-@keyframes pin-pulse {
-  0%, 100% { box-shadow: 0 0 8px var(--zaza); }
-  50% { box-shadow: 0 0 20px var(--zaza), 0 0 40px rgba(57,255,20,0.3); }
-}
-
-.map-legend {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  background: rgba(8,10,8,0.85);
-  border: 1px solid var(--edge);
-  border-radius: 6px;
-  padding: 12px 16px;
-  backdrop-filter: blur(10px);
-}
-
-.legend-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--mist);
-  margin-bottom: 6px;
-}
-
-.legend-row:last-child { margin-bottom: 0; }
-
-.legend-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.map-stats {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  display: flex;
-  gap: 10px;
-}
-
-.map-stat-chip {
-  background: rgba(8,10,8,0.85);
-  border: 1px solid var(--edge);
-  border-radius: 5px;
-  padding: 8px 12px;
-  backdrop-filter: blur(10px);
-  font-family: var(--mono);
-  font-size: 10px;
-}
-
-.map-stat-num {
-  color: var(--zaza);
-  font-size: 16px;
-  font-weight: 700;
-  display: block;
-  margin-bottom: 2px;
-}
-
-/* SYNC ACTIVITY */
-.sync-section {
-  background: var(--deep);
-  border-top: 1px solid var(--edge);
-  border-bottom: 1px solid var(--edge);
-}
-
-.sync-terminal {
-  background: var(--void);
-  border: 1px solid var(--wire);
-  border-radius: 8px;
-  overflow: hidden;
-  margin-top: 40px;
-  max-width: 800px;
-}
-
-.terminal-bar {
-  background: var(--plate);
-  padding: 10px 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border-bottom: 1px solid var(--wire);
-}
-
-.terminal-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-
-.terminal-title {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--fog);
-  margin-left: 8px;
-  letter-spacing: 0.06em;
-}
-
-.terminal-body {
-  padding: 20px;
-  font-family: var(--mono);
-  font-size: 12px;
-  line-height: 2;
-}
-
-.log-line {
-  display: flex;
-  gap: 12px;
-  align-items: baseline;
-}
-
-.log-time { color: var(--fog); font-size: 10px; min-width: 60px; }
-.log-type { font-size: 10px; min-width: 70px; font-weight: 700; }
-.log-type.sync { color: var(--zaza); }
-.log-type.update { color: var(--ice); }
-.log-type.alert { color: var(--amber); }
-.log-type.error { color: var(--danger); }
-.log-msg { color: var(--mist); font-size: 11px; }
-.log-msg .highlight { color: var(--paper); }
-
-.cursor-blink {
-  display: inline-block;
-  width: 8px;
-  height: 14px;
-  background: var(--zaza);
-  animation: cursor 1s step-end infinite;
-  vertical-align: middle;
-  margin-left: 4px;
-}
-
-@keyframes cursor {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-/* MARKET INSIGHTS */
-.insights-section { padding: 100px 48px; }
-
-.insights-grid {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr;
-  gap: 12px;
-  margin-top: 40px;
-}
-
-.insight-card {
-  background: var(--surface);
-  border: 1px solid var(--edge);
-  border-radius: 8px;
-  padding: 20px 22px;
-}
-
-.insight-card.tall { grid-row: span 2; }
-
-.insight-label {
-  font-family: var(--mono);
-  font-size: 9px;
-  color: var(--fog);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-bottom: 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.live-tag {
-  font-family: var(--mono);
-  font-size: 8px;
-  color: var(--zaza);
-  background: var(--zaza-ghost);
-  border: 1px solid rgba(57,255,20,0.2);
-  padding: 1px 6px;
-  border-radius: 3px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-/* CHART BARS */
-.chart-bars {
-  display: flex;
-  gap: 6px;
-  align-items: flex-end;
-  height: 120px;
-  margin-bottom: 12px;
-}
-
-.bar-col { display: flex; flex-direction: column; gap: 4px; align-items: center; flex: 1; }
-
-.bar {
-  width: 100%;
-  border-radius: 2px 2px 0 0;
-  background: var(--wire);
-  transition: background 0.2s;
-  position: relative;
-}
-
-.bar.active { background: var(--zaza); }
-.bar.medium { background: var(--zaza-dim); }
-
-.bar-label {
-  font-family: var(--mono);
-  font-size: 8px;
-  color: var(--fog);
-  text-align: center;
-}
-
-/* TREND LIST */
-.trend-list { display: flex; flex-direction: column; gap: 10px; }
-
-.trend-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--edge);
-}
-
-.trend-item:last-child { border-bottom: none; }
-
-.trend-rank {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--fog);
-  min-width: 20px;
-}
-
-.trend-name {
-  flex: 1;
-  font-size: 12px;
-  color: var(--paper);
-}
-
-.trend-change {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--zaza);
-}
-
-.trend-change.down { color: var(--danger); }
-
-/* CATEGORY PILLS */
-.category-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.cat-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 10px;
-  background: var(--plate);
-  border-radius: 5px;
-  border: 1px solid var(--edge);
-}
-
-.cat-name { font-size: 11px; color: var(--paper); }
-.cat-count { font-family: var(--mono); font-size: 10px; color: var(--zaza); }
-
-/* BIG NUMBER */
-.big-number {
-  font-family: var(--display);
-  font-size: 56px;
-  color: var(--zaza);
-  line-height: 1;
-  margin-bottom: 4px;
-  text-shadow: 0 0 30px rgba(57,255,20,0.3);
-}
-
-.big-number-label {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--mist);
-}
-
-/* API SECTION */
-.api-section {
-  padding: 100px 48px;
-  background: var(--deep);
-  border-top: 1px solid var(--edge);
-}
-
-.api-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 48px;
-  align-items: center;
-  margin-top: 48px;
-}
-
-.api-code {
-  background: var(--void);
-  border: 1px solid var(--wire);
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.code-bar {
-  background: var(--plate);
-  padding: 8px 14px;
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--fog);
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--wire);
-}
-
-.code-body {
-  padding: 20px;
-  font-family: var(--mono);
-  font-size: 12px;
-  line-height: 1.8;
-}
-
-.code-key { color: var(--ice); }
-.code-str { color: var(--zaza); }
-.code-num { color: var(--amber); }
-.code-punc { color: var(--fog); }
-.code-comment { color: var(--fog); font-style: italic; }
-
-.api-features { display: flex; flex-direction: column; gap: 20px; }
-
-.api-feature {
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--edge);
-}
-
-.api-feature:last-child { border-bottom: none; }
-
-.api-icon {
-  width: 36px;
-  height: 36px;
-  border: 1px solid var(--wire);
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  flex-shrink: 0;
-  background: var(--plate);
-  color: var(--zaza);
-  font-family: var(--mono);
-  font-weight: 700;
-}
-
-.api-feature-title { font-size: 14px; font-weight: 500; color: var(--white); margin-bottom: 4px; }
-.api-feature-desc { font-size: 12px; color: var(--mist); line-height: 1.6; }
-
-/* FOOTER */
-footer {
-  padding: 48px;
-  border-top: 1px solid var(--edge);
-  position: relative;
-  z-index: 2;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.footer-left { }
-
-.footer-tagline {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--fog);
-  margin-top: 8px;
-  letter-spacing: 0.1em;
-}
-
-.footer-right {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--fog);
-  text-align: right;
-  line-height: 1.8;
-}
-
-/* DIVIDER LINE */
-.section-divider {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(57,255,20,0.2), transparent);
-  margin: 0 48px;
-  position: relative;
-  z-index: 2;
-}
-
-/* SCROLL REVEAL */
-.reveal {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  nav { padding: 14px 20px; }
-  .nav-center { display: none; }
-  .hero { padding: 100px 20px 60px; }
-  section { padding: 60px 20px; }
-  .live-stats { grid-template-columns: repeat(2, 1fr); }
-  .hero-visual { display: none; }
-  .insights-grid { grid-template-columns: 1fr; }
-  .api-grid { grid-template-columns: 1fr; }
-  footer { flex-direction: column; gap: 20px; text-align: center; }
-}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>ZazaSync Mobile</title>
+  <style>
+    :root {
+      --bg: #060806;
+      --panel: #101510;
+      --panel-2: #151d16;
+      --line: #273527;
+      --text: #f1f7ef;
+      --muted: #a7b4a4;
+      --soft: #6f7d6d;
+      --zaza: #39ff14;
+      --zaza-2: #b8ff4f;
+      --amber: #f5b942;
+      --red: #ff6b6b;
+      --blue: #5bc5ff;
+      --shadow: 0 24px 80px rgba(0, 0, 0, .42);
+      --radius: 8px;
+      --tab-h: 74px;
+      color-scheme: dark;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(rgba(57, 255, 20, .035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(57, 255, 20, .03) 1px, transparent 1px),
+        radial-gradient(circle at 50% 0%, rgba(57, 255, 20, .12), transparent 34%),
+        var(--bg);
+      background-size: 24px 24px, 24px 24px, auto, auto;
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .app {
+      width: min(100vw, 460px);
+      height: 100vh;
+      margin: 0 auto;
+      position: relative;
+      background: rgba(6, 8, 6, .94);
+      border-left: 1px solid rgba(57, 255, 20, .12);
+      border-right: 1px solid rgba(57, 255, 20, .12);
+      overflow: hidden;
+    }
+
+    .status {
+      position: sticky;
+      top: 0;
+      z-index: 6;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 58px;
+      padding: max(12px, env(safe-area-inset-top)) 18px 10px;
+      background: rgba(6, 8, 6, .88);
+      border-bottom: 1px solid rgba(57, 255, 20, .15);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      border: 1px solid rgba(57, 255, 20, .42);
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: var(--zaza);
+      background: linear-gradient(135deg, rgba(57, 255, 20, .18), rgba(255, 255, 255, .04));
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .brand-name {
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .brand-sub {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1;
+    }
+
+    .sync-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 30px;
+      padding: 0 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(57, 255, 20, .32);
+      color: var(--zaza-2);
+      background: rgba(57, 255, 20, .08);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--zaza);
+      box-shadow: 0 0 14px var(--zaza);
+    }
+
+    main {
+      height: calc(100vh - var(--tab-h));
+      overflow: hidden;
+    }
+
+    .screen {
+      display: none;
+      height: 100%;
+      overflow-y: auto;
+      padding: 16px 16px calc(var(--tab-h) + 24px);
+      scrollbar-width: none;
+    }
+
+    .screen::-webkit-scrollbar {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    .hero {
+      min-height: 194px;
+      padding: 18px;
+      border: 1px solid rgba(57, 255, 20, .2);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(145deg, rgba(57, 255, 20, .13), transparent 48%),
+        linear-gradient(180deg, rgba(255, 255, 255, .06), transparent),
+        var(--panel);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(transparent 50%, rgba(57, 255, 20, .035) 50%);
+      background-size: 100% 5px;
+      pointer-events: none;
+    }
+
+    .kicker {
+      color: var(--zaza);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    h1 {
+      margin: 10px 0 8px;
+      max-width: 12ch;
+      font-size: clamp(34px, 11vw, 54px);
+      line-height: .88;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .hero-copy {
+      margin: 0;
+      max-width: 28ch;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 18px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .stat {
+      min-height: 66px;
+      padding: 10px;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: var(--radius);
+      background: rgba(0, 0, 0, .22);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 20px;
+      color: var(--text);
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 3px;
+      color: var(--soft);
+      font-size: 11px;
+    }
+
+    .search-card,
+    .module {
+      margin-top: 12px;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: var(--radius);
+      background: rgba(16, 21, 16, .92);
+    }
+
+    .search-card {
+      padding: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 4;
+      backdrop-filter: blur(16px);
+    }
+
+    .search-row {
+      display: grid;
+      grid-template-columns: 1fr 42px;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .search {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid rgba(57, 255, 20, .18);
+      border-radius: var(--radius);
+      background: #070a07;
+      color: var(--text);
+      outline: 0;
+      padding: 0 12px;
+    }
+
+    .icon-btn {
+      min-width: 42px;
+      height: 42px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(57, 255, 20, .24);
+      background: rgba(57, 255, 20, .08);
+      color: var(--zaza);
+      font-weight: 900;
+    }
+
+    .chips {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 10px 0 0;
+      scrollbar-width: none;
+    }
+
+    .chips::-webkit-scrollbar {
+      display: none;
+    }
+
+    .chip {
+      flex: 0 0 auto;
+      min-height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, .1);
+      background: rgba(255, 255, 255, .04);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .chip.active {
+      border-color: rgba(57, 255, 20, .58);
+      color: var(--bg);
+      background: var(--zaza);
+      font-weight: 800;
+    }
+
+    .module {
+      padding: 14px;
+    }
+
+    .module-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .module-title {
+      margin: 0;
+      font-size: 17px;
+      letter-spacing: 0;
+    }
+
+    .module-meta {
+      margin-top: 3px;
+      color: var(--soft);
+      font-size: 12px;
+    }
+
+    .link-btn {
+      color: var(--zaza);
+      background: transparent;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .product-list,
+    .store-list,
+    .alert-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .product {
+      display: grid;
+      grid-template-columns: 52px 1fr auto;
+      gap: 11px;
+      align-items: center;
+      width: 100%;
+      min-height: 88px;
+      padding: 10px;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, .035);
+      text-align: left;
+    }
+
+    .rank {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius);
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(57, 255, 20, .2);
+      background: rgba(57, 255, 20, .08);
+      color: var(--zaza);
+      font-weight: 900;
+    }
+
+    .p-name {
+      font-weight: 800;
+      line-height: 1.16;
+    }
+
+    .p-brand {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .p-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 7px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 20px;
+      padding: 0 7px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .06);
+      color: var(--soft);
+      font-size: 11px;
+    }
+
+    .stock {
+      color: var(--zaza-2);
+    }
+
+    .low {
+      color: var(--amber);
+    }
+
+    .out {
+      color: var(--red);
+    }
+
+    .price {
+      align-self: start;
+      padding-top: 2px;
+      color: var(--text);
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .store {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      min-height: 78px;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, .035);
+    }
+
+    .store-name {
+      font-weight: 850;
+    }
+
+    .store-sub {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .store-score {
+      text-align: right;
+      font-weight: 900;
+      color: var(--zaza);
+    }
+
+    .store-score span {
+      display: block;
+      margin-top: 4px;
+      color: var(--soft);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .segmented {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      padding: 5px;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: var(--radius);
+      background: rgba(0, 0, 0, .24);
+      margin-bottom: 12px;
+    }
+
+    .segment {
+      min-height: 34px;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .segment.active {
+      background: var(--zaza);
+      color: var(--bg);
+    }
+
+    .map-panel {
+      height: 250px;
+      position: relative;
+      border: 1px solid rgba(57, 255, 20, .16);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(91, 197, 255, .16), transparent 48%),
+        linear-gradient(45deg, rgba(57, 255, 20, .11), transparent 62%),
+        #081008;
+    }
+
+    .map-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, .055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, .055) 1px, transparent 1px);
+      background-size: 28px 28px;
+      opacity: .65;
+    }
+
+    .pin {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border-radius: 50% 50% 50% 2px;
+      transform: rotate(-45deg);
+      background: var(--zaza);
+      box-shadow: 0 0 18px rgba(57, 255, 20, .75);
+    }
+
+    .pin.low {
+      background: var(--amber);
+      box-shadow: 0 0 16px rgba(245, 185, 66, .6);
+    }
+
+    .pin span {
+      position: absolute;
+      inset: 4px;
+      border-radius: 50%;
+      background: var(--bg);
+    }
+
+    .map-label {
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+      right: 12px;
+      min-height: 56px;
+      padding: 10px;
+      border: 1px solid rgba(255, 255, 255, .1);
+      border-radius: var(--radius);
+      background: rgba(0, 0, 0, .58);
+      backdrop-filter: blur(12px);
+    }
+
+    .alert-card {
+      display: grid;
+      grid-template-columns: 40px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      min-height: 72px;
+      padding: 11px;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, .035);
+    }
+
+    .alert-icon {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: var(--radius);
+      background: rgba(57, 255, 20, .08);
+      color: var(--zaza);
+      font-weight: 900;
+    }
+
+    .alert-title {
+      font-weight: 850;
+    }
+
+    .alert-sub {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .toggle {
+      position: relative;
+      width: 48px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid rgba(57, 255, 20, .22);
+      background: rgba(57, 255, 20, .1);
+    }
+
+    .toggle::after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      top: 3px;
+      right: 4px;
+      border-radius: 50%;
+      background: var(--zaza);
+      box-shadow: 0 0 12px rgba(57, 255, 20, .45);
+    }
+
+    .profile-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .profile-tile {
+      min-height: 92px;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, .035);
+    }
+
+    .profile-tile strong {
+      display: block;
+      font-size: 22px;
+    }
+
+    .profile-tile span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .tabs {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 8;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      min-height: calc(var(--tab-h) + env(safe-area-inset-bottom));
+      padding: 6px 8px max(6px, env(safe-area-inset-bottom));
+      border-top: 1px solid rgba(57, 255, 20, .18);
+      background: rgba(8, 12, 8, .94);
+      backdrop-filter: blur(18px);
+    }
+
+    .tab {
+      display: grid;
+      justify-items: center;
+      align-content: center;
+      gap: 4px;
+      min-width: 0;
+      border-radius: var(--radius);
+      background: transparent;
+      color: var(--soft);
+      font-size: 10px;
+      font-weight: 750;
+    }
+
+    .tab b {
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      font-size: 12px;
+    }
+
+    .tab.active {
+      color: var(--zaza);
+      background: rgba(57, 255, 20, .06);
+    }
+
+    .tab.active b {
+      border-color: rgba(57, 255, 20, .28);
+      background: rgba(57, 255, 20, .1);
+    }
+
+    .sheet {
+      position: absolute;
+      inset: auto 0 0 0;
+      z-index: 12;
+      max-height: 82vh;
+      padding: 10px 16px calc(20px + env(safe-area-inset-bottom));
+      border-top: 1px solid rgba(57, 255, 20, .28);
+      background: rgba(10, 14, 10, .98);
+      box-shadow: 0 -28px 80px rgba(0, 0, 0, .66);
+      transform: translateY(110%);
+      transition: transform .22s ease;
+      overflow-y: auto;
+    }
+
+    .sheet.open {
+      transform: translateY(0);
+    }
+
+    .scrim {
+      position: absolute;
+      inset: 0;
+      z-index: 11;
+      background: rgba(0, 0, 0, .56);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease;
+    }
+
+    .scrim.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .grabber {
+      width: 42px;
+      height: 4px;
+      margin: 0 auto 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .18);
+    }
+
+    .sheet-head {
+      display: grid;
+      grid-template-columns: 1fr 42px;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .sheet h2 {
+      margin: 0;
+      font-size: 27px;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .close {
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, .06);
+      color: var(--muted);
+      font-size: 20px;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 16px 0;
+    }
+
+    .detail {
+      min-height: 70px;
+      padding: 10px;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, .035);
+    }
+
+    .detail strong {
+      display: block;
+      font-size: 16px;
+    }
+
+    .detail span {
+      display: block;
+      margin-top: 5px;
+      color: var(--soft);
+      font-size: 11px;
+    }
+
+    .action-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 14px 0;
+    }
+
+    .alert-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 10px 0 16px;
+    }
+
+    .option-btn {
+      min-height: 42px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(57, 255, 20, .2);
+      background: rgba(255, 255, 255, .04);
+      color: var(--muted);
+      font-weight: 850;
+    }
+
+    .option-btn.active {
+      background: rgba(57, 255, 20, .12);
+      color: var(--zaza);
+      border-color: rgba(57, 255, 20, .42);
+    }
+
+    .primary,
+    .secondary {
+      min-height: 46px;
+      border-radius: var(--radius);
+      font-weight: 900;
+    }
+
+    .primary {
+      background: var(--zaza);
+      color: var(--bg);
+    }
+
+    .secondary {
+      border: 1px solid rgba(57, 255, 20, .24);
+      background: rgba(57, 255, 20, .08);
+      color: var(--zaza);
+    }
+
+    .empty {
+      min-height: 118px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: var(--muted);
+      border: 1px dashed rgba(255, 255, 255, .12);
+      border-radius: var(--radius);
+      padding: 18px;
+    }
+
+    @media (min-width: 700px) {
+      body {
+        display: grid;
+        place-items: center;
+      }
+
+      .app {
+        height: min(900px, 100vh);
+        box-shadow: 0 0 0 1px rgba(57, 255, 20, .12), 0 36px 120px rgba(0, 0, 0, .66);
+      }
+    }
+  </style>
 </head>
 <body>
-
-<!-- NAV -->
-<nav>
-  <div class="nav-logo">
-    <div class="logo-mark"><div class="logo-mark-inner"></div></div>
-    <div class="logo-text">ZAZA<span>SYNC</span></div>
-  </div>
-  <div class="nav-center">
-    <a href="#discover" class="nav-link">Discover</a>
-    <a href="#map" class="nav-link">Availability</a>
-    <a href="#market" class="nav-link">Analytics</a>
-    <a href="#api" class="nav-link">API</a>
-  </div>
-  <div class="nav-right">
-    <div class="sync-indicator">
-      <div class="sync-dot"></div>
-      LIVE SYNC
-    </div>
-    <button class="btn-primary">Early Access</button>
-  </div>
-</nav>
-
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-eyebrow">Quebec Cannabis Intelligence Platform</div>
-  <div class="hero-title">
-    QUEBEC<br>
-    CANNABIS.<br>
-    <span class="accent">SYNC'D.</span>
-  </div>
-  <div class="hero-title-sub">Real-time. Verified. Live.</div>
-  <p class="hero-desc">
-    ZazaSync continuously pulls live product data from every SQDC location in Quebec — giving you real-time availability, pricing intelligence, and market analytics in one terminal.
-  </p>
-  <div class="hero-actions">
-    <button class="btn-primary">Launch Terminal →</button>
-    <button class="btn-ghost">View API Docs</button>
-  </div>
-
-  <div class="live-stats">
-    <div class="stat-cell">
-      <div class="stat-label">Products tracked</div>
-      <div class="stat-value" id="stat1">847</div>
-      <div class="stat-sub">↑ 12 this week</div>
-    </div>
-    <div class="stat-cell">
-      <div class="stat-label">SQDC Locations</div>
-      <div class="stat-value">107</div>
-      <div class="stat-sub">Across Quebec</div>
-    </div>
-    <div class="stat-cell">
-      <div class="stat-label">Last sync</div>
-      <div class="stat-value" id="syncTime">0:42</div>
-      <div class="stat-sub">ago</div>
-    </div>
-    <div class="stat-cell">
-      <div class="stat-label">Uptime</div>
-      <div class="stat-value">99.9<span style="font-size:14px;">%</span></div>
-      <div class="stat-sub">30-day average</div>
-    </div>
-  </div>
-
-  <!-- RADAR -->
-  <div class="hero-visual">
-    <div class="radar-container">
-      <div class="radar-ring"></div>
-      <div class="radar-ring"></div>
-      <div class="radar-ring"></div>
-      <div class="radar-ring"></div>
-      <div class="radar-ring"></div>
-      <div class="radar-cross"></div>
-      <div class="radar-sweep"></div>
-      <div class="radar-blip" style="top:42%;left:55%;animation-delay:0s;"></div>
-      <div class="radar-blip" style="top:35%;left:48%;animation-delay:1s;"></div>
-      <div class="radar-blip" style="top:55%;left:60%;animation-delay:2s;"></div>
-      <div class="radar-blip" style="top:48%;left:38%;animation-delay:0.5s;"></div>
-      <div class="radar-blip" style="top:30%;left:55%;animation-delay:1.5s;"></div>
-      <div class="radar-blip" style="top:60%;left:45%;animation-delay:2.5s;"></div>
-      <div class="radar-blip" style="top:38%;left:62%;animation-delay:3s;"></div>
-    </div>
-  </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- PRODUCT DISCOVERY -->
-<section class="discovery-section" id="discover">
-  <div class="section-header reveal">
-    <div class="section-tag">Product Discovery</div>
-    <div class="section-title">FIND YOUR<br>NEXT PRODUCT</div>
-  </div>
-
-  <div class="search-bar reveal">
-    <div class="search-icon">⌕</div>
-    <input class="search-input" placeholder="Search by product, brand, strain, or SKU..." readonly>
-    <div class="search-shortcut">⌘K</div>
-  </div>
-
-  <div class="filter-row reveal">
-    <div class="filter-chip active">All</div>
-    <div class="filter-chip">Flower</div>
-    <div class="filter-chip">Pre-rolls</div>
-    <div class="filter-chip">Vape</div>
-    <div class="filter-chip">Edibles</div>
-    <div class="filter-chip">Concentrates</div>
-    <div class="filter-chip">Beverages</div>
-    <div class="filter-chip">Topicals</div>
-    <div class="filter-chip">Sativa</div>
-    <div class="filter-chip">Indica</div>
-    <div class="filter-chip">Hybrid</div>
-    <div class="filter-chip">In Stock ◉</div>
-  </div>
-
-  <div class="products-grid reveal">
-    <div class="product-card">
-      <div class="card-header">
-        <div class="card-category">Flower · Sativa</div>
-        <div class="availability-badge avail-yes">IN STOCK</div>
-      </div>
-      <div class="card-name">Moby Dick #4</div>
-      <div class="card-brand">Tantalus Labs</div>
-      <div class="card-meta">
-        <span class="meta-tag">3.5g</span>
-        <span class="meta-tag">Sativa</span>
-        <span class="meta-tag">Citrus</span>
-      </div>
-      <div class="card-footer">
-        <div class="card-price">$34.95</div>
+  <div class="app">
+    <header class="status">
+      <div class="brand">
+        <div class="brand-mark">ZS</div>
         <div>
-          <div class="card-thc">THC 22.4%</div>
-          <div class="card-stores">47 stores</div>
+          <div class="brand-name">ZazaSync</div>
+          <div class="brand-sub">Quebec inventory pulse</div>
         </div>
       </div>
-    </div>
+      <div class="sync-pill"><span class="dot"></span><span id="syncAge">6 min</span></div>
+    </header>
 
-    <div class="product-card">
-      <div class="card-header">
-        <div class="card-category">Pre-roll · Hybrid</div>
-        <div class="availability-badge avail-low">LOW STOCK</div>
-      </div>
-      <div class="card-name">Pink Kush Infused 1g</div>
-      <div class="card-brand">Weed Me</div>
-      <div class="card-meta">
-        <span class="meta-tag">1g × 3</span>
-        <span class="meta-tag">Hybrid</span>
-        <span class="meta-tag">Infused</span>
-      </div>
-      <div class="card-footer">
-        <div class="card-price">$22.50</div>
-        <div>
-          <div class="card-thc">THC 38.1%</div>
-          <div class="card-stores">8 stores</div>
+    <main>
+      <section class="screen active" data-screen="home">
+        <div class="hero">
+          <div class="kicker">Live SQDC intelligence</div>
+          <h1>Find stock before the drive.</h1>
+          <p class="hero-copy">Track nearby availability, new arrivals, best sellers, and restock movement across Quebec stores.</p>
+          <div class="hero-stats">
+            <div class="stat"><strong id="statProducts">0</strong><span>products watched</span></div>
+            <div class="stat"><strong id="statStores">0</strong><span>stores sampled</span></div>
+            <div class="stat"><strong id="statAlerts">0</strong><span>alerts armed</span></div>
+          </div>
         </div>
-      </div>
-    </div>
 
-    <div class="product-card">
-      <div class="card-header">
-        <div class="card-category">Vape · Indica</div>
-        <div class="availability-badge avail-yes">IN STOCK</div>
-      </div>
-      <div class="card-name">Blue Dream 510 Cart</div>
-      <div class="card-brand">Kolab Project</div>
-      <div class="card-meta">
-        <span class="meta-tag">0.5g</span>
-        <span class="meta-tag">510 thread</span>
-        <span class="meta-tag">Terpene</span>
-      </div>
-      <div class="card-footer">
-        <div class="card-price">$44.00</div>
-        <div>
-          <div class="card-thc">THC 85.2%</div>
-          <div class="card-stores">62 stores</div>
+        <div class="search-card">
+          <div class="search-row">
+            <input class="search" id="globalSearch" placeholder="Search product, brand, city" autocomplete="off">
+            <button class="icon-btn" data-jump="browse" aria-label="Open browse">GO</button>
+          </div>
+          <div class="chips" id="homeChips"></div>
         </div>
-      </div>
-    </div>
 
-    <div class="product-card">
-      <div class="card-header">
-        <div class="card-category">Edible · Hybrid</div>
-        <div class="availability-badge avail-no">OUT OF STOCK</div>
-      </div>
-      <div class="card-name">Sour Watermelon Gummies</div>
-      <div class="card-brand">Wyld</div>
-      <div class="card-meta">
-        <span class="meta-tag">10mg × 10</span>
-        <span class="meta-tag">Gummies</span>
-        <span class="meta-tag">Vegan</span>
-      </div>
-      <div class="card-footer">
-        <div class="card-price">$19.99</div>
-        <div>
-          <div class="card-thc">THC 10mg</div>
-          <div class="card-stores">0 stores</div>
+        <div class="module">
+          <div class="module-head">
+            <div>
+              <h2 class="module-title">Near Montreal</h2>
+              <div class="module-meta">Stores with the freshest stock updates</div>
+            </div>
+            <button class="link-btn" data-jump="stores">VIEW ALL</button>
+          </div>
+          <div class="store-list" id="nearStores"></div>
         </div>
-      </div>
-    </div>
 
-    <div class="product-card">
-      <div class="card-header">
-        <div class="card-category">Flower · Indica</div>
-        <div class="availability-badge avail-yes">IN STOCK</div>
-      </div>
-      <div class="card-name">Death Bubba AAAA</div>
-      <div class="card-brand">Msiku</div>
-      <div class="card-meta">
-        <span class="meta-tag">7g</span>
-        <span class="meta-tag">Indica</span>
-        <span class="meta-tag">Earthy</span>
-      </div>
-      <div class="card-footer">
-        <div class="card-price">$54.99</div>
-        <div>
-          <div class="card-thc">THC 27.8%</div>
-          <div class="card-stores">31 stores</div>
+        <div class="module">
+          <div class="module-head">
+            <div>
+              <h2 class="module-title">Restocked today</h2>
+              <div class="module-meta">Mock feed shaped for the future scraper</div>
+            </div>
+            <button class="link-btn" data-jump="browse">BROWSE</button>
+          </div>
+          <div class="product-list" id="restockedList"></div>
         </div>
-      </div>
-    </div>
+      </section>
 
-    <div class="product-card">
-      <div class="card-header">
-        <div class="card-category">Concentrate · Sativa</div>
-        <div class="availability-badge avail-yes">IN STOCK</div>
-      </div>
-      <div class="card-name">Lemon Haze Live Resin</div>
-      <div class="card-brand">Redecan</div>
-      <div class="card-meta">
-        <span class="meta-tag">1g</span>
-        <span class="meta-tag">Live Resin</span>
-        <span class="meta-tag">Lemon</span>
-      </div>
-      <div class="card-footer">
-        <div class="card-price">$49.95</div>
-        <div>
-          <div class="card-thc">THC 76.4%</div>
-          <div class="card-stores">19 stores</div>
+      <section class="screen" data-screen="browse">
+        <div class="search-card">
+          <div class="search-row">
+            <input class="search" id="browseSearch" placeholder="Search catalog" autocomplete="off">
+            <button class="icon-btn" id="clearSearch" aria-label="Clear search">X</button>
+          </div>
+          <div class="chips" id="categoryChips"></div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
+        <div class="module">
+          <div class="module-head">
+            <div>
+              <h2 class="module-title">Product catalog</h2>
+              <div class="module-meta" id="catalogMeta">Mock inventory</div>
+            </div>
+            <select class="search" id="sortSelect" aria-label="Sort products">
+              <option value="rank">Best sellers</option>
+              <option value="fresh">Freshest</option>
+              <option value="price">Lowest price</option>
+            </select>
+          </div>
+          <div class="segmented" id="typeSegments"></div>
+          <div class="product-list" id="catalogList"></div>
+        </div>
+      </section>
 
-<!-- MAP -->
-<section class="map-section" id="map">
-  <div class="section-header reveal">
-    <div class="section-tag">Live Availability</div>
-    <div class="section-title">QUEBEC<br>COVERAGE MAP</div>
-  </div>
+      <section class="screen" data-screen="stores">
+        <div class="module">
+          <div class="module-head">
+            <div>
+              <h2 class="module-title">Store radar</h2>
+              <div class="module-meta">Inventory status by SQDC location</div>
+            </div>
+            <button class="link-btn" id="refreshStores">SYNC</button>
+          </div>
+          <div class="map-panel">
+            <div class="map-grid"></div>
+            <div class="pin" style="left:38%;top:50%;"><span></span></div>
+            <div class="pin low" style="left:54%;top:33%;"><span></span></div>
+            <div class="pin" style="left:62%;top:56%;"><span></span></div>
+            <div class="pin" style="left:75%;top:44%;"><span></span></div>
+            <div class="pin low" style="left:24%;top:63%;"><span></span></div>
+            <div class="map-label">
+              <div class="store-name">Quebec coverage preview</div>
+              <div class="store-sub">Map pins are mock coordinates. Later: SQDC store latitude, stock counts, and product matches.</div>
+            </div>
+          </div>
+        </div>
+        <div class="module">
+          <div class="module-head">
+            <div>
+              <h2 class="module-title">All stores</h2>
+              <div class="module-meta" id="storeMeta">Sorted by latest update</div>
+            </div>
+          </div>
+          <div class="store-list" id="storeList"></div>
+        </div>
+      </section>
 
-  <div class="map-container reveal">
-    <div class="map-bg"></div>
+      <section class="screen" data-screen="trending">
+        <div class="module">
+          <div class="module-head">
+            <div>
+              <h2 class="module-title">Best sellers</h2>
+              <div class="module-meta">Based on Weedcrawler-style category ranking</div>
+            </div>
+          </div>
+          <div class="segmented" id="windowSegments"></div>
+          <div class="product-list" id="trendingList"></div>
+        </div>
+        <div class="module">
+          <div class="module-head">
+            <div>
+              <h2 class="module-title">Category heat</h2>
+              <div class="module-meta">Where shoppers are moving this week</div>
+            </div>
+          </div>
+          <div class="store-list" id="categoryHeat"></div>
+        </div>
+      </section>
 
-    <div class="map-stats">
-      <div class="map-stat-chip">
-        <span class="map-stat-num">94</span>
-        <span style="font-family:var(--mono);font-size:9px;color:var(--fog);">IN STOCK</span>
-      </div>
-      <div class="map-stat-chip">
-        <span class="map-stat-num" style="color:var(--amber);">8</span>
-        <span style="font-family:var(--mono);font-size:9px;color:var(--fog);">LOW STOCK</span>
-      </div>
-      <div class="map-stat-chip">
-        <span class="map-stat-num" style="color:var(--danger);">5</span>
-        <span style="font-family:var(--mono);font-size:9px;color:var(--fog);">OUT OF STOCK</span>
-      </div>
-    </div>
+      <section class="screen" data-screen="alerts">
+        <div class="module">
+          <div class="module-head">
+            <div>
+              <h2 class="module-title">Watchlist</h2>
+              <div class="module-meta">Restock, low stock, and price movement</div>
+            </div>
+            <button class="link-btn" data-jump="browse">ADD</button>
+          </div>
+          <div class="alert-list" id="alertList"></div>
+        </div>
+        <div class="module">
+          <div class="module-head">
+            <div>
+              <h2 class="module-title">Saved products</h2>
+              <div class="module-meta">Tap a product to inspect availability</div>
+            </div>
+          </div>
+          <div class="product-list" id="savedList"></div>
+        </div>
+      </section>
 
-    <!-- Quebec outline suggestion via pins -->
-    <!-- Montreal area -->
-    <div class="store-pin pin-active" style="top:62%;left:38%;"></div>
-    <div class="store-pin pin-active" style="top:60%;left:40%;"></div>
-    <div class="store-pin pin-active" style="top:64%;left:37%;"></div>
-    <div class="store-pin pin-active" style="top:61%;left:42%;"></div>
-    <div class="store-pin pin-low" style="top:63%;left:41%;"></div>
-    <!-- Quebec City area -->
-    <div class="store-pin pin-active" style="top:48%;left:58%;"></div>
-    <div class="store-pin pin-active" style="top:50%;left:60%;"></div>
-    <div class="store-pin pin-low" style="top:47%;left:57%;"></div>
-    <!-- Sherbrooke area -->
-    <div class="store-pin pin-active" style="top:68%;left:50%;"></div>
-    <div class="store-pin pin-out" style="top:69%;left:48%;"></div>
-    <!-- Gatineau area -->
-    <div class="store-pin pin-active" style="top:55%;left:32%;"></div>
-    <div class="store-pin pin-active" style="top:57%;left:30%;"></div>
-    <!-- Saguenay -->
-    <div class="store-pin pin-active" style="top:35%;left:55%;"></div>
-    <div class="store-pin pin-low" style="top:33%;left:57%;"></div>
-    <!-- Trois-Rivières -->
-    <div class="store-pin pin-active" style="top:54%;left:48%;"></div>
-    <!-- Laval -->
-    <div class="store-pin pin-active" style="top:59%;left:39%;"></div>
-    <!-- Longueuil -->
-    <div class="store-pin pin-active" style="top:65%;left:39%;"></div>
-    <!-- Various -->
-    <div class="store-pin pin-active" style="top:58%;left:44%;"></div>
-    <div class="store-pin pin-out" style="top:45%;left:65%;"></div>
-    <div class="store-pin pin-active" style="top:72%;left:42%;"></div>
-    <div class="store-pin pin-active" style="top:40%;left:48%;"></div>
-    <div class="store-pin pin-low" style="top:52%;left:35%;"></div>
-    <div class="store-pin pin-active" style="top:56%;left:52%;"></div>
-    <div class="store-pin pin-active" style="top:30%;left:50%;"></div>
-    <div class="store-pin pin-active" style="top:25%;left:60%;"></div>
-    <div class="store-pin pin-out" style="top:43%;left:58%;"></div>
-    <div class="store-pin pin-active" style="top:66%;left:55%;"></div>
+      <section class="screen" data-screen="profile">
+        <div class="module">
+          <div class="module-head">
+            <div>
+              <h2 class="module-title">Your ZazaSync</h2>
+              <div class="module-meta">Prototype preferences and legal guardrails</div>
+            </div>
+          </div>
+          <div class="profile-grid">
+            <div class="profile-tile"><strong>21+</strong><span>Quebec cannabis is for adults 21 and over.</span></div>
+            <div class="profile-tile"><strong>3</strong><span>Preferred stores around Montreal.</span></div>
+            <div class="profile-tile"><strong>12</strong><span>Favorite categories, formats, and restock alerts tracked.</span></div>
+            <div class="profile-tile"><strong>5m</strong><span>Target sync interval once backend is live.</span></div>
+          </div>
+        </div>
+        <div class="module">
+          <div class="module-head">
+            <div>
+              <h2 class="module-title">Data model ready</h2>
+              <div class="module-meta">Frontend can swap mock arrays for live inventory records</div>
+            </div>
+          </div>
+          <div class="alert-list">
+            <div class="alert-card"><div class="alert-icon">P</div><div><div class="alert-title">Products</div><div class="alert-sub">Name, brand, format, type, THC/CBD, category, price</div></div><div></div></div>
+            <div class="alert-card"><div class="alert-icon">S</div><div><div class="alert-title">Stores</div><div class="alert-sub">City, freshness, open date, status, inventory counts</div></div><div></div></div>
+            <div class="alert-card"><div class="alert-icon">I</div><div><div class="alert-title">Inventory</div><div class="alert-sub">Product/store stock state, restock age, low stock signal</div></div><div></div></div>
+          </div>
+        </div>
+      </section>
+    </main>
 
-    <!-- Labels -->
-    <div class="map-label" style="top:56%;left:35%;">MONTRÉAL</div>
-    <div class="map-label" style="top:44%;left:61%;">QUÉBEC CITY</div>
-    <div class="map-label" style="top:51%;left:44%;">TROIS-RIVIÈRES</div>
-    <div class="map-label" style="top:52%;left:27%;">GATINEAU</div>
-    <div class="map-label" style="top:31%;left:52%;">SAGUENAY</div>
+    <nav class="tabs" aria-label="Primary">
+      <button class="tab active" data-tab="home"><b>H</b><span>Home</span></button>
+      <button class="tab" data-tab="browse"><b>B</b><span>Browse</span></button>
+      <button class="tab" data-tab="stores"><b>S</b><span>Stores</span></button>
+      <button class="tab" data-tab="trending"><b>T</b><span>Trends</span></button>
+      <button class="tab" data-tab="alerts"><b>A</b><span>Alerts</span></button>
+      <button class="tab" data-tab="profile"><b>P</b><span>Profile</span></button>
+    </nav>
 
-    <div class="map-legend">
-      <div class="legend-row"><div class="legend-dot" style="background:var(--zaza);box-shadow:0 0 6px var(--zaza);"></div>In stock</div>
-      <div class="legend-row"><div class="legend-dot" style="background:var(--amber);"></div>Low stock</div>
-      <div class="legend-row"><div class="legend-dot" style="background:var(--danger);"></div>Out of stock</div>
-    </div>
-  </div>
-</section>
-
-<!-- SYNC ACTIVITY -->
-<section class="sync-section">
-  <div class="section-header reveal">
-    <div class="section-tag">Live Sync Activity</div>
-    <div class="section-title">SYNC<br>TERMINAL</div>
-  </div>
-
-  <div class="sync-terminal reveal">
-    <div class="terminal-bar">
-      <div class="terminal-dot" style="background:#FF5F56;"></div>
-      <div class="terminal-dot" style="background:#FFBD2E;"></div>
-      <div class="terminal-dot" style="background:#27C93F;"></div>
-      <div class="terminal-title">zazasync-daemon v2.4.1 — live feed</div>
-    </div>
-    <div class="terminal-body" id="terminal">
-      <div class="log-line"><span class="log-time">11:42:07</span><span class="log-type sync">SYNC</span><span class="log-msg">Pulling inventory from <span class="highlight">SQDC Montréal Centre</span> — 247 products scanned</span></div>
-      <div class="log-line"><span class="log-time">11:42:09</span><span class="log-type update">UPDATE</span><span class="log-msg"><span class="highlight">Moby Dick #4</span> — availability changed: 12 → 9 units</span></div>
-      <div class="log-line"><span class="log-time">11:42:11</span><span class="log-type sync">SYNC</span><span class="log-msg">Pulling inventory from <span class="highlight">SQDC Laval Centropolis</span> — 189 products scanned</span></div>
-      <div class="log-line"><span class="log-time">11:42:14</span><span class="log-type alert">ALERT</span><span class="log-msg"><span class="highlight">Pink Kush Infused</span> — LOW STOCK detected across 8 locations</span></div>
-      <div class="log-line"><span class="log-time">11:42:17</span><span class="log-type update">UPDATE</span><span class="log-msg">New product added: <span class="highlight">Grizzly Purple Punch 3.5g</span> — Organigram</span></div>
-      <div class="log-line"><span class="log-time">11:42:19</span><span class="log-type sync">SYNC</span><span class="log-msg">Pulling inventory from <span class="highlight">SQDC Québec Sainte-Foy</span> — 312 products scanned</span></div>
-      <div class="log-line"><span class="log-time">11:42:22</span><span class="log-type update">UPDATE</span><span class="log-msg"><span class="highlight">Sour Watermelon Gummies</span> — status changed: LOW → OUT OF STOCK</span></div>
-      <div class="log-line"><span class="log-time">11:42:25</span><span class="log-type sync">SYNC</span><span class="log-msg">Pulling inventory from <span class="highlight">SQDC Gatineau Promenade</span> — 198 products scanned</span></div>
-      <div class="log-line"><span class="log-time">11:42:28</span><span class="log-type update">UPDATE</span><span class="log-msg">Price update: <span class="highlight">Death Bubba AAAA 7g</span> — $57.99 → $54.99</span></div>
-      <div class="log-line"><span class="log-time">11:42:31</span><span class="log-type sync">SYNC</span><span class="log-msg">Cycle complete — <span class="highlight">107 locations</span> synchronized — 847 products validated<span class="cursor-blink"></span></span></div>
-    </div>
-  </div>
-</section>
-
-<!-- MARKET INSIGHTS -->
-<section class="insights-section" id="market">
-  <div class="section-header reveal">
-    <div class="section-tag">Market Intelligence</div>
-    <div class="section-title">LIVE MARKET<br>ANALYTICS</div>
+    <div class="scrim" id="scrim"></div>
+    <aside class="sheet" id="sheet" aria-hidden="true"></aside>
   </div>
 
-  <div class="insights-grid reveal">
+  <script>
+    const products = [
+      { id: 1, rank: 1, name: "Jean Guy", brand: "Good Supply", category: "Fleurs sechees", type: "Sativa", strain: "Jean Guy", format: "3.5 g", price: 20.90, thc: "20-26%", cbd: "<1%", stock: "En stock", restocked: 2, sellers: [1, 2, 4, 5], saved: true, alerted: true, channels: ["Email"] },
+      { id: 2, rank: 2, name: "Black Cherry Punch", brand: "Wo La", category: "Fleurs sechees", type: "Hybride", strain: "Black Cherry Punch", format: "3.5 g", price: 24.80, thc: "22-29%", cbd: "<1%", stock: "Stock faible", restocked: 1, sellers: [1, 3], saved: false, alerted: false, channels: [] },
+      { id: 3, rank: 3, name: "Blueberry Muffin", brand: "Irony", category: "Preroules", type: "Indica", strain: "Blueberry Muffin", format: "2 x 0.5 g", price: 12.40, thc: "21-27%", cbd: "<1%", stock: "En stock", restocked: 4, sellers: [2, 4, 5], saved: true, alerted: false, channels: [] },
+      { id: 4, rank: 4, name: "Pineapple Express", brand: "Good Supply", category: "Cartouche", type: "Derives", strain: "Pineapple Express", format: "1 g", price: 35.10, thc: "78-84%", cbd: "<1%", stock: "En stock", restocked: 3, sellers: [1, 2, 3], saved: false, alerted: false, channels: [] },
+      { id: 5, rank: 5, name: "Jean Guy Resin", brand: "Orchid", category: "Resine", type: "Derives", strain: "Jean Guy", format: "1 g", price: 42.70, thc: "68-76%", cbd: "<1%", stock: "Stock faible", restocked: 9, sellers: [4], saved: false, alerted: false, channels: [] },
+      { id: 6, rank: 6, name: "Galactic Burger Infuse", brand: "Nugz", category: "Concentres", type: "Hybride", strain: "Galactic Burger", format: "3 x 0.6 g", price: 31.50, thc: "32-40%", cbd: "<1%", stock: "En stock", restocked: 1, sellers: [1, 5], saved: true, alerted: true, channels: ["Email", "SMS"] },
+      { id: 7, rank: 7, name: "CBD 1000", brand: "XK", category: "Atomiseur oral", type: "CBD", strain: "Melange", format: "20 ml", price: 39.00, thc: "<1%", cbd: "45-55 mg/ml", stock: "Stock faible", restocked: 11, sellers: [3, 4], saved: false, alerted: false, channels: [] },
+      { id: 8, rank: 8, name: "Limonade Framboise", brand: "Riff", category: "Pret a boire", type: "Derives", strain: "Boisson", format: "355 ml", price: 7.20, thc: "5 mg", cbd: "0 mg", stock: "En stock", restocked: 2, sellers: [1, 2, 5], saved: false, alerted: false, channels: [] },
+      { id: 9, rank: 9, name: "Baie Sauvage", brand: "Shred", category: "Moulu", type: "Hybride", strain: "Blend", format: "15 g", price: 69.90, thc: "18-24%", cbd: "<1%", stock: "En stock", restocked: 6, sellers: [2, 3, 5], saved: true, alerted: false, channels: [] },
+      { id: 10, rank: 10, name: "Bon Vieux Hash", brand: "Good Supply", category: "Haschich", type: "Indica", strain: "Hash", format: "2 g", price: 24.90, thc: "30-38%", cbd: "<1%", stock: "Rupture", restocked: 24, sellers: [], saved: false, alerted: true, channels: ["Email"] }
+    ];
 
-    <div class="insight-card tall">
-      <div class="insight-label">
-        Weekly product volume by category
-        <span class="live-tag"><span style="width:5px;height:5px;background:var(--zaza);border-radius:50%;display:inline-block;"></span>LIVE</span>
-      </div>
-      <div class="chart-bars">
-        <div class="bar-col">
-          <div class="bar active" style="height:85%;"></div>
-          <div class="bar-label">Flower</div>
-        </div>
-        <div class="bar-col">
-          <div class="bar medium" style="height:60%;"></div>
-          <div class="bar-label">Pre-roll</div>
-        </div>
-        <div class="bar-col">
-          <div class="bar medium" style="height:45%;"></div>
-          <div class="bar-label">Vape</div>
-        </div>
-        <div class="bar-col">
-          <div class="bar" style="height:30%;"></div>
-          <div class="bar-label">Edible</div>
-        </div>
-        <div class="bar-col">
-          <div class="bar" style="height:20%;"></div>
-          <div class="bar-label">Conc.</div>
-        </div>
-        <div class="bar-col">
-          <div class="bar" style="height:15%;"></div>
-          <div class="bar-label">Bev.</div>
-        </div>
-      </div>
+    const stores = [
+      { id: 1, name: "Montreal - Metro Mont-Royal", city: "Montreal", updated: 5, opened: 2020, products: 384, categories: 26, low: 18 },
+      { id: 2, name: "Montreal - Saint-Denis Rachel", city: "Montreal", updated: 7, opened: 2022, products: 361, categories: 25, low: 22 },
+      { id: 3, name: "Laval - Chomedey", city: "Laval", updated: 8, opened: 2021, products: 337, categories: 24, low: 31 },
+      { id: 4, name: "Quebec - Sainte-Foy", city: "Quebec", updated: 9, opened: 2018, products: 352, categories: 27, low: 15 },
+      { id: 5, name: "Longueuil - Place Longueuil", city: "Longueuil", updated: 6, opened: 2023, products: 322, categories: 23, low: 27 }
+    ];
 
-      <div class="insight-label" style="margin-top:20px;">Category breakdown</div>
-      <div class="category-grid">
-        <div class="cat-item"><span class="cat-name">Flower</span><span class="cat-count">312</span></div>
-        <div class="cat-item"><span class="cat-name">Pre-rolls</span><span class="cat-count">198</span></div>
-        <div class="cat-item"><span class="cat-name">Vape</span><span class="cat-count">147</span></div>
-        <div class="cat-item"><span class="cat-name">Edibles</span><span class="cat-count">89</span></div>
-        <div class="cat-item"><span class="cat-name">Concentrates</span><span class="cat-count">64</span></div>
-        <div class="cat-item"><span class="cat-name">Beverages</span><span class="cat-count">37</span></div>
-      </div>
-    </div>
+    const categories = ["All", "Fleurs sechees", "Preroules", "Cartouche", "Concentres", "Haschich", "Pret a boire", "Moulu", "CBD"];
+    const types = ["All", "Indica", "Sativa", "Hybride", "Derives", "CBD"];
+    const windows = ["7 days", "30 days", "90 days"];
 
-    <div class="insight-card">
-      <div class="insight-label">Trending products<span class="live-tag"><span style="width:5px;height:5px;background:var(--zaza);border-radius:50%;display:inline-block;"></span>LIVE</span></div>
-      <div class="trend-list">
-        <div class="trend-item"><span class="trend-rank">01</span><span class="trend-name">Moby Dick #4</span><span class="trend-change">↑ 42%</span></div>
-        <div class="trend-item"><span class="trend-rank">02</span><span class="trend-name">Pink Kush Infused</span><span class="trend-change">↑ 38%</span></div>
-        <div class="trend-item"><span class="trend-rank">03</span><span class="trend-name">Death Bubba AAAA</span><span class="trend-change">↑ 21%</span></div>
-        <div class="trend-item"><span class="trend-rank">04</span><span class="trend-name">Blue Dream 510</span><span class="trend-change">↑ 17%</span></div>
-        <div class="trend-item"><span class="trend-rank">05</span><span class="trend-name">Sour Watermelon</span><span class="trend-change down">↓ 8%</span></div>
-      </div>
-    </div>
+    const state = {
+      tab: "home",
+      category: "All",
+      type: "All",
+      search: "",
+      sort: "rank",
+      window: "7 days"
+    };
 
-    <div class="insight-card">
-      <div class="insight-label">Total products live</div>
-      <div class="big-number">847</div>
-      <div class="big-number-label">Active SQDC listings</div>
-    </div>
+    const $ = (selector) => document.querySelector(selector);
+    const $$ = (selector) => Array.from(document.querySelectorAll(selector));
 
-    <div class="insight-card">
-      <div class="insight-label">Avg. price — Flower 3.5g</div>
-      <div class="big-number">$36<span style="font-size:28px;">.42</span></div>
-      <div class="big-number-label" style="color:var(--zaza);">↓ $1.20 vs last week</div>
-    </div>
-
-    <div class="insight-card">
-      <div class="insight-label">Market availability rate</div>
-      <div class="big-number">88<span style="font-size:28px;">%</span></div>
-      <div class="big-number-label">Products in stock right now</div>
-    </div>
-
-  </div>
-</section>
-
-<!-- API SECTION -->
-<section class="api-section" id="api">
-  <div class="section-header reveal">
-    <div class="section-tag">Developer Access</div>
-    <div class="section-title">BUILD ON<br>ZAZASYNC</div>
-  </div>
-
-  <div class="api-grid reveal">
-    <div class="api-code">
-      <div class="code-bar">
-        <span>zazasync-api — example request</span>
-        <span style="color:var(--zaza);">REST · JSON</span>
-      </div>
-      <div class="code-body">
-        <div><span class="code-comment">// Get live product availability</span></div>
-        <div><span class="code-key">GET</span> <span class="code-str">/v1/products</span></div>
-        <div style="margin-top:8px;"><span class="code-punc">{</span></div>
-        <div>&nbsp;&nbsp;<span class="code-key">"category"</span><span class="code-punc">:</span> <span class="code-str">"flower"</span><span class="code-punc">,</span></div>
-        <div>&nbsp;&nbsp;<span class="code-key">"region"</span><span class="code-punc">:</span> <span class="code-str">"montreal"</span><span class="code-punc">,</span></div>
-        <div>&nbsp;&nbsp;<span class="code-key">"in_stock"</span><span class="code-punc">:</span> <span class="code-num">true</span><span class="code-punc">,</span></div>
-        <div>&nbsp;&nbsp;<span class="code-key">"limit"</span><span class="code-punc">:</span> <span class="code-num">50</span></div>
-        <div><span class="code-punc">}</span></div>
-        <div style="margin-top:12px;"><span class="code-comment">// Response</span></div>
-        <div><span class="code-punc">{</span></div>
-        <div>&nbsp;&nbsp;<span class="code-key">"sync_timestamp"</span><span class="code-punc">:</span> <span class="code-str">"2026-05-27T11:42:31Z"</span><span class="code-punc">,</span></div>
-        <div>&nbsp;&nbsp;<span class="code-key">"total"</span><span class="code-punc">:</span> <span class="code-num">312</span><span class="code-punc">,</span></div>
-        <div>&nbsp;&nbsp;<span class="code-key">"products"</span><span class="code-punc">: [</span></div>
-        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-punc">{</span></div>
-        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"name"</span><span class="code-punc">:</span> <span class="code-str">"Moby Dick #4"</span><span class="code-punc">,</span></div>
-        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"brand"</span><span class="code-punc">:</span> <span class="code-str">"Tantalus Labs"</span><span class="code-punc">,</span></div>
-        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"price"</span><span class="code-punc">:</span> <span class="code-num">34.95</span><span class="code-punc">,</span></div>
-        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"thc"</span><span class="code-punc">:</span> <span class="code-num">22.4</span><span class="code-punc">,</span></div>
-        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"stores_available"</span><span class="code-punc">:</span> <span class="code-num">47</span></div>
-        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-punc">}</span></div>
-        <div>&nbsp;&nbsp;<span class="code-punc">]</span></div>
-        <div><span class="code-punc">}</span></div>
-      </div>
-    </div>
-
-    <div class="api-features">
-      <div class="api-feature">
-        <div class="api-icon">⚡</div>
-        <div>
-          <div class="api-feature-title">Real-time sync webhooks</div>
-          <div class="api-feature-desc">Get notified instantly when any product changes availability, price, or stock status across all 107 SQDC locations.</div>
-        </div>
-      </div>
-      <div class="api-feature">
-        <div class="api-icon">📊</div>
-        <div>
-          <div class="api-feature-title">Historical market data</div>
-          <div class="api-feature-desc">Access full price and availability history going back to platform launch. Track market trends, seasonal patterns, and pricing shifts.</div>
-        </div>
-      </div>
-      <div class="api-feature">
-        <div class="api-icon">🗺</div>
-        <div>
-          <div class="api-feature-title">Location-aware queries</div>
-          <div class="api-feature-desc">Filter by specific SQDC location, city, or region. Find which store nearest to you has a specific product in stock right now.</div>
-        </div>
-      </div>
-      <div class="api-feature">
-        <div class="api-icon">🔔</div>
-        <div>
-          <div class="api-feature-title">Restock alerts</div>
-          <div class="api-feature-desc">Subscribe to any product and get notified the moment it comes back in stock at any Quebec location. Never miss a drop.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-left">
-    <div class="nav-logo">
-      <div class="logo-mark"><div class="logo-mark-inner"></div></div>
-      <div class="logo-text">ZAZA<span>SYNC</span></div>
-    </div>
-    <div class="footer-tagline">Quebec Cannabis. Synchronized.</div>
-  </div>
-  <div class="footer-right">
-    <div>Data sourced from publicly available SQDC information</div>
-    <div>Built in Quebec · Not affiliated with SQDC or SAQ</div>
-    <div style="margin-top:8px; color:var(--zaza);">© 2026 ZazaSync Intelligence Platform</div>
-  </div>
-</footer>
-
-<script>
-// Scroll reveal
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('visible');
+    function stockClass(value) {
+      if (value === "Rupture") return "out";
+      if (value === "Stock faible") return "low";
+      return "stock";
     }
-  });
-}, { threshold: 0.1 });
 
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    function money(value) {
+      return value.toFixed(2) + "$";
+    }
 
-// Live sync timer
-let seconds = 42;
-setInterval(() => {
-  seconds++;
-  if (seconds >= 180) seconds = 0;
-  const el = document.getElementById('syncTime');
-  if (el) {
-    if (seconds < 60) el.textContent = `0:${seconds.toString().padStart(2,'0')}`;
-    else el.textContent = `${Math.floor(seconds/60)}:${(seconds%60).toString().padStart(2,'0')}`;
-  }
-}, 1000);
+    function isOut(product) {
+      return product.stock === "Rupture";
+    }
 
-// Filter chips
-document.querySelectorAll('.filter-chip').forEach(chip => {
-  chip.addEventListener('click', () => {
-    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-  });
-});
+    function productButton(product) {
+      return `
+        <button class="product" data-product="${product.id}">
+          <div class="rank">${product.rank}</div>
+          <div>
+            <div class="p-name">${product.name}</div>
+            <div class="p-brand">${product.brand} - ${product.format}</div>
+            <div class="p-tags">
+              <span class="tag">${product.category}</span>
+              <span class="tag">${product.type}</span>
+              <span class="tag ${stockClass(product.stock)}">${product.stock}</span>
+            </div>
+          </div>
+          <div class="price">${money(product.price)}</div>
+        </button>
+      `;
+    }
 
-// Animated terminal - add new lines periodically
-const logMessages = [
-  ['SYNC', 'var(--zaza)', 'Pulling inventory from <span class="highlight">SQDC Sherbrooke Jacques-Cartier</span> — 201 products scanned'],
-  ['UPDATE', 'var(--ice)', '<span class="highlight">Lemon Haze Live Resin</span> — stock update: 3 locations restocked'],
-  ['SYNC', 'var(--zaza)', 'Pulling inventory from <span class="highlight">SQDC Longueuil</span> — 178 products scanned'],
-  ['ALERT', 'var(--amber)', '<span class="highlight">Blue Dream 510</span> — price drop detected: $47.00 → $44.00'],
-  ['UPDATE', 'var(--ice)', 'New product added: <span class="highlight">Atomic Zkittlez 1g</span> — Pure Sunfarms'],
-];
+    function storeCard(store) {
+      return `
+        <div class="store">
+          <div>
+            <div class="store-name">${store.name}</div>
+            <div class="store-sub">${store.city} - updated ${store.updated} min ago - opened ${store.opened}</div>
+          </div>
+          <div class="store-score">${store.products}<span>${store.categories} cats</span></div>
+        </div>
+      `;
+    }
 
-let msgIndex = 0;
-setInterval(() => {
-  const terminal = document.getElementById('terminal');
-  if (!terminal) return;
-  const now = new Date();
-  const time = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
-  const msg = logMessages[msgIndex % logMessages.length];
-  const line = document.createElement('div');
-  line.className = 'log-line';
-  line.innerHTML = `<span class="log-time">${time}</span><span class="log-type" style="color:${msg[1]};">${msg[0]}</span><span class="log-msg">${msg[2]}</span>`;
-  terminal.appendChild(line);
-  terminal.scrollTop = terminal.scrollHeight;
-  // Remove old lines
-  const lines = terminal.querySelectorAll('.log-line');
-  if (lines.length > 12) lines[0].remove();
-  msgIndex++;
-}, 3000);
-</script>
+    function renderChips(target, items, active, setter) {
+      $(target).innerHTML = items.map(item => `<button class="chip ${item === active ? "active" : ""}" data-set="${setter}" data-value="${item}">${item}</button>`).join("");
+    }
+
+    function renderSegments(target, items, active, setter) {
+      $(target).innerHTML = items.map(item => `<button class="segment ${item === active ? "active" : ""}" data-set="${setter}" data-value="${item}">${item}</button>`).join("");
+    }
+
+    function filteredProducts() {
+      const q = state.search.trim().toLowerCase();
+      let result = products.filter(product => {
+        const categoryOk = state.category === "All" || product.category === state.category;
+        const typeOk = state.type === "All" || product.type === state.type;
+        const searchOk = !q || [product.name, product.brand, product.category, product.type, product.strain].join(" ").toLowerCase().includes(q);
+        return categoryOk && typeOk && searchOk;
+      });
+
+      if (state.sort === "fresh") result = result.sort((a, b) => a.restocked - b.restocked);
+      if (state.sort === "price") result = result.sort((a, b) => a.price - b.price);
+      if (state.sort === "rank") result = result.sort((a, b) => a.rank - b.rank);
+      return result;
+    }
+
+    function renderHome() {
+      $("#statProducts").textContent = products.length;
+      $("#statStores").textContent = stores.length;
+      $("#statAlerts").textContent = products.filter(p => p.alerted).length;
+      $("#nearStores").innerHTML = stores.slice(0, 3).map(storeCard).join("");
+      $("#restockedList").innerHTML = products.filter(p => p.restocked <= 3).map(productButton).join("");
+      renderChips("#homeChips", categories.slice(0, 6), state.category, "category");
+    }
+
+    function renderBrowse() {
+      renderChips("#categoryChips", categories, state.category, "category");
+      renderSegments("#typeSegments", types, state.type, "type");
+      const result = filteredProducts();
+      $("#catalogMeta").textContent = `${result.length} matching products`;
+      $("#catalogList").innerHTML = result.length ? result.map(productButton).join("") : `<div class="empty">No products match that filter yet.</div>`;
+    }
+
+    function renderStores() {
+      const sorted = stores.slice().sort((a, b) => a.updated - b.updated);
+      $("#storeList").innerHTML = sorted.map(storeCard).join("");
+      $("#storeMeta").textContent = `${stores.length} sample stores, ${products.length} products indexed`;
+    }
+
+    function renderTrending() {
+      renderSegments("#windowSegments", windows, state.window, "window");
+      const shift = state.window === "30 days" ? 1 : state.window === "90 days" ? 2 : 0;
+      const ranked = products.slice().sort((a, b) => ((a.rank + shift) % 10) - ((b.rank + shift) % 10));
+      $("#trendingList").innerHTML = ranked.slice(0, 6).map(productButton).join("");
+      $("#categoryHeat").innerHTML = categories.slice(1, 7).map((cat) => {
+        const count = products.filter(p => p.category === cat).length;
+        return `<div class="store"><div><div class="store-name">${cat}</div><div class="store-sub">${count || 1} active products - ${state.window}</div></div><div class="store-score">${Math.max(count * 14, 8)}%<span>heat</span></div></div>`;
+      }).join("");
+    }
+
+    function renderAlerts() {
+      const saved = products.filter(product => product.saved || product.alerted);
+      $("#savedList").innerHTML = saved.map(productButton).join("");
+      $("#alertList").innerHTML = saved.map(product => `
+        <div class="alert-card">
+          <div class="alert-icon">${product.name.slice(0, 1)}</div>
+          <div>
+            <div class="alert-title">${product.name}</div>
+            <div class="alert-sub">${product.alerted ? `${product.channels.join(" + ")} alert armed` : "Saved only"} - ${product.stock} at ${product.sellers.length} stores</div>
+          </div>
+          <button class="toggle" aria-label="Alert enabled"></button>
+        </div>
+      `).join("");
+    }
+
+    function renderAll() {
+      renderHome();
+      renderBrowse();
+      renderStores();
+      renderTrending();
+      renderAlerts();
+      $("#syncAge").textContent = `${Math.max(3, Math.min(9, stores[0].updated))} min`;
+    }
+
+    function setTab(tab) {
+      state.tab = tab;
+      $$(".screen").forEach(screen => screen.classList.toggle("active", screen.dataset.screen === tab));
+      $$(".tab").forEach(button => button.classList.toggle("active", button.dataset.tab === tab));
+      $(".screen.active").scrollTop = 0;
+    }
+
+    function openProduct(id) {
+      const product = products.find(item => item.id === Number(id));
+      const sellerStores = stores.filter(store => product.sellers.includes(store.id));
+      const alertCopy = isOut(product)
+        ? "No stores have this in the sample feed. Arm an alert and ZazaSync will notify you when it comes back."
+        : "Watch this product for restocks, low-stock changes, and price movement.";
+      $("#sheet").innerHTML = `
+        <div class="grabber"></div>
+        <div class="sheet-head">
+          <div>
+            <div class="kicker">${product.brand}</div>
+            <h2>${product.name}</h2>
+            <div class="p-brand" style="margin-top:8px;">${product.category} - ${product.type} - ${product.format}</div>
+          </div>
+          <button class="close" id="closeSheet" aria-label="Close">x</button>
+        </div>
+        <div class="detail-grid">
+          <div class="detail"><strong>${money(product.price)}</strong><span>SQDC price</span></div>
+          <div class="detail"><strong>${product.thc}</strong><span>THC</span></div>
+          <div class="detail"><strong>${product.cbd}</strong><span>CBD</span></div>
+        </div>
+        <div class="action-row">
+          <button class="primary" data-alert="${product.id}">${product.alerted ? "Alert armed" : isOut(product) ? "Alert me" : "Watch product"}</button>
+          <button class="secondary" data-jump="stores">Find stores</button>
+        </div>
+        <div class="alert-options">
+          <button class="option-btn ${product.channels.includes("Email") ? "active" : ""}" data-channel="Email" data-alert="${product.id}">Email</button>
+          <button class="option-btn ${product.channels.includes("SMS") ? "active" : ""}" data-channel="SMS" data-alert="${product.id}">SMS</button>
+        </div>
+        <div class="alert-card" style="grid-template-columns:40px 1fr;">
+          <div class="alert-icon">${isOut(product) ? "!" : "A"}</div>
+          <div>
+            <div class="alert-title">${isOut(product) ? "Back-in-stock alert" : "Inventory alert"}</div>
+            <div class="alert-sub">${alertCopy}</div>
+          </div>
+        </div>
+        <div class="module-head" style="margin-top:18px;">
+          <div>
+            <h3 class="module-title">Available nearby</h3>
+            <div class="module-meta">Restocked ${product.restocked} days ago - ${product.stock}</div>
+          </div>
+        </div>
+        <div class="store-list">
+          ${sellerStores.length ? sellerStores.map(storeCard).join("") : `<div class="empty">No sample stores have this right now. Real data will show exact SQDC stock.</div>`}
+        </div>
+      `;
+      $("#scrim").classList.add("open");
+      $("#sheet").classList.add("open");
+      $("#sheet").setAttribute("aria-hidden", "false");
+    }
+
+    function closeSheet() {
+      $("#scrim").classList.remove("open");
+      $("#sheet").classList.remove("open");
+      $("#sheet").setAttribute("aria-hidden", "true");
+    }
+
+    document.addEventListener("click", (event) => {
+      const tab = event.target.closest("[data-tab]");
+      const jump = event.target.closest("[data-jump]");
+      const product = event.target.closest("[data-product]");
+      const set = event.target.closest("[data-set]");
+      const close = event.target.closest("#closeSheet");
+      const alert = event.target.closest("[data-alert]");
+
+      if (tab) setTab(tab.dataset.tab);
+      if (jump) {
+        closeSheet();
+        setTab(jump.dataset.jump);
+      }
+      if (product) openProduct(product.dataset.product);
+      if (set) {
+        state[set.dataset.set] = set.dataset.value;
+        renderAll();
+      }
+      if (close || event.target.id === "scrim") closeSheet();
+      if (alert) {
+        const item = products.find(product => product.id === Number(alert.dataset.alert));
+        item.saved = true;
+        item.alerted = true;
+        const channel = alert.dataset.channel || "Email";
+        if (!item.channels.includes(channel)) item.channels.push(channel);
+        renderAll();
+        openProduct(item.id);
+      }
+    });
+
+    $("#globalSearch").addEventListener("input", (event) => {
+      state.search = event.target.value;
+      $("#browseSearch").value = state.search;
+      renderBrowse();
+    });
+
+    $("#browseSearch").addEventListener("input", (event) => {
+      state.search = event.target.value;
+      $("#globalSearch").value = state.search;
+      renderBrowse();
+    });
+
+    $("#clearSearch").addEventListener("click", () => {
+      state.search = "";
+      $("#globalSearch").value = "";
+      $("#browseSearch").value = "";
+      renderBrowse();
+    });
+
+    $("#sortSelect").addEventListener("change", (event) => {
+      state.sort = event.target.value;
+      renderBrowse();
+    });
+
+    $("#refreshStores").addEventListener("click", () => {
+      stores.forEach((store, index) => {
+        store.updated = 4 + index;
+        store.products += index % 2;
+      });
+      renderAll();
+    });
+
+    renderAll();
+  </script>
 </body>
 </html>
