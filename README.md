@@ -30,6 +30,7 @@ That is the main experience ZazaSync should make effortless.
 | [zazasync-pwa-manifest.json](./zazasync-pwa-manifest.json) | Future PWA manifest for installable mobile web app behavior |
 | [zazasync-sw.js](./zazasync-sw.js) | Future service worker for caching and push-notification behavior |
 | [FUTURE_PRODUCT_README.md](./FUTURE_PRODUCT_README.md) | Notes for the monetizable mobile-first product package |
+| [MONETIZATION_PLAN.md](./MONETIZATION_PLAN.md) | Clean business monetization plan: reports first, B2B dashboard later, SMS future only |
 | [WEBMASTER_HANDOFF.md](./WEBMASTER_HANDOFF.md) | File map explaining which pages belong together and what each page should become |
 | [zazasync-web-v2.html](./zazasync-web-v2.html) | Latest preferred visual direction: clean search-first desktop web prototype |
 | [TEAM_BRIEF.md](./TEAM_BRIEF.md) | Team product brief with strategy, UX flow, MVP priorities, and next decisions |
@@ -78,6 +79,8 @@ zazasync-pwa-manifest.json + zazasync-sw.js
 ```
 
 Read [FUTURE_PRODUCT_README.md](./FUTURE_PRODUCT_README.md) before building this part. For the current build, SMS, Stripe, and Twilio should remain `coming soon`; the webmaster should focus on email alerts first.
+
+For the business model, read [MONETIZATION_PLAN.md](./MONETIZATION_PLAN.md). The recommended monetization path is aggregated market intelligence reports first, not SMS.
 
 ## Preferred UX
 

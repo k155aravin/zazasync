@@ -56,6 +56,7 @@ These files are the future product/monetization layer. They are not a separate p
 | `zazasync-pwa-manifest.json` | PWA install manifest | Requires missing `/icons/icon-192.png` and `/icons/icon-512.png` assets |
 | `zazasync-sw.js` | Service worker for cache and push notification behavior | Register only after production routes and cache paths are confirmed |
 | `FUTURE_PRODUCT_README.md` | Full notes for the monetizable package | Read before implementation |
+| `MONETIZATION_PLAN.md` | Business monetization strategy | Reports first, dashboard later, SMS future only |
 
 Future monetization concept:
 
@@ -78,6 +79,7 @@ Important for the webmaster:
 - If SMS is built later, use Stripe Billing with Checkout Sessions and Stripe Prices for recurring premium plans.
 - The PWA manifest references icon files that are not currently included.
 - The service worker is a prototype and must be tested against production routes before launch.
+- The first business monetization path should be aggregated market intelligence reports, not SMS.
 
 ## User Flow
 
