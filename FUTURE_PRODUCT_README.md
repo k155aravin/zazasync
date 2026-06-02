@@ -1,6 +1,6 @@
 # ZazaSync Future Product Package
 
-This package is the future mobile-first, monetizable version of ZazaSync. It should be treated as a product direction for a production web/PWA build, not just a static design.
+This package is the future mobile-first, monetizable version of ZazaSync. It should be treated as a product direction for later, not as the current webmaster build scope.
 
 ## Files In This Package
 
@@ -8,7 +8,7 @@ This package is the future mobile-first, monetizable version of ZazaSync. It sho
 |---|---|
 | `zazasync-age-gate.html` | Age verification entry page for Quebec 21+ access |
 | `zazasync-mobile-product.html` | Mobile product detail page with availability, sharing, and alert options |
-| `zazasync-sms-upsell.html` | SMS alert upgrade / monetization page |
+| `zazasync-sms-upsell.html` | Future SMS alert upgrade / monetization page; keep as coming soon for now |
 | `zazasync-pwa-manifest.json` | PWA manifest for installable mobile web app behavior |
 | `zazasync-sw.js` | Service worker for offline cache and push-notification handling |
 
@@ -22,14 +22,14 @@ User opens ZazaSync on mobile
   -> user searches/browses inventory
   -> user opens a product
   -> zazasync-mobile-product.html
-  -> user sets email alert or chooses SMS
+  -> user sets email alert
   -> zazasync-sms-upsell.html
-  -> user upgrades to SMS alerts
+  -> future option: user upgrades to SMS alerts later
 ```
 
-## Monetization Idea
+## Future Monetization Idea
 
-The main monetizable feature is SMS alerts.
+The main future monetizable feature is SMS alerts. This is not part of the current build. The webmaster should leave SMS as `coming soon` and build email alerts first.
 
 Free tier:
 
@@ -38,7 +38,7 @@ Free tier:
 - Email back-in-stock alerts
 - Basic watchlist
 
-Paid/premium tier:
+Future paid/premium tier:
 
 - SMS back-in-stock alerts
 - Faster notification promise
@@ -48,9 +48,9 @@ Paid/premium tier:
 
 ## Webmaster Notes
 
-The SMS page is currently a prototype. It does not process payment yet and does not send real SMS.
+The SMS page is currently a prototype. It does not process payment yet and does not send real SMS. Do not wire Stripe, Twilio, or paid SMS in the current build.
 
-To make it production-ready, the webmaster/developer needs:
+To make SMS production-ready later, the webmaster/developer will need:
 
 - Payment provider, likely Stripe Billing with Checkout Sessions
 - SMS provider, likely Twilio
@@ -60,7 +60,7 @@ To make it production-ready, the webmaster/developer needs:
 - Alert throttling so costs do not explode
 - Notification logs so the same alert is not sent repeatedly
 
-Stripe recommendation:
+Future Stripe recommendation:
 
 - Use Stripe Billing for recurring SMS premium plans.
 - Use Checkout Sessions with `mode: subscription` for signup/payment.
@@ -127,21 +127,22 @@ Because ZazaSync relates to cannabis and user notifications:
 2. Add product detail page.
 3. Add age gate before cannabis inventory access.
 4. Add SMS upsell page.
-5. Connect Stripe subscriptions or paid SMS credits.
-6. Connect Twilio SMS delivery.
-7. Add throttling, notification logs, and STOP handling.
-8. Enable PWA manifest and service worker.
+5. Leave SMS upsell as coming soon.
+6. Enable PWA manifest and service worker when production routes are ready.
+7. Later: connect Stripe subscriptions or paid SMS credits.
+8. Later: connect Twilio SMS delivery.
+9. Later: add throttling, notification logs, and STOP handling.
 
 ## Simple Summary
 
-This future package is the monetization layer:
+This future package is the monetization direction:
 
 ```text
 Age gate
   -> Mobile product page
   -> Email alerts
-  -> SMS upsell
-  -> Paid SMS alerts
+  -> SMS upsell as coming soon
+  -> Paid SMS alerts later
   -> PWA install/push notification support
 ```
 

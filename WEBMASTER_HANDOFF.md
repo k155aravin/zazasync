@@ -52,30 +52,30 @@ These files are the future product/monetization layer. They are not a separate p
 |---|---|---|
 | `zazasync-age-gate.html` | 21+ gate before cannabis inventory access | Keep before public/mobile cannabis inventory views |
 | `zazasync-mobile-product.html` | Mobile product detail page | Connect to real product, store availability, watchlist, and alert data |
-| `zazasync-sms-upsell.html` | SMS alert monetization page | Connect to Stripe/payment and Twilio/SMS provider later |
+| `zazasync-sms-upsell.html` | Future SMS alert monetization concept | Keep as `coming soon`; do not connect Stripe/Twilio yet |
 | `zazasync-pwa-manifest.json` | PWA install manifest | Requires missing `/icons/icon-192.png` and `/icons/icon-512.png` assets |
 | `zazasync-sw.js` | Service worker for cache and push notification behavior | Register only after production routes and cache paths are confirmed |
 | `FUTURE_PRODUCT_README.md` | Full notes for the monetizable package | Read before implementation |
 
-Future monetization flow:
+Future monetization concept:
 
 ```text
 Age gate
   -> Mobile inventory
   -> Product detail
   -> Email alert
-  -> SMS upsell
-  -> Paid SMS alerts
+  -> SMS upsell shown as coming soon
+  -> Paid SMS alerts later
   -> PWA/push support later
 ```
 
 Important for the webmaster:
 
-- SMS alerts are not just a UI toggle. They need backend alert logic, consent, STOP handling, and notification logs.
-- Start with email alerts first, then add SMS once the alert logic works.
-- SMS should be limited or premium because every message has a cost.
-- For recurring SMS premium plans, use Stripe Billing with Checkout Sessions and Stripe Prices.
-- Use Stripe Customer Portal for self-service cancellation and payment updates.
+- Do not build SMS, Stripe, or Twilio now.
+- Keep SMS as `coming soon` in the UI.
+- The current build should support email alerts only.
+- SMS alerts are a future phase because they need paid billing, phone verification, consent, STOP handling, throttling, and notification logs.
+- If SMS is built later, use Stripe Billing with Checkout Sessions and Stripe Prices for recurring premium plans.
 - The PWA manifest references icon files that are not currently included.
 - The service worker is a prototype and must be tested against production routes before launch.
 
@@ -172,7 +172,7 @@ Build work:
 - Load saved products for the signed-in user.
 - Show in-stock and out-of-stock watched products.
 - Allow add/remove from watchlist.
-- Allow alert toggles for email and later SMS.
+- Allow email alert toggles now. Leave SMS disabled or marked `coming soon`.
 - Show recent activity such as restocked, price drop, or alert sent.
 
 Suggested production route:
@@ -248,8 +248,8 @@ The frontend pages need these data areas:
 | Stores | SQDC locations |
 | Inventory | Product availability by store |
 | Watchlist | Products saved by each user |
-| Alerts | Email/SMS notification preferences |
-| Subscriptions | Paid SMS alerts, plan status, Stripe customer/subscription IDs |
+| Alerts | Email notification preferences now; SMS fields can be reserved for later |
+| Subscriptions | Future-only paid SMS plans; not required for current build |
 | Notification logs | Prevent repeat SMS/email spam and track delivery history |
 | Events | Search, product views, watchlist adds, alert sets |
 
@@ -263,7 +263,7 @@ stores
 inventory
 watchlist
 alerts
-subscriptions
+subscriptions (future only)
 user_events
 notification_logs
 ```
@@ -277,7 +277,7 @@ Recommended order:
 3. Save onboarding data from `zazasync-onboarding.html`.
 4. Connect `zazasync-watchlist.html` to real user data.
 5. Add email alerts for out-of-stock products.
-6. Add SMS later.
+6. Leave SMS as coming soon.
 
 ## Important Privacy Note
 

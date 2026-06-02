@@ -26,7 +26,7 @@ That is the main experience ZazaSync should make effortless.
 | [zazasync-mobile-onboarding.html](./zazasync-mobile-onboarding.html) | Mobile onboarding survey after account creation |
 | [zazasync-age-gate.html](./zazasync-age-gate.html) | Future 21+ age verification entry page for the mobile/PWA product |
 | [zazasync-mobile-product.html](./zazasync-mobile-product.html) | Future mobile product detail page with availability and alert options |
-| [zazasync-sms-upsell.html](./zazasync-sms-upsell.html) | Future SMS alert upsell / monetization page |
+| [zazasync-sms-upsell.html](./zazasync-sms-upsell.html) | Future-only SMS alert upsell page; do not wire payments/SMS yet |
 | [zazasync-pwa-manifest.json](./zazasync-pwa-manifest.json) | Future PWA manifest for installable mobile web app behavior |
 | [zazasync-sw.js](./zazasync-sw.js) | Future service worker for caching and push-notification behavior |
 | [FUTURE_PRODUCT_README.md](./FUTURE_PRODUCT_README.md) | Notes for the monetizable mobile-first product package |
@@ -71,13 +71,13 @@ zazasync-mobile-product.html
   -> product detail and alert options
 
 zazasync-sms-upsell.html
-  -> paid/premium SMS alert upgrade
+  -> future SMS alert upgrade concept only
 
 zazasync-pwa-manifest.json + zazasync-sw.js
   -> installable PWA and push-notification foundation
 ```
 
-Read [FUTURE_PRODUCT_README.md](./FUTURE_PRODUCT_README.md) before building this part. It explains the SMS monetization idea, required backend tables, PWA icon requirements, service-worker notes, and compliance concerns.
+Read [FUTURE_PRODUCT_README.md](./FUTURE_PRODUCT_README.md) before building this part. For the current build, SMS, Stripe, and Twilio should remain `coming soon`; the webmaster should focus on email alerts first.
 
 ## Preferred UX
 
@@ -87,7 +87,7 @@ The new web direction should feel like a focused product marketplace:
 - Quick filters such as `In stock`, `New drops`, `Back in stock`, `Under $25`, `Pre-rolls`, and `CBD`
 - Product cards with brand, product name, format, price, THC/CBD, and stock status
 - Recently restocked products
-- Email/SMS alert capture for out-of-stock products
+- Email alert capture for out-of-stock products
 - Stores with the most availability
 - Clear 21+ and SQDC independence disclaimer
 
@@ -98,8 +98,8 @@ The new web direction should feel like a focused product marketplace:
 3. ZazaSync shows simple product cards.
 4. User opens a product to see availability by SQDC store.
 5. If the product is out of stock, user taps `Alert me`.
-6. User chooses email, SMS, or both.
-7. ZazaSync notifies the user when the product appears available again.
+6. User enters an email for alerts.
+7. ZazaSync notifies the user by email when the product appears available again.
 
 ## Features That Make ZazaSync Different
 
@@ -124,7 +124,7 @@ Start simple. Build the useful loop first:
 4. Back-in-stock email alerts
 5. Saved products
 6. Preferred stores
-7. SMS alerts after email alerts are working
+7. SMS alerts later, after email alerts are working and the business is ready for paid notifications
 
 ## Suggested Navigation
 
