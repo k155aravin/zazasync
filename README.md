@@ -19,8 +19,6 @@ That is the main experience ZazaSync should make effortless.
 | [zazasync.html](./zazasync.html) | Main webmaster handoff page: search-first inventory homepage |
 | [zazasync-auth.html](./zazasync-auth.html) | Account/sign-in prototype for alerts, watchlist, preferred stores, and 21+ signup |
 | [zazasync-web-v2.html](./zazasync-web-v2.html) | Latest preferred visual direction: clean search-first desktop web prototype |
-| [zazasync-desktop-v1.html](./zazasync-desktop-v1.html) | Earlier desktop concept retained for history |
-| [zazasync-mobile-v1.html](./zazasync-mobile-v1.html) | Mobile app-style prototype with tabs, product browsing, stores, watchlist, and alerts |
 | [TEAM_BRIEF.md](./TEAM_BRIEF.md) | Team product brief with strategy, UX flow, MVP priorities, and next decisions |
 
 ## Preferred UX
