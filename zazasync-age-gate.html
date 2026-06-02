@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="theme-color" content="#0d0f0e"/>
+<title>ZazaSync — Age Verification</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  :root{--bg:#0d0f0e;--bg2:#141714;--bg3:#1c1f1c;--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);--green:#4ade80;--green-bg:rgba(74,222,128,0.08);--text:#f0f2f0;--text2:#9ba89b;--text3:#6b786b;--red:#f87171;--radius:12px;--radius-lg:18px}
+  html,body{min-height:100vh;min-height:100dvh;background:var(--bg);color:var(--text);font-family:'DM Sans',-apple-system,sans-serif;display:flex;align-items:center;justify-content:center;padding:1.5rem}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.35}}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+  .card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);width:100%;max-width:380px;padding:2.5rem 2rem;text-align:center;animation:fadeIn 0.4s ease}
+
+  .logo{font-weight:700;font-size:1.2rem;color:var(--green);display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:2rem;letter-spacing:-0.02em}
+  .logo-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+
+  .shield{font-size:3.5rem;margin-bottom:1.25rem;line-height:1}
+  .title{font-size:1.35rem;font-weight:700;letter-spacing:-0.03em;margin-bottom:0.5rem}
+  .sub{font-size:0.83rem;color:var(--text3);margin-bottom:2rem;line-height:1.6}
+  .sub b{color:var(--text2)}
+
+  /* DOB INPUT */
+  .dob-label{font-size:0.78rem;font-weight:500;color:var(--text2);text-align:left;margin-bottom:8px;display:block}
+  .dob-row{display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:8px;margin-bottom:0.75rem}
+  select{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);font-size:0.9rem;font-family:inherit;padding:12px 10px;outline:none;-webkit-appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236b786b' d='M6 8L0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+  select:focus{border-color:rgba(74,222,128,0.4)}
+
+  .error-msg{background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.2);border-radius:10px;padding:10px 14px;font-size:0.8rem;color:var(--red);margin-bottom:1rem;display:none;text-align:left}
+
+  .btn-verify{width:100%;background:var(--green);border:none;color:#0a1a0a;font-size:1rem;font-weight:700;font-family:inherit;padding:15px;border-radius:var(--radius);cursor:pointer;margin-bottom:1rem;-webkit-appearance:none}
+  .btn-verify:active{opacity:0.85}
+  .btn-verify:disabled{opacity:0.35;cursor:not-allowed}
+
+  .lang-row{display:flex;justify-content:center;gap:0.75rem;margin-bottom:1.5rem}
+  .lang-btn{background:none;border:1px solid var(--border);color:var(--text3);font-size:0.75rem;font-family:inherit;padding:5px 12px;border-radius:999px;cursor:pointer}
+  .lang-btn.active{border-color:var(--green);color:var(--green)}
+
+  .legal{font-size:0.72rem;color:var(--text3);line-height:1.6}
+  .legal a{color:var(--text3);text-decoration:underline}
+
+  /* DENIED STATE */
+  .denied{display:none;text-align:center}
+  .denied-icon{font-size:3rem;margin-bottom:1rem}
+  .denied-title{font-size:1.1rem;font-weight:700;margin-bottom:0.5rem}
+  .denied-sub{font-size:0.82rem;color:var(--text3);line-height:1.6}
+
+  /* SUCCESS OVERLAY */
+  .success-overlay{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:100;display:none;flex-direction:column;gap:1rem;text-align:center;padding:2rem}
+  .success-overlay.show{display:flex}
+  .success-logo{font-size:1.2rem;font-weight:700;color:var(--green);display:flex;align-items:center;gap:8px;justify-content:center}
+  .success-text{font-size:1rem;color:var(--text2)}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="card" id="gate-card">
+  <div class="logo"><div class="logo-dot"></div>ZazaSync</div>
+
+  <div class="lang-row">
+    <button class="lang-btn active" onclick="setLang('en',this)">English</button>
+    <button class="lang-btn" onclick="setLang('fr',this)">Français</button>
+  </div>
+
+  <div class="shield">🔞</div>
+  <div class="title" id="t-title">Are you 21 or older?</div>
+  <p class="sub" id="t-sub">ZazaSync tracks <b>SQDC cannabis products</b> in Quebec. You must be <b>21 or older</b> to enter — as required by Quebec law.</p>
+
+  <label class="dob-label" id="t-dob">Enter your date of birth</label>
+  <div class="dob-row">
+    <select id="dob-day" onchange="checkReady()">
+      <option value="">Day</option>
+      <script>for(let i=1;i<=31;i++)document.write(`<option value="${i}">${i}</option>`)</script>
+    </select>
+    <select id="dob-month" onchange="checkReady()">
+      <option value="">Month</option>
+      <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option>
+      <option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option>
+      <option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option>
+      <option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option>
+    </select>
+    <select id="dob-year" onchange="checkReady()">
+      <option value="">Year</option>
+      <script>for(let y=new Date().getFullYear()-21;y>=1940;y--)document.write(`<option value="${y}">${y}</option>`)</script>
+    </select>
+  </div>
+
+  <div class="error-msg" id="err-msg">You must be 21 or older to access ZazaSync.</div>
+
+  <button class="btn-verify" id="btn-verify" onclick="verify()" disabled>Confirm age →</button>
+
+  <p class="legal" id="t-legal">By entering, you confirm you are 21+ and agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>. We do not sell cannabis. This site is for information only.</p>
+
+  <!-- DENIED -->
+  <div class="denied" id="denied-state">
+    <div class="denied-icon">🚫</div>
+    <div class="denied-title" id="t-denied-title">Access restricted</div>
+    <p class="denied-sub" id="t-denied-sub">You must be 21 or older to access ZazaSync. This is a Quebec legal requirement for cannabis-related platforms.</p>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div class="success-overlay" id="success-overlay">
+  <div class="success-logo"><div class="logo-dot" style="animation:pulse 2s infinite"></div>ZazaSync</div>
+  <div style="font-size:2rem">✓</div>
+  <div class="success-text">Age verified. Welcome.</div>
+</div>
+
+<script>
+const strings={
+  en:{title:"Are you 21 or older?",sub:"ZazaSync tracks <b>SQDC cannabis products</b> in Quebec. You must be <b>21 or older</b> to enter — as required by Quebec law.",dob:"Enter your date of birth",btn:"Confirm age →",legal:"By entering, you confirm you are 21+ and agree to our Terms and Privacy Policy. We do not sell cannabis.",deniedTitle:"Access restricted",deniedSub:"You must be 21 or older to access ZazaSync. This is a Quebec legal requirement."},
+  fr:{title:"Avez-vous 21 ans ou plus ?",sub:"ZazaSync suit les <b>produits cannabis SQDC</b> au Québec. Vous devez avoir <b>21 ans ou plus</b> pour accéder — conformément à la loi québécoise.",dob:"Entrez votre date de naissance",btn:"Confirmer l'âge →",legal:"En entrant, vous confirmez avoir 21 ans+ et acceptez nos Conditions et Politique de confidentialité. Nous ne vendons pas de cannabis.",deniedTitle:"Accès restreint",deniedSub:"Vous devez avoir 21 ans ou plus pour accéder à ZazaSync. C'est une exigence légale québécoise."}
+};
+let curLang='en';
+function setLang(lang,btn){
+  curLang=lang;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const s=strings[lang];
+  document.getElementById('t-title').textContent=s.title;
+  document.getElementById('t-sub').innerHTML=s.sub;
+  document.getElementById('t-dob').textContent=s.dob;
+  document.getElementById('btn-verify').textContent=s.btn;
+  document.getElementById('t-legal').innerHTML=s.legal;
+  document.getElementById('t-denied-title').textContent=s.deniedTitle;
+  document.getElementById('t-denied-sub').textContent=s.deniedSub;
+}
+function checkReady(){
+  const d=document.getElementById('dob-day').value;
+  const m=document.getElementById('dob-month').value;
+  const y=document.getElementById('dob-year').value;
+  document.getElementById('btn-verify').disabled=!(d&&m&&y);
+}
+function verify(){
+  const d=parseInt(document.getElementById('dob-day').value);
+  const m=parseInt(document.getElementById('dob-month').value)-1;
+  const y=parseInt(document.getElementById('dob-year').value);
+  const dob=new Date(y,m,d);
+  const today=new Date();
+  let age=today.getFullYear()-dob.getFullYear();
+  const monthDiff=today.getMonth()-dob.getMonth();
+  if(monthDiff<0||(monthDiff===0&&today.getDate()<dob.getDate()))age--;
+  if(age>=21){
+    sessionStorage.setItem('zaza_age_verified','1');
+    document.getElementById('success-overlay').classList.add('show');
+    setTimeout(()=>{window.location.href='zazasync-mobile.html'},1200);
+  } else {
+    document.getElementById('err-msg').style.display='block';
+    document.getElementById('btn-verify').style.display='none';
+    document.getElementById('denied-state').style.display='block';
+  }
+}
+// Skip if already verified this session
+if(sessionStorage.getItem('zaza_age_verified')==='1'){
+  window.location.href='zazasync-mobile.html';
+}
+</script>
+</body>
+</html>

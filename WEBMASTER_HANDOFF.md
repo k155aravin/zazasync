@@ -44,6 +44,41 @@ Important: the mobile files are not a separate app yet. They are a mobile-first 
 - merge them into responsive routes in the main site,
 - or rebuild them as React/Next.js mobile views using the same design and flow.
 
+## Future Monetizable Mobile Package
+
+These files are the future product/monetization layer. They are not a separate product; they should be wired into the same ZazaSync account, product, inventory, watchlist, and alert system.
+
+| File | Role | Build Notes |
+|---|---|---|
+| `zazasync-age-gate.html` | 21+ gate before cannabis inventory access | Keep before public/mobile cannabis inventory views |
+| `zazasync-mobile-product.html` | Mobile product detail page | Connect to real product, store availability, watchlist, and alert data |
+| `zazasync-sms-upsell.html` | SMS alert monetization page | Connect to Stripe/payment and Twilio/SMS provider later |
+| `zazasync-pwa-manifest.json` | PWA install manifest | Requires missing `/icons/icon-192.png` and `/icons/icon-512.png` assets |
+| `zazasync-sw.js` | Service worker for cache and push notification behavior | Register only after production routes and cache paths are confirmed |
+| `FUTURE_PRODUCT_README.md` | Full notes for the monetizable package | Read before implementation |
+
+Future monetization flow:
+
+```text
+Age gate
+  -> Mobile inventory
+  -> Product detail
+  -> Email alert
+  -> SMS upsell
+  -> Paid SMS alerts
+  -> PWA/push support later
+```
+
+Important for the webmaster:
+
+- SMS alerts are not just a UI toggle. They need backend alert logic, consent, STOP handling, and notification logs.
+- Start with email alerts first, then add SMS once the alert logic works.
+- SMS should be limited or premium because every message has a cost.
+- For recurring SMS premium plans, use Stripe Billing with Checkout Sessions and Stripe Prices.
+- Use Stripe Customer Portal for self-service cancellation and payment updates.
+- The PWA manifest references icon files that are not currently included.
+- The service worker is a prototype and must be tested against production routes before launch.
+
 ## User Flow
 
 The intended user journey is:
@@ -214,6 +249,8 @@ The frontend pages need these data areas:
 | Inventory | Product availability by store |
 | Watchlist | Products saved by each user |
 | Alerts | Email/SMS notification preferences |
+| Subscriptions | Paid SMS alerts, plan status, Stripe customer/subscription IDs |
+| Notification logs | Prevent repeat SMS/email spam and track delivery history |
 | Events | Search, product views, watchlist adds, alert sets |
 
 ## Suggested Database Tables
@@ -226,6 +263,7 @@ stores
 inventory
 watchlist
 alerts
+subscriptions
 user_events
 notification_logs
 ```

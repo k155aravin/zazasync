@@ -24,6 +24,12 @@ That is the main experience ZazaSync should make effortless.
 | [zazasync-mobile.html](./zazasync-mobile.html) | Mobile/PWA-style version of the inventory, watchlist, alerts, and profile experience |
 | [zazasync-mobile-auth.html](./zazasync-mobile-auth.html) | Mobile sign-in/create-account page |
 | [zazasync-mobile-onboarding.html](./zazasync-mobile-onboarding.html) | Mobile onboarding survey after account creation |
+| [zazasync-age-gate.html](./zazasync-age-gate.html) | Future 21+ age verification entry page for the mobile/PWA product |
+| [zazasync-mobile-product.html](./zazasync-mobile-product.html) | Future mobile product detail page with availability and alert options |
+| [zazasync-sms-upsell.html](./zazasync-sms-upsell.html) | Future SMS alert upsell / monetization page |
+| [zazasync-pwa-manifest.json](./zazasync-pwa-manifest.json) | Future PWA manifest for installable mobile web app behavior |
+| [zazasync-sw.js](./zazasync-sw.js) | Future service worker for caching and push-notification behavior |
+| [FUTURE_PRODUCT_README.md](./FUTURE_PRODUCT_README.md) | Notes for the monetizable mobile-first product package |
 | [WEBMASTER_HANDOFF.md](./WEBMASTER_HANDOFF.md) | File map explaining which pages belong together and what each page should become |
 | [zazasync-web-v2.html](./zazasync-web-v2.html) | Latest preferred visual direction: clean search-first desktop web prototype |
 | [TEAM_BRIEF.md](./TEAM_BRIEF.md) | Team product brief with strategy, UX flow, MVP priorities, and next decisions |
@@ -52,6 +58,26 @@ zazasync-mobile-onboarding.html
 ```
 
 The webmaster should treat the desktop and mobile packages as the same product expressed in two layouts. They should share the same future backend data: users, profiles, products, stores, inventory, watchlist, alerts, and notification logs.
+
+## Future Monetization Package
+
+The future product files add the monetization direction:
+
+```text
+zazasync-age-gate.html
+  -> 21+ access control before cannabis inventory
+
+zazasync-mobile-product.html
+  -> product detail and alert options
+
+zazasync-sms-upsell.html
+  -> paid/premium SMS alert upgrade
+
+zazasync-pwa-manifest.json + zazasync-sw.js
+  -> installable PWA and push-notification foundation
+```
+
+Read [FUTURE_PRODUCT_README.md](./FUTURE_PRODUCT_README.md) before building this part. It explains the SMS monetization idea, required backend tables, PWA icon requirements, service-worker notes, and compliance concerns.
 
 ## Preferred UX
 

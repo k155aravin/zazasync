@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="theme-color" content="#0d0f0e"/>
+<title>ZazaSync — SMS Alerts</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  :root{--bg:#0d0f0e;--bg2:#141714;--bg3:#1c1f1c;--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);--green:#4ade80;--green-bg:rgba(74,222,128,0.08);--text:#f0f2f0;--text2:#9ba89b;--text3:#6b786b;--amber:#fbbf24;--radius:12px;--radius-lg:18px}
+  html,body{min-height:100vh;min-height:100dvh;background:var(--bg);color:var(--text);font-family:'DM Sans',-apple-system,sans-serif}
+  .topbar{height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1.25rem;border-bottom:1px solid var(--border);background:rgba(13,15,14,0.95);backdrop-filter:blur(12px);position:sticky;top:0;z-index:50}
+  .logo{font-weight:700;font-size:1.1rem;color:var(--green);display:flex;align-items:center;gap:7px;letter-spacing:-0.02em}
+  .logo-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.35}}
+  .back{font-size:0.82rem;color:var(--text3);cursor:pointer}
+  .main{padding:2rem 1.25rem;padding-bottom:calc(120px + env(safe-area-inset-bottom))}
+
+  /* HERO */
+  .hero{text-align:center;margin-bottom:2.5rem}
+  .hero-icon{font-size:4rem;margin-bottom:1rem;line-height:1}
+  .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.25);color:var(--amber);font-size:0.72rem;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:1rem}
+  .hero-title{font-size:1.5rem;font-weight:700;letter-spacing:-0.03em;line-height:1.2;margin-bottom:0.75rem}
+  .hero-sub{font-size:0.85rem;color:var(--text3);line-height:1.6;max-width:320px;margin:0 auto}
+
+  /* COMPARISON */
+  .compare-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1.5rem}
+  .compare-header{display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid var(--border)}
+  .compare-col-head{padding:0.875rem 0.75rem;text-align:center;font-size:0.72rem;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em}
+  .compare-col-head.highlight{background:var(--green-bg);color:var(--green);border-left:1px solid rgba(74,222,128,0.15);border-right:1px solid rgba(74,222,128,0.15)}
+  .compare-row{display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid var(--border)}
+  .compare-row:last-child{border-bottom:none}
+  .compare-cell{padding:0.875rem 0.75rem;text-align:center;font-size:0.8rem;color:var(--text2)}
+  .compare-cell.feature{text-align:left;color:var(--text3);font-size:0.78rem}
+  .compare-cell.highlight{background:var(--green-bg);border-left:1px solid rgba(74,222,128,0.1);border-right:1px solid rgba(74,222,128,0.1);color:var(--text);font-weight:500}
+  .check{color:var(--green);font-size:1rem}
+  .cross{color:var(--text3);font-size:0.9rem}
+
+  /* PERKS */
+  .perks{display:flex;flex-direction:column;gap:10px;margin-bottom:1.5rem}
+  .perk{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;display:flex;align-items:flex-start;gap:12px}
+  .perk-icon{font-size:1.4rem;flex-shrink:0;width:32px;text-align:center}
+  .perk-title{font-size:0.88rem;font-weight:600;color:var(--text);margin-bottom:3px}
+  .perk-sub{font-size:0.78rem;color:var(--text3);line-height:1.4}
+
+  /* PHONE INPUT */
+  .phone-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1rem}
+  .phone-label{font-size:0.82rem;font-weight:500;color:var(--text2);margin-bottom:10px;display:block}
+  .phone-input-row{display:flex;gap:8px}
+  .country-select{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);font-size:0.9rem;font-family:inherit;padding:13px 10px;outline:none;-webkit-appearance:none;cursor:pointer;width:90px;flex-shrink:0}
+  .phone-input{flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);font-size:1rem;font-family:inherit;padding:13px;outline:none;-webkit-appearance:none}
+  .phone-input:focus,.country-select:focus{border-color:rgba(74,222,128,0.4)}
+  .phone-input::placeholder{color:var(--text3)}
+  .casl-note{font-size:0.72rem;color:var(--text3);margin-top:10px;line-height:1.5}
+  .casl-note a{color:var(--text3);text-decoration:underline}
+
+  /* BOTTOM CTA */
+  .bottom-cta{position:fixed;bottom:0;left:0;right:0;background:rgba(13,15,14,0.97);border-top:1px solid var(--border);padding:1rem 1.25rem;padding-bottom:calc(1rem + env(safe-area-inset-bottom));backdrop-filter:blur(12px)}
+  .price-row{display:flex;align-items:baseline;gap:8px;margin-bottom:0.75rem}
+  .price-big{font-size:1.5rem;font-weight:700;color:var(--green);letter-spacing:-0.02em}
+  .price-period{font-size:0.82rem;color:var(--text3)}
+  .price-note{font-size:0.72rem;color:var(--text3)}
+  .btn-primary{width:100%;background:var(--green);border:none;color:#0a1a0a;font-size:1rem;font-weight:700;font-family:inherit;padding:15px;border-radius:var(--radius);cursor:pointer;margin-bottom:8px;-webkit-appearance:none}
+  .btn-primary:active{opacity:0.85}
+  .btn-ghost{width:100%;background:none;border:1px solid var(--border2);color:var(--text3);font-size:0.9rem;font-family:inherit;padding:12px;border-radius:var(--radius);cursor:pointer;-webkit-appearance:none}
+
+  /* TOAST */
+  .toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:10px 20px;font-size:0.82rem;color:var(--text);z-index:200;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap}
+  .toast.show{opacity:1}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo"><div class="logo-dot"></div>ZazaSync</div>
+  <div class="back" onclick="history.back()">← Back</div>
+</div>
+
+<div class="main">
+
+  <div class="hero">
+    <div class="hero-icon">📱</div>
+    <div class="hero-badge">⚡ Fastest alerts</div>
+    <div class="hero-title">Never miss a restock again</div>
+    <p class="hero-sub">Upgrade to SMS alerts and get a text the second your product comes back — no app, no login, straight to your phone.</p>
+  </div>
+
+  <!-- COMPARISON TABLE -->
+  <div class="compare-card">
+    <div class="compare-header">
+      <div class="compare-col-head">Feature</div>
+      <div class="compare-col-head">Email</div>
+      <div class="compare-col-head highlight">📱 SMS</div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell feature">Alert speed</div>
+      <div class="compare-cell">~5–15 min</div>
+      <div class="compare-cell highlight">~1 min</div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell feature">See without opening app</div>
+      <div class="compare-cell"><span class="cross">✗</span></div>
+      <div class="compare-cell highlight"><span class="check">✓</span></div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell feature">Works on any phone</div>
+      <div class="compare-cell"><span class="check">✓</span></div>
+      <div class="compare-cell highlight"><span class="check">✓</span></div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell feature">Price drop alerts</div>
+      <div class="compare-cell"><span class="check">✓</span></div>
+      <div class="compare-cell highlight"><span class="check">✓</span></div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell feature">Preferred stores filter</div>
+      <div class="compare-cell"><span class="check">✓</span></div>
+      <div class="compare-cell highlight"><span class="check">✓</span></div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell feature">Cost</div>
+      <div class="compare-cell">Free</div>
+      <div class="compare-cell highlight" style="color:var(--green);font-weight:700">$2.99/mo</div>
+    </div>
+  </div>
+
+  <!-- PERKS -->
+  <div class="perks">
+    <div class="perk">
+      <div class="perk-icon">⚡</div>
+      <div><div class="perk-title">Instant notification</div><div class="perk-sub">SMS fires within 60 seconds of our crawler detecting a restock. Email can take 5–15 minutes to arrive.</div></div>
+    </div>
+    <div class="perk">
+      <div class="perk-icon">🎯</div>
+      <div><div class="perk-title">Your stores only</div><div class="perk-sub">We only text you when your preferred stores get the product — not random locations across Quebec.</div></div>
+    </div>
+    <div class="perk">
+      <div class="perk-icon">🚫</div>
+      <div><div class="perk-title">Cancel anytime</div><div class="perk-sub">Reply STOP to any message to cancel instantly. No questions, no friction — Canadian law (CASL) requires it.</div></div>
+    </div>
+  </div>
+
+  <!-- PHONE INPUT -->
+  <div class="phone-section">
+    <label class="phone-label">Your Canadian mobile number</label>
+    <div class="phone-input-row">
+      <select class="country-select"><option value="+1">🇨🇦 +1</option></select>
+      <input class="phone-input" type="tel" placeholder="514 000 0000" id="phone-input"/>
+    </div>
+    <div class="casl-note">By subscribing you agree to receive SMS alerts from ZazaSync. Reply STOP to unsubscribe at any time. Message frequency varies. Standard carrier rates may apply. See our <a href="#">Privacy Policy</a>.</div>
+  </div>
+
+</div>
+
+<!-- BOTTOM CTA -->
+<div class="bottom-cta">
+  <div class="price-row">
+    <span class="price-big">$2.99</span>
+    <span class="price-period">/ month</span>
+    <span class="price-note">· Cancel anytime</span>
+  </div>
+  <button class="btn-primary" onclick="subscribe()">Start SMS alerts →</button>
+  <button class="btn-ghost" onclick="history.back()">Keep free email alerts</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function subscribe(){
+  const phone=document.getElementById('phone-input').value.replace(/\D/g,'');
+  if(phone.length<10){showToast('Please enter a valid phone number');return;}
+  showToast('🎉 SMS alerts activated!');
+  setTimeout(()=>history.back(),2000);
+}
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+</script>
+</body>
+</html>
