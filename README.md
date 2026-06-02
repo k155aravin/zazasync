@@ -21,6 +21,7 @@ That is the main experience ZazaSync should make effortless.
 | [zazasync-onboarding.html](./zazasync-onboarding.html) | Post-signup onboarding survey for age range, region, language, shopping behavior, and preferred stores |
 | [zazasync-watchlist.html](./zazasync-watchlist.html) | Watchlist page for saved products, alert toggles, recent activity, and notification settings |
 | [zazasync-webmaster-brief.html](./zazasync-webmaster-brief.html) | HTML implementation brief for the webmaster/developer |
+| [WEBMASTER_HANDOFF.md](./WEBMASTER_HANDOFF.md) | File map explaining which pages belong together and what each page should become |
 | [zazasync-web-v2.html](./zazasync-web-v2.html) | Latest preferred visual direction: clean search-first desktop web prototype |
 | [TEAM_BRIEF.md](./TEAM_BRIEF.md) | Team product brief with strategy, UX flow, MVP priorities, and next decisions |
 

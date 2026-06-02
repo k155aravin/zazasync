@@ -1,0 +1,247 @@
+# ZazaSync Webmaster Handoff
+
+This document explains how the current prototype files fit together so the webmaster can turn them into a working site.
+
+## Main File Set
+
+These files belong together and should be treated as the current web handoff package:
+
+| File | Role | Connects To |
+|---|---|---|
+| `zazasync.html` | Main inventory homepage and search-first landing page | `zazasync-auth.html`, future product pages, future inventory data |
+| `zazasync-auth.html` | Sign in / create account page | `zazasync-onboarding.html`, `zazasync-watchlist.html` |
+| `zazasync-onboarding.html` | First-time user onboarding survey | `zazasync-watchlist.html` |
+| `zazasync-watchlist.html` | User watchlist, saved products, alert settings | `zazasync.html`, auth/user database, product inventory data |
+| `zazasync-webmaster-brief.html` | Technical implementation brief for the webmaster | Use as a developer checklist |
+
+## User Flow
+
+The intended user journey is:
+
+```text
+zazasync.html
+  -> user searches/browses products
+  -> user clicks Sign in or Get alerts
+  -> zazasync-auth.html
+  -> new user creates account
+  -> zazasync-onboarding.html
+  -> user chooses age range, region, language, frequency, preferred stores
+  -> zazasync-watchlist.html
+  -> user manages saved products and alert settings
+```
+
+Returning users can go:
+
+```text
+zazasync-auth.html
+  -> sign in
+  -> zazasync-watchlist.html
+```
+
+## What Each Page Should Become
+
+### `zazasync.html`
+
+Purpose: public-facing search and inventory discovery.
+
+Build work:
+
+- Connect search to real product data.
+- Make navigation links go to real routes.
+- Make `Sign in` open the auth page.
+- Make `Get alerts` open signup/auth or an alert capture flow.
+- Product cards should eventually link to real product detail pages.
+- `Watchlist` nav should require login and go to the watchlist page.
+
+Suggested production route:
+
+```text
+/
+/inventory
+```
+
+### `zazasync-auth.html`
+
+Purpose: account creation and login.
+
+Build work:
+
+- Connect email/password sign in.
+- Connect Google OAuth if desired.
+- Enforce 21+ confirmation on signup.
+- After signup, redirect to onboarding.
+- After login, redirect to watchlist if onboarding is complete.
+
+Suggested production routes:
+
+```text
+/signin
+/signup
+/auth
+```
+
+### `zazasync-onboarding.html`
+
+Purpose: capture profile/preferences that make alerts and analytics useful.
+
+Build work:
+
+- Save onboarding answers to the user profile.
+- Capture age range, region, language, shopping frequency, and preferred stores.
+- Do not collect exact birthdate unless legally necessary.
+- After completion, mark `onboarding_done = true`.
+- Redirect to watchlist.
+
+Suggested production route:
+
+```text
+/onboarding
+```
+
+### `zazasync-watchlist.html`
+
+Purpose: user dashboard for saved products and alerts.
+
+Build work:
+
+- Load saved products for the signed-in user.
+- Show in-stock and out-of-stock watched products.
+- Allow add/remove from watchlist.
+- Allow alert toggles for email and later SMS.
+- Show recent activity such as restocked, price drop, or alert sent.
+
+Suggested production route:
+
+```text
+/watchlist
+```
+
+### `zazasync-webmaster-brief.html`
+
+Purpose: developer-facing implementation notes.
+
+Build work:
+
+- Use this file as a checklist.
+- It explains auth, onboarding, watchlist, alert logic, event tracking, and suggested database tables.
+- It does not need to be a public user page.
+
+Suggested production route:
+
+```text
+/webmaster-brief
+```
+
+Or keep it private/internal only.
+
+## Older / Supporting Files
+
+These files are useful, but they are not the main current handoff package:
+
+| File | Role |
+|---|---|
+| `zazasync-web-v2.html` | Earlier copy of the search-first design direction |
+| `TEAM_BRIEF.md` | Product strategy and team discussion notes |
+| `ZazaSync_Team_Product_Brief.docx` | Word version of the product brief |
+| `scripts/build_zazasync_team_doc.py` | Script used to generate the Word brief |
+
+## Suggested Folder Structure For Production
+
+The webmaster can keep the prototype files in root for now, but a production app should eventually be organized like this:
+
+```text
+/
+  index.html or app entry
+  pages/
+    inventory
+    auth
+    onboarding
+    watchlist
+    product-detail
+  components/
+    nav
+    product-card
+    alert-modal
+    store-availability
+  data/
+    products
+    stores
+    inventory
+    alerts
+```
+
+If using React/Next.js, the pages would become routes instead of raw HTML files.
+
+## Backend / Database Pieces Needed
+
+The frontend pages need these data areas:
+
+| Area | Purpose |
+|---|---|
+| Users | Login, signup, profile, age confirmation |
+| Products | SQDC product catalog |
+| Stores | SQDC locations |
+| Inventory | Product availability by store |
+| Watchlist | Products saved by each user |
+| Alerts | Email/SMS notification preferences |
+| Events | Search, product views, watchlist adds, alert sets |
+
+## Suggested Database Tables
+
+```text
+users
+profiles
+products
+stores
+inventory
+watchlist
+alerts
+user_events
+notification_logs
+```
+
+## What To Build First
+
+Recommended order:
+
+1. Make `zazasync.html` the working homepage.
+2. Wire sign in / signup from `zazasync-auth.html`.
+3. Save onboarding data from `zazasync-onboarding.html`.
+4. Connect `zazasync-watchlist.html` to real user data.
+5. Add email alerts for out-of-stock products.
+6. Add SMS later.
+
+## Important Privacy Note
+
+ZazaSync can collect useful user preferences, but user data should be handled carefully.
+
+Recommended:
+
+- Use age ranges, not exact age, unless exact DOB is legally required.
+- Use region/city, not exact home address.
+- Ask for clear consent before using activity for analytics.
+- Sell/report only anonymized aggregate insights.
+- Do not sell identifiable user profiles.
+
+## Simple Summary
+
+The current file package should be understood like this:
+
+```text
+Public product search:
+  zazasync.html
+
+Account system:
+  zazasync-auth.html
+
+First-time profile setup:
+  zazasync-onboarding.html
+
+Saved products and alerts:
+  zazasync-watchlist.html
+
+Developer instructions:
+  zazasync-webmaster-brief.html
+```
+
+That is the complete handoff set.
