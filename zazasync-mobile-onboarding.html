@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="theme-color" content="#0d0f0e"/>
+<title>ZazaSync — Setup</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  :root{--bg:#0d0f0e;--bg2:#141714;--bg3:#1c1f1c;--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);--green:#4ade80;--green-bg:rgba(74,222,128,0.08);--text:#f0f2f0;--text2:#9ba89b;--text3:#6b786b;--radius:12px;--radius-lg:18px}
+  html,body{min-height:100vh;min-height:100dvh;background:var(--bg);color:var(--text);font-family:'DM Sans',-apple-system,sans-serif}
+  .shell{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+  .topbar{height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1.25rem;border-bottom:1px solid var(--border);background:rgba(13,15,14,0.95);backdrop-filter:blur(12px);position:sticky;top:0;z-index:50}
+  .logo{font-weight:700;font-size:1.1rem;color:var(--green);display:flex;align-items:center;gap:7px;letter-spacing:-0.02em}
+  .logo-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.35}}
+  .step-counter{font-size:0.78rem;color:var(--text3)}
+  .main{flex:1;padding:1.5rem 1.25rem;padding-bottom:calc(100px + env(safe-area-inset-bottom))}
+  .progress-track{height:3px;background:var(--bg3);border-radius:2px;margin-bottom:2rem;overflow:hidden}
+  .progress-fill{height:100%;background:var(--green);border-radius:2px;transition:width 0.4s ease}
+  .step{display:none}
+  .step.active{display:block}
+  .step-label{font-size:0.7rem;font-weight:600;color:var(--green);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.5rem}
+  .step-title{font-size:1.35rem;font-weight:700;letter-spacing:-0.03em;margin-bottom:0.4rem}
+  .step-sub{font-size:0.82rem;color:var(--text3);margin-bottom:1.75rem;line-height:1.5}
+  .opts{display:flex;flex-direction:column;gap:10px;margin-bottom:2rem}
+  .opts.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .opt{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);padding:1rem;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:12px;-webkit-tap-highlight-color:transparent}
+  .opt:active{background:var(--bg3)}
+  .opt.selected{border-color:var(--green);background:var(--green-bg)}
+  .opt-icon{font-size:1.3rem;width:28px;text-align:center;flex-shrink:0}
+  .opt-label{font-size:0.88rem;font-weight:500;color:var(--text)}
+  .opt-sub{font-size:0.72rem;color:var(--text3);margin-top:2px}
+  .opt-check{margin-left:auto;width:20px;height:20px;border-radius:50%;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:transparent;flex-shrink:0}
+  .opt.selected .opt-check{background:var(--green);border-color:var(--green);color:#0a1a0a}
+  .lang-row{display:flex;gap:8px;margin-bottom:2rem}
+  .lang-btn{flex:1;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);padding:12px 8px;cursor:pointer;font-family:inherit;font-size:0.85rem;font-weight:500;color:var(--text2);text-align:center;-webkit-appearance:none}
+  .lang-btn.selected{border-color:var(--green);background:var(--green-bg);color:var(--text)}
+  .store-search{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);font-size:1rem;font-family:inherit;padding:13px;outline:none;margin-bottom:10px;-webkit-appearance:none}
+  .store-search::placeholder{color:var(--text3)}
+  .store-search:focus{border-color:rgba(74,222,128,0.4)}
+  .store-list{display:flex;flex-direction:column;gap:8px;max-height:320px;overflow-y:auto;-webkit-overflow-scrolling:touch;margin-bottom:1.5rem}
+  .sitem{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:0.875rem 1rem;cursor:pointer;display:flex;align-items:center;justify-content:space-between;-webkit-tap-highlight-color:transparent}
+  .sitem:active{background:var(--bg2)}
+  .sitem.selected{border-color:var(--green);background:var(--green-bg)}
+  .sitem-name{font-size:0.85rem;font-weight:500;color:var(--text)}
+  .sitem-city{font-size:0.72rem;color:var(--text3);margin-top:2px}
+  .sitem-check{width:18px;height:18px;border-radius:50%;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:0.65rem;color:transparent;flex-shrink:0}
+  .sitem.selected .sitem-check{background:var(--green);border-color:var(--green);color:#0a1a0a}
+  .bottom-btns{position:fixed;bottom:0;left:0;right:0;background:rgba(13,15,14,0.97);border-top:1px solid var(--border);padding:1rem 1.25rem;padding-bottom:calc(1rem + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:8px;backdrop-filter:blur(12px)}
+  .btn-primary{width:100%;background:var(--green);border:none;color:#0a1a0a;font-size:1rem;font-weight:700;font-family:inherit;padding:15px;border-radius:var(--radius);cursor:pointer;-webkit-appearance:none}
+  .btn-primary:active{opacity:0.85}
+  .btn-primary:disabled{opacity:0.35}
+  .btn-ghost{width:100%;background:none;border:1px solid var(--border2);color:var(--text3);font-size:0.9rem;font-family:inherit;padding:13px;border-radius:var(--radius);cursor:pointer;-webkit-appearance:none}
+  .summary-box{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:1.5rem}
+  .sum-row{padding:0.875rem 1rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;font-size:0.83rem}
+  .sum-row:last-child{border-bottom:none}
+  .sum-label{color:var(--text3)}
+  .sum-val{color:var(--text);font-weight:500;text-align:right;max-width:55%}
+  .success-wrap{text-align:center;padding:1rem 0}
+  .success-icon{width:64px;height:64px;background:var(--green-bg);border:1px solid rgba(74,222,128,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin:0 auto 1.25rem}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="shell">
+  <div class="topbar">
+    <div class="logo"><div class="logo-dot"></div>ZazaSync</div>
+    <div class="step-counter" id="step-counter">Step 1 of 4</div>
+  </div>
+  <div class="main">
+    <div class="progress-track"><div class="progress-fill" id="progress" style="width:25%"></div></div>
+
+    <!-- STEP 1 AGE -->
+    <div class="step active" id="s1">
+      <div class="step-label">Step 1 of 4</div>
+      <div class="step-title">How old are you?</div>
+      <p class="step-sub">Anonymous — helps us understand who uses ZazaSync.</p>
+      <div class="opts grid2" id="age-opts">
+        <div class="opt" data-v="21-25" onclick="pick(this,'age-opts','btn1')"><div class="opt-label">21 – 25</div><div class="opt-check">✓</div></div>
+        <div class="opt" data-v="26-34" onclick="pick(this,'age-opts','btn1')"><div class="opt-label">26 – 34</div><div class="opt-check">✓</div></div>
+        <div class="opt" data-v="35-44" onclick="pick(this,'age-opts','btn1')"><div class="opt-label">35 – 44</div><div class="opt-check">✓</div></div>
+        <div class="opt" data-v="45-54" onclick="pick(this,'age-opts','btn1')"><div class="opt-label">45 – 54</div><div class="opt-check">✓</div></div>
+        <div class="opt" data-v="55+" onclick="pick(this,'age-opts','btn1')"><div class="opt-label">55+</div><div class="opt-check">✓</div></div>
+        <div class="opt" data-v="prefer-not" onclick="pick(this,'age-opts','btn1')"><div class="opt-label">Prefer not</div><div class="opt-check">✓</div></div>
+      </div>
+    </div>
+
+    <!-- STEP 2 REGION -->
+    <div class="step" id="s2">
+      <div class="step-label">Step 2 of 4</div>
+      <div class="step-title">Where in Quebec?</div>
+      <p class="step-sub">We surface stores and products nearest to you.</p>
+      <div class="opts" id="region-opts">
+        <div class="opt" data-v="montreal" onclick="pick(this,'region-opts','btn2')"><div class="opt-icon">🏙️</div><div><div class="opt-label">Montréal</div><div class="opt-sub">Island + surroundings</div></div><div class="opt-check">✓</div></div>
+        <div class="opt" data-v="quebec-city" onclick="pick(this,'region-opts','btn2')"><div class="opt-icon">🏰</div><div><div class="opt-label">Québec City</div><div class="opt-sub">Capitale-Nationale</div></div><div class="opt-check">✓</div></div>
+        <div class="opt" data-v="laval-rive-nord" onclick="pick(this,'region-opts','btn2')"><div class="opt-icon">🌆</div><div><div class="opt-label">Laval / Rive-Nord</div><div class="opt-sub">Laval, Mirabel, Blainville</div></div><div class="opt-check">✓</div></div>
+        <div class="opt" data-v="rive-sud" onclick="pick(this,'region-opts','btn2')"><div class="opt-icon">🌉</div><div><div class="opt-label">Rive-Sud</div><div class="opt-sub">Longueuil, Brossard</div></div><div class="opt-check">✓</div></div>
+        <div class="opt" data-v="other" onclick="pick(this,'region-opts','btn2')"><div class="opt-icon">🗺️</div><div><div class="opt-label">Other Quebec</div><div class="opt-sub">Gatineau, Sherbrooke…</div></div><div class="opt-check">✓</div></div>
+      </div>
+    </div>
+
+    <!-- STEP 3 FREQUENCY + LANGUAGE -->
+    <div class="step" id="s3">
+      <div class="step-label">Step 3 of 4</div>
+      <div class="step-title">Quick questions</div>
+      <p class="step-sub">Takes 10 seconds. Helps personalize your experience.</p>
+      <div style="font-size:0.82rem;font-weight:500;color:var(--text2);margin-bottom:10px">How often do you visit SQDC?</div>
+      <div class="opts grid2" id="freq-opts">
+        <div class="opt" data-v="weekly" onclick="pick(this,'freq-opts');checkS3()"><div class="opt-label">Weekly</div><div class="opt-check">✓</div></div>
+        <div class="opt" data-v="biweekly" onclick="pick(this,'freq-opts');checkS3()"><div class="opt-label">Every 2 weeks</div><div class="opt-check">✓</div></div>
+        <div class="opt" data-v="monthly" onclick="pick(this,'freq-opts');checkS3()"><div class="opt-label">Monthly</div><div class="opt-check">✓</div></div>
+        <div class="opt" data-v="rarely" onclick="pick(this,'freq-opts');checkS3()"><div class="opt-label">Rarely</div><div class="opt-check">✓</div></div>
+      </div>
+      <div style="font-size:0.82rem;font-weight:500;color:var(--text2);margin-bottom:10px">Preferred language</div>
+      <div class="lang-row">
+        <button class="lang-btn" onclick="pickLang(this,'fr')">🇫🇷 Français</button>
+        <button class="lang-btn" onclick="pickLang(this,'en')">🇬🇧 English</button>
+        <button class="lang-btn" onclick="pickLang(this,'both')">Both</button>
+      </div>
+    </div>
+
+    <!-- STEP 4 STORES -->
+    <div class="step" id="s4">
+      <div class="step-label">Step 4 of 4</div>
+      <div class="step-title">Your favourite stores</div>
+      <p class="step-sub">Pick up to 3 SQDC locations. Alerts will prioritize these.</p>
+      <input class="store-search" type="search" placeholder="Search stores…" oninput="filterS(this.value)"/>
+      <div class="store-list" id="store-list"></div>
+    </div>
+
+    <!-- STEP 5 SUCCESS -->
+    <div class="step" id="s5">
+      <div class="success-wrap">
+        <div class="success-icon">🎉</div>
+        <div style="font-size:1.35rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem">You're all set!</div>
+        <p style="font-size:0.82rem;color:var(--text3);margin-bottom:1.75rem;line-height:1.6">Here's what we saved to personalize your ZazaSync.</p>
+        <div class="summary-box">
+          <div class="sum-row"><span class="sum-label">Age range</span><span class="sum-val" id="sum-age">—</span></div>
+          <div class="sum-row"><span class="sum-label">Region</span><span class="sum-val" id="sum-region">—</span></div>
+          <div class="sum-row"><span class="sum-label">SQDC visits</span><span class="sum-val" id="sum-freq">—</span></div>
+          <div class="sum-row"><span class="sum-label">Language</span><span class="sum-val" id="sum-lang">—</span></div>
+          <div class="sum-row"><span class="sum-label">Preferred stores</span><span class="sum-val" id="sum-stores">—</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM BUTTONS -->
+  <div class="bottom-btns">
+    <button class="btn-primary" id="btn-next" onclick="nextStep()" disabled>Continue →</button>
+    <button class="btn-ghost" id="btn-back" onclick="prevStep()" style="display:none">← Back</button>
+  </div>
+</div>
+
+<script>
+const stores=[
+  {n:'SQDC Ste-Catherine Ouest',c:'Montréal'},{n:'SQDC St-Laurent',c:'Montréal'},{n:'SQDC Acadie',c:'Montréal'},
+  {n:'SQDC St-Hubert',c:'Montréal'},{n:'SQDC Côte-des-Neiges',c:'Montréal'},{n:'SQDC Verdun',c:'Montréal'},
+  {n:'SQDC Rosemont',c:'Montréal'},{n:'SQDC Anjou',c:'Montréal'},
+  {n:'SQDC Laval — Carrefour',c:'Laval'},{n:'SQDC Laval — Centropolis',c:'Laval'},
+  {n:'SQDC Brossard',c:'Brossard'},{n:'SQDC Longueuil',c:'Longueuil'},
+  {n:'SQDC Saint-Bruno',c:'Saint-Bruno'},{n:'SQDC Mirabel',c:'Mirabel'},
+  {n:'SQDC Blainville',c:'Blainville'},{n:'SQDC Québec — Laurier',c:'Québec City'},
+  {n:'SQDC Québec — Ste-Foy',c:'Québec City'},{n:'SQDC Gatineau',c:'Gatineau'},
+  {n:'SQDC Sherbrooke',c:'Sherbrooke'},{n:'SQDC Trois-Rivières',c:'Trois-Rivières'},
+];
+let sel={age:'',region:'',freq:'',lang:'',stores:[]};
+let curStep=1;
+const rMap={montreal:'Montréal','quebec-city':'Québec City','laval-rive-nord':'Laval/Rive-Nord','rive-sud':'Rive-Sud',other:'Other Quebec'};
+const fMap={weekly:'Weekly',biweekly:'Every 2 weeks',monthly:'Monthly',rarely:'Rarely'};
+const lMap={fr:'Français',en:'English',both:'Both'};
+
+function renderStores(list){
+  document.getElementById('store-list').innerHTML=list.map(s=>`
+    <div class="sitem ${sel.stores.includes(s.n)?'selected':''}" onclick="toggleS(this,'${s.n}')">
+      <div><div class="sitem-name">${s.n}</div><div class="sitem-city">${s.c}</div></div>
+      <div class="sitem-check">✓</div>
+    </div>`).join('');
+}
+function filterS(q){renderStores(stores.filter(s=>(s.n+s.c).toLowerCase().includes(q.toLowerCase())))}
+function toggleS(el,name){
+  if(el.classList.contains('selected')){el.classList.remove('selected');sel.stores=sel.stores.filter(s=>s!==name);}
+  else{if(sel.stores.length>=3){alert('Max 3 stores');return;}el.classList.add('selected');sel.stores.push(name);}
+}
+function pick(el,group,btnId){
+  document.querySelectorAll('#'+group+' .opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  const v=el.dataset.v;
+  if(group==='age-opts')sel.age=v;
+  if(group==='region-opts')sel.region=v;
+  if(group==='freq-opts')sel.freq=v;
+  if(btnId)document.getElementById('btn-next').disabled=false;
+}
+function pickLang(el,lang){
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');sel.lang=lang;checkS3();
+}
+function checkS3(){document.getElementById('btn-next').disabled=!(sel.freq&&sel.lang)}
+function goStep(n){
+  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s'+n).classList.add('active');
+  document.getElementById('step-counter').textContent=n<=4?'Step '+n+' of 4':'Complete ✓';
+  document.getElementById('progress').style.width=(Math.min(n,4)/4*100)+'%';
+  document.getElementById('btn-back').style.display=n>1?'block':'none';
+  const nextBtn=document.getElementById('btn-next');
+  if(n===1)nextBtn.disabled=!sel.age;
+  if(n===2)nextBtn.disabled=!sel.region;
+  if(n===3)nextBtn.disabled=!(sel.freq&&sel.lang);
+  if(n===4){nextBtn.disabled=false;nextBtn.textContent='Finish setup →';}
+  if(n===5){nextBtn.textContent='Go to inventory →';nextBtn.disabled=false;document.getElementById('btn-back').style.display='none';fillSummary();}
+  curStep=n;
+}
+function nextStep(){if(curStep<5)goStep(curStep+1);else window.location.href='zazasync-mobile.html';}
+function prevStep(){if(curStep>1)goStep(curStep-1);}
+function fillSummary(){
+  document.getElementById('sum-age').textContent=sel.age||'—';
+  document.getElementById('sum-region').textContent=rMap[sel.region]||'—';
+  document.getElementById('sum-freq').textContent=fMap[sel.freq]||'—';
+  document.getElementById('sum-lang').textContent=lMap[sel.lang]||'—';
+  document.getElementById('sum-stores').textContent=sel.stores.length?sel.stores.map(s=>s.replace('SQDC ','')).join(', '):'None selected';
+}
+renderStores(stores);
+</script>
+</body>
+</html>

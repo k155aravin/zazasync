@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="theme-color" content="#0d0f0e"/>
+<title>ZazaSync</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  :root{
+    --bg:#0d0f0e;--bg2:#141714;--bg3:#1c1f1c;
+    --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+    --green:#4ade80;--green-bg:rgba(74,222,128,0.08);--green-bg2:rgba(74,222,128,0.14);
+    --text:#f0f2f0;--text2:#9ba89b;--text3:#6b786b;
+    --amber:#fbbf24;--amber-bg:rgba(251,191,36,0.08);
+    --red:#f87171;--red-bg:rgba(248,113,113,0.08);
+    --radius:12px;--radius-lg:18px;
+    --nav-h:56px;--tab-h:64px;
+  }
+  html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif}
+
+  /* LAYOUT SHELL */
+  .shell{display:flex;flex-direction:column;height:100vh;height:100dvh}
+  .topbar{height:var(--nav-h);background:rgba(13,15,14,0.96);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 1rem;flex-shrink:0;position:relative;z-index:50;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+  .scroll-area{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+  .bottom-nav{height:var(--tab-h);background:rgba(13,15,14,0.96);border-top:1px solid var(--border);display:flex;align-items:stretch;flex-shrink:0;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding-bottom:env(safe-area-inset-bottom)}
+
+  /* TOP BAR */
+  .logo{font-weight:700;font-size:1.1rem;color:var(--green);display:flex;align-items:center;gap:7px;letter-spacing:-0.02em}
+  .logo-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.35}}
+  .topbar-right{display:flex;align-items:center;gap:8px}
+  .icon-btn{width:36px;height:36px;border-radius:10px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;color:var(--text2)}
+  .notif-dot{position:relative}
+  .notif-dot::after{content:'';position:absolute;top:7px;right:7px;width:6px;height:6px;border-radius:50%;background:var(--green);border:1.5px solid var(--bg)}
+
+  /* BOTTOM NAV */
+  .tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;border:none;background:none;color:var(--text3);font-family:inherit;font-size:0.6rem;font-weight:500;padding-top:8px;transition:color 0.15s;letter-spacing:0.02em;text-transform:uppercase}
+  .tab-btn.active{color:var(--green)}
+  .tab-icon{font-size:1.3rem;line-height:1}
+
+  /* PAGES */
+  .page{display:none;padding-bottom:1rem}
+  .page.active{display:block}
+
+  /* SEARCH HEADER */
+  .search-section{padding:1rem 1rem 0.75rem;background:var(--bg)}
+  .search-bar{display:flex;align-items:center;gap:10px;background:var(--bg2);border:1px solid var(--border2);border-radius:14px;padding:0 14px;height:48px}
+  .search-icon{color:var(--text3);font-size:1rem;flex-shrink:0}
+  .search-input{flex:1;background:none;border:none;color:var(--text);font-size:0.95rem;font-family:inherit;outline:none}
+  .search-input::placeholder{color:var(--text3)}
+  .search-mic{color:var(--text3);font-size:1rem;cursor:pointer}
+
+  /* FILTER CHIPS SCROLL */
+  .chips-scroll{display:flex;gap:8px;overflow-x:auto;padding:0.75rem 1rem;scrollbar-width:none}
+  .chips-scroll::-webkit-scrollbar{display:none}
+  .chip{flex-shrink:0;background:var(--bg2);border:1px solid var(--border);color:var(--text2);font-size:0.78rem;font-weight:500;padding:7px 14px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:all 0.15s;font-family:inherit}
+  .chip.active{background:var(--green-bg);border-color:rgba(74,222,128,0.3);color:var(--green)}
+
+  /* STATS STRIP */
+  .stats-strip{display:flex;gap:0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg2);margin-bottom:1.25rem}
+  .stat-cell{flex:1;padding:0.75rem 0;text-align:center;border-right:1px solid var(--border)}
+  .stat-cell:last-child{border-right:none}
+  .stat-n{font-size:1rem;font-weight:700;color:var(--text);letter-spacing:-0.02em}
+  .stat-n.g{color:var(--green)}
+  .stat-l{font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-top:2px}
+
+  /* SECTION */
+  .section{padding:0 1rem;margin-bottom:1.5rem}
+  .section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem}
+  .section-title{font-size:0.88rem;font-weight:600;color:var(--text);display:flex;align-items:center;gap:7px}
+  .section-badge{font-size:0.65rem;font-weight:600;background:var(--green-bg);color:var(--green);border:1px solid rgba(74,222,128,0.2);padding:2px 7px;border-radius:999px}
+  .section-link{font-size:0.78rem;color:var(--text3)}
+
+  /* PRODUCT CARDS — horizontal scroll */
+  .cards-scroll{display:flex;gap:10px;overflow-x:auto;padding:0 1rem 0.5rem;margin:0 -1rem;scrollbar-width:none}
+  .cards-scroll::-webkit-scrollbar{display:none}
+  .pcard{flex-shrink:0;width:155px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:0.875rem;cursor:pointer;transition:border-color 0.15s;position:relative}
+  .pcard:active{border-color:var(--border2)}
+  .pcard-img{width:100%;aspect-ratio:1;background:var(--bg3);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:2rem;margin-bottom:0.625rem}
+  .pcard-brand{font-size:0.62rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:2px}
+  .pcard-name{font-size:0.8rem;font-weight:500;color:var(--text);line-height:1.3;margin-bottom:6px}
+  .pcard-tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px}
+  .pcard-tag{font-size:0.6rem;color:var(--text3);background:var(--bg);border:1px solid var(--border);padding:2px 6px;border-radius:4px}
+  .pcard-footer{display:flex;align-items:center;justify-content:space-between}
+  .pcard-price{font-size:0.85rem;font-weight:700;color:var(--text)}
+  .stock-pill{font-size:0.62rem;font-weight:600;padding:3px 7px;border-radius:999px}
+  .s-in{background:var(--green-bg);color:var(--green);border:1px solid rgba(74,222,128,0.2)}
+  .s-out{background:var(--red-bg);color:var(--red);border:1px solid rgba(248,113,113,0.2)}
+  .s-low{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(251,191,36,0.2)}
+  .heart-btn{position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:7px;background:rgba(13,15,14,0.7);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.75rem;color:var(--text3);cursor:pointer}
+  .heart-btn.liked{color:var(--green)}
+
+  /* RESTOCK LIST */
+  .restock-list{display:flex;flex-direction:column;gap:8px}
+  .ritem{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:0.75rem;display:flex;align-items:center;gap:10px;cursor:pointer}
+  .ritem:active{background:var(--bg3)}
+  .ritem-emoji{font-size:1.3rem;width:32px;text-align:center;flex-shrink:0}
+  .ritem-info{flex:1;min-width:0}
+  .ritem-name{font-size:0.82rem;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ritem-brand{font-size:0.7rem;color:var(--text3);margin-top:1px}
+  .ritem-right{text-align:right;flex-shrink:0}
+  .ritem-price{font-size:0.82rem;font-weight:700;color:var(--text)}
+  .ritem-time{font-size:0.65rem;color:var(--green);margin-top:2px}
+
+  /* ALERT BANNER */
+  .alert-banner{margin:0 1rem 1.5rem;background:var(--green-bg);border:1px solid rgba(74,222,128,0.18);border-radius:var(--radius-lg);padding:1rem}
+  .alert-banner-title{font-size:0.88rem;font-weight:600;margin-bottom:4px}
+  .alert-banner-sub{font-size:0.75rem;color:var(--text2);margin-bottom:0.875rem;line-height:1.5}
+  .alert-input-row{display:flex;gap:8px}
+  .alert-input{flex:1;background:var(--bg);border:1px solid var(--border2);border-radius:10px;color:var(--text);font-size:0.85rem;font-family:inherit;padding:9px 12px;outline:none}
+  .alert-input::placeholder{color:var(--text3)}
+  .btn-sm-green{background:var(--green);border:none;color:#0a1a0a;font-size:0.8rem;font-weight:700;font-family:inherit;padding:9px 14px;border-radius:10px;cursor:pointer;white-space:nowrap}
+
+  /* STORES */
+  .stores-list{display:flex;flex-direction:column;gap:8px}
+  .store-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:0.75rem 1rem;display:flex;align-items:center;gap:10px;cursor:pointer}
+  .store-item:active{background:var(--bg3)}
+  .store-icon-box{width:36px;height:36px;border-radius:8px;background:var(--green-bg);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+  .store-info{flex:1;min-width:0}
+  .store-name{font-size:0.82rem;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .store-city{font-size:0.7rem;color:var(--text3)}
+  .store-count{font-size:0.72rem;font-weight:600;color:var(--green);background:var(--green-bg);border:1px solid rgba(74,222,128,0.15);padding:3px 9px;border-radius:999px;flex-shrink:0}
+
+  /* WATCHLIST PAGE */
+  .wl-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:1rem;margin-bottom:0.5rem}
+  .wl-stat{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:0.875rem}
+  .wl-stat-label{font-size:0.65rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px}
+  .wl-stat-num{font-size:1.4rem;font-weight:700;letter-spacing:-0.02em}
+  .wl-stat-num.g{color:var(--green)}
+  .wl-stat-num.a{color:var(--amber)}
+  .wl-items{display:flex;flex-direction:column;gap:8px}
+  .wl-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:0.875rem;display:flex;align-items:center;gap:12px;cursor:pointer}
+  .wl-item:active{background:var(--bg3)}
+  .wl-emoji{width:42px;height:42px;background:var(--bg3);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+  .wl-info{flex:1;min-width:0}
+  .wl-name{font-size:0.85rem;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .wl-brand{font-size:0.72rem;color:var(--text3);margin-top:2px}
+  .wl-right{text-align:right;flex-shrink:0}
+  .wl-price{font-size:0.85rem;font-weight:700;color:var(--text);margin-bottom:4px}
+  .toggle-sm{width:38px;height:22px;background:var(--bg3);border:1px solid var(--border2);border-radius:999px;cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0;margin-left:auto}
+  .toggle-sm.on{background:var(--green);border-color:var(--green)}
+  .toggle-thumb-sm{width:16px;height:16px;background:var(--text3);border-radius:50%;position:absolute;top:2px;left:2px;transition:all 0.2s}
+  .toggle-sm.on .toggle-thumb-sm{background:#0a1a0a;left:18px}
+
+  /* ALERTS PAGE */
+  .alerts-section{padding:1rem}
+  .alert-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1rem}
+  .alert-card-header{padding:0.875rem 1rem;border-bottom:1px solid var(--border);font-size:0.82rem;font-weight:600;color:var(--text);display:flex;align-items:center;justify-content:space-between}
+  .alert-row{padding:0.875rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .alert-row:last-child{border-bottom:none}
+  .alert-row-label{font-size:0.83rem;font-weight:500;color:var(--text)}
+  .alert-row-sub{font-size:0.72rem;color:var(--text3);margin-top:2px}
+  .activity-feed{display:flex;flex-direction:column;gap:8px}
+  .act-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:0.75rem;display:flex;align-items:flex-start;gap:10px}
+  .act-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+  .act-dot.g{background:var(--green)}
+  .act-dot.a{background:var(--amber)}
+  .act-text{font-size:0.8rem;color:var(--text2);flex:1;line-height:1.5}
+  .act-text b{color:var(--text)}
+  .act-time{font-size:0.68rem;color:var(--text3);flex-shrink:0}
+
+  /* PROFILE PAGE */
+  .profile-header{padding:1.5rem 1rem 1rem;display:flex;align-items:center;gap:14px}
+  .avatar{width:56px;height:56px;border-radius:50%;background:var(--green-bg);border:2px solid rgba(74,222,128,0.3);display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:700;color:var(--green);flex-shrink:0}
+  .profile-name{font-size:1.05rem;font-weight:700;letter-spacing:-0.02em}
+  .profile-email{font-size:0.78rem;color:var(--text3);margin-top:2px}
+  .profile-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin:0 1rem 1rem}
+  .profile-row{padding:0.875rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+  .profile-row:last-child{border-bottom:none}
+  .profile-row:active{background:var(--bg3)}
+  .profile-row-label{font-size:0.85rem;font-weight:500;color:var(--text)}
+  .profile-row-val{font-size:0.8rem;color:var(--text3);display:flex;align-items:center;gap:6px}
+  .chevron{font-size:0.7rem;color:var(--text3)}
+  .demo-chips{display:flex;gap:6px;flex-wrap:wrap;margin:0 1rem 1rem}
+  .demo-chip{background:var(--green-bg);border:1px solid rgba(74,222,128,0.2);color:var(--green);font-size:0.72rem;font-weight:500;padding:5px 12px;border-radius:999px}
+  .signout-btn{margin:0 1rem;width:calc(100% - 2rem);background:none;border:1px solid rgba(248,113,113,0.3);color:var(--red);font-size:0.875rem;font-family:inherit;padding:13px;border-radius:var(--radius);cursor:pointer;font-weight:500}
+
+  /* BOTTOM SAFE AREA */
+  .safe-bottom{height:env(safe-area-inset-bottom)}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="logo"><div class="logo-dot"></div>ZazaSync</div>
+    <div class="topbar-right">
+      <div class="icon-btn notif-dot" onclick="showTab('alerts')">🔔</div>
+      <div class="icon-btn" onclick="showTab('profile')">👤</div>
+    </div>
+  </div>
+
+  <!-- SCROLL AREA -->
+  <div class="scroll-area" id="scroll-area">
+
+    <!-- HOME PAGE -->
+    <div class="page active" id="page-home">
+      <div class="search-section">
+        <div class="search-bar">
+          <span class="search-icon">🔍</span>
+          <input class="search-input" type="text" placeholder='Try "pre-roll under $20"…'/>
+          <span class="search-mic">🎤</span>
+        </div>
+      </div>
+
+      <div class="chips-scroll">
+        <button class="chip active" onclick="setChip(this)">In stock</button>
+        <button class="chip" onclick="setChip(this)">New drops</button>
+        <button class="chip" onclick="setChip(this)">Back in stock</button>
+        <button class="chip" onclick="setChip(this)">Under $25</button>
+        <button class="chip" onclick="setChip(this)">Pre-rolls</button>
+        <button class="chip" onclick="setChip(this)">CBD</button>
+        <button class="chip" onclick="setChip(this)">Indica</button>
+        <button class="chip" onclick="setChip(this)">Sativa</button>
+      </div>
+
+      <div class="stats-strip">
+        <div class="stat-cell"><div class="stat-n g">289</div><div class="stat-l">Products</div></div>
+        <div class="stat-cell"><div class="stat-n">106</div><div class="stat-l">Stores</div></div>
+        <div class="stat-cell"><div class="stat-n g">Live</div><div class="stat-l">Snapshot</div></div>
+        <div class="stat-cell"><div class="stat-n">21+</div><div class="stat-l">Only</div></div>
+      </div>
+
+      <!-- POPULAR -->
+      <div class="section">
+        <div class="section-head">
+          <div class="section-title">Popular right now <span class="section-badge">Live</span></div>
+          <span class="section-link">See all →</span>
+        </div>
+      </div>
+      <div class="cards-scroll">
+        <div class="pcard">
+          <div class="heart-btn" onclick="likeCard(this)">♡</div>
+          <div class="pcard-img">🌿</div>
+          <div class="pcard-brand">ROSE HIGHWAY</div>
+          <div class="pcard-name">Pineapple Punch Pre-Roll 3×0.5g</div>
+          <div class="pcard-tags"><span class="pcard-tag">Sativa</span><span class="pcard-tag">THC 24%</span></div>
+          <div class="pcard-footer"><span class="pcard-price">$18.95</span><span class="stock-pill s-in">In stock</span></div>
+        </div>
+        <div class="pcard">
+          <div class="heart-btn" onclick="likeCard(this)">♡</div>
+          <div class="pcard-img">💚</div>
+          <div class="pcard-brand">TREMBLANT</div>
+          <div class="pcard-name">Kush Mints Flower 3.5g</div>
+          <div class="pcard-tags"><span class="pcard-tag">Indica</span><span class="pcard-tag">THC 28%</span></div>
+          <div class="pcard-footer"><span class="pcard-price">$32.50</span><span class="stock-pill s-low">Low</span></div>
+        </div>
+        <div class="pcard">
+          <div class="heart-btn" onclick="likeCard(this)">♡</div>
+          <div class="pcard-img">🍃</div>
+          <div class="pcard-brand">SOLEI</div>
+          <div class="pcard-name">Balance CBD Oil 30ml</div>
+          <div class="pcard-tags"><span class="pcard-tag">CBD</span><span class="pcard-tag">25mg/ml</span></div>
+          <div class="pcard-footer"><span class="pcard-price">$54.99</span><span class="stock-pill s-in">In stock</span></div>
+        </div>
+        <div class="pcard">
+          <div class="heart-btn" onclick="likeCard(this)">♡</div>
+          <div class="pcard-img">🔥</div>
+          <div class="pcard-brand">REDECAN</div>
+          <div class="pcard-name">Reign Drops 10:10 30ml</div>
+          <div class="pcard-tags"><span class="pcard-tag">Hybrid</span><span class="pcard-tag">THC+CBD</span></div>
+          <div class="pcard-footer"><span class="pcard-price">$39.00</span><span class="stock-pill s-out">Out</span></div>
+        </div>
+        <div class="pcard">
+          <div class="heart-btn" onclick="likeCard(this)">♡</div>
+          <div class="pcard-img">💨</div>
+          <div class="pcard-brand">PAX</div>
+          <div class="pcard-name">Era Pod — Mango Haze</div>
+          <div class="pcard-tags"><span class="pcard-tag">Vape</span><span class="pcard-tag">THC 76%</span></div>
+          <div class="pcard-footer"><span class="pcard-price">$44.95</span><span class="stock-pill s-in">In stock</span></div>
+        </div>
+      </div>
+
+      <!-- BACK IN STOCK -->
+      <div class="section" style="margin-top:1.5rem">
+        <div class="section-head">
+          <div class="section-title">Back in stock <span class="section-badge">Updated</span></div>
+          <span class="section-link">See all →</span>
+        </div>
+        <div class="restock-list">
+          <div class="ritem">
+            <div class="ritem-emoji">🌿</div>
+            <div class="ritem-info"><div class="ritem-name">Blue Dream Flower 3.5g</div><div class="ritem-brand">Broken Coast · Sativa · THC 22%</div></div>
+            <div class="ritem-right"><div class="ritem-price">$29.95</div><div class="ritem-time">12 min ago</div></div>
+          </div>
+          <div class="ritem">
+            <div class="ritem-emoji">💚</div>
+            <div class="ritem-info"><div class="ritem-name">Watermelon Zkittlez 5-pack</div><div class="ritem-brand">Spinach · Indica · THC 19%</div></div>
+            <div class="ritem-right"><div class="ritem-price">$22.99</div><div class="ritem-time">34 min ago</div></div>
+          </div>
+          <div class="ritem">
+            <div class="ritem-emoji">🍃</div>
+            <div class="ritem-info"><div class="ritem-name">Midnight CBD Capsules 30pk</div><div class="ritem-brand">Canopy · CBD · 25mg</div></div>
+            <div class="ritem-right"><div class="ritem-price">$64.99</div><div class="ritem-time">1h ago</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ALERT BANNER -->
+      <div class="alert-banner">
+        <div class="alert-banner-title">🔔 Get notified when it's back</div>
+        <div class="alert-banner-sub">Free email alert — no account needed to start.</div>
+        <div class="alert-input-row">
+          <input class="alert-input" type="email" placeholder="your@email.com"/>
+          <button class="btn-sm-green">Alert me</button>
+        </div>
+      </div>
+
+      <!-- STORES -->
+      <div class="section">
+        <div class="section-head">
+          <div class="section-title">Top stores near you</div>
+          <span class="section-link">All stores →</span>
+        </div>
+        <div class="stores-list">
+          <div class="store-item"><div class="store-icon-box">🏪</div><div class="store-info"><div class="store-name">SQDC Ste-Catherine Ouest</div><div class="store-city">Montréal · 4 min ago</div></div><div class="store-count">312</div></div>
+          <div class="store-item"><div class="store-icon-box">🏪</div><div class="store-info"><div class="store-name">SQDC Laval — Carrefour</div><div class="store-city">Laval · 7 min ago</div></div><div class="store-count">287</div></div>
+          <div class="store-item"><div class="store-icon-box">🏪</div><div class="store-info"><div class="store-name">SQDC Brossard</div><div class="store-city">Brossard · 9 min ago</div></div><div class="store-count">261</div></div>
+        </div>
+      </div>
+      <div style="height:1rem"></div>
+    </div>
+
+    <!-- WATCHLIST PAGE -->
+    <div class="page" id="page-watchlist">
+      <div class="wl-stats">
+        <div class="wl-stat"><div class="wl-stat-label">Watching</div><div class="wl-stat-num">6</div></div>
+        <div class="wl-stat"><div class="wl-stat-label">In stock now</div><div class="wl-stat-num g">3</div></div>
+        <div class="wl-stat"><div class="wl-stat-label">Waiting</div><div class="wl-stat-num a">3</div></div>
+        <div class="wl-stat"><div class="wl-stat-label">Alerts sent</div><div class="wl-stat-num">12</div></div>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><div class="section-title">In stock now <span class="section-badge">3</span></div></div>
+        <div class="wl-items">
+          <div class="wl-item"><div class="wl-emoji">🌿</div><div class="wl-info"><div class="wl-name">Pineapple Punch Pre-Roll 3×0.5g</div><div class="wl-brand">Rose Highway · Sativa</div></div><div class="wl-right"><div class="wl-price">$18.95</div><span class="stock-pill s-in">In stock</span></div></div>
+          <div class="wl-item"><div class="wl-emoji">🍃</div><div class="wl-info"><div class="wl-name">Balance CBD Oil 30ml</div><div class="wl-brand">Solei · CBD</div></div><div class="wl-right"><div class="wl-price">$54.99</div><span class="stock-pill s-in">In stock</span></div></div>
+          <div class="wl-item"><div class="wl-emoji">🌱</div><div class="wl-info"><div class="wl-name">Jean Guy Flower 28g</div><div class="wl-brand">7ACRES · Sativa</div></div><div class="wl-right"><div class="wl-price">$149.99</div><span class="stock-pill s-in">In stock</span></div></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><div class="section-title">Waiting for restock <span class="section-badge" style="background:var(--amber-bg);color:var(--amber);border-color:rgba(251,191,36,0.2)">3</span></div></div>
+        <div class="wl-items">
+          <div class="wl-item"><div class="wl-emoji">🔥</div><div class="wl-info"><div class="wl-name">Reign Drops 10:10 30ml</div><div class="wl-brand">Redecan · Hybrid</div></div><div class="wl-right"><div class="wl-price">$39.00</div><span class="stock-pill s-out">Out</span></div></div>
+          <div class="wl-item"><div class="wl-emoji">💚</div><div class="wl-info"><div class="wl-name">Kush Mints Flower 3.5g</div><div class="wl-brand">Tremblant · Indica</div></div><div class="wl-right"><div class="wl-price">$32.50</div><span class="stock-pill s-out">Out</span></div></div>
+          <div class="wl-item"><div class="wl-emoji">💨</div><div class="wl-info"><div class="wl-name">Era Pod — Mango Haze</div><div class="wl-brand">PAX · Vape</div></div><div class="wl-right"><div class="wl-price">$44.95</div><span class="stock-pill s-out">Out</span></div></div>
+        </div>
+      </div>
+      <div style="height:1rem"></div>
+    </div>
+
+    <!-- ALERTS PAGE -->
+    <div class="page" id="page-alerts">
+      <div class="alerts-section">
+        <div style="font-size:1.1rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:1rem">Alert settings</div>
+
+        <div class="alert-card">
+          <div class="alert-card-header">Notifications</div>
+          <div class="alert-row"><div><div class="alert-row-label">Email alerts</div><div class="alert-row-sub">yourname@email.com</div></div><div class="toggle-sm on" onclick="this.classList.toggle('on')"><div class="toggle-thumb-sm"></div></div></div>
+          <div class="alert-row"><div><div class="alert-row-label">SMS alerts</div><div class="alert-row-sub">Coming soon</div></div><div class="toggle-sm" style="opacity:0.4"><div class="toggle-thumb-sm"></div></div></div>
+          <div class="alert-row"><div><div class="alert-row-label">Price drop alerts</div><div class="alert-row-sub">When a price falls</div></div><div class="toggle-sm on" onclick="this.classList.toggle('on')"><div class="toggle-thumb-sm"></div></div></div>
+          <div class="alert-row"><div><div class="alert-row-label">My stores only</div><div class="alert-row-sub">Filter to your 3 stores</div></div><div class="toggle-sm on" onclick="this.classList.toggle('on')"><div class="toggle-thumb-sm"></div></div></div>
+        </div>
+
+        <div style="font-size:0.85rem;font-weight:600;margin-bottom:0.75rem">Recent activity</div>
+        <div class="activity-feed">
+          <div class="act-item"><div class="act-dot g"></div><div class="act-text"><b>Blue Dream 3.5g</b> back in stock at SQDC Ste-Catherine</div><div class="act-time">12m</div></div>
+          <div class="act-item"><div class="act-dot a"></div><div class="act-text"><b>Kush Mints</b> went out of stock everywhere</div><div class="act-time">2h</div></div>
+          <div class="act-item"><div class="act-dot g"></div><div class="act-text"><b>Balance CBD Oil</b> price dropped to $54.99</div><div class="act-time">Yesterday</div></div>
+          <div class="act-item"><div class="act-dot g"></div><div class="act-text"><b>Reign Drops 10:10</b> spotted at SQDC Laval</div><div class="act-time">2d</div></div>
+        </div>
+      </div>
+      <div style="height:1rem"></div>
+    </div>
+
+    <!-- PROFILE PAGE -->
+    <div class="page" id="page-profile">
+      <div class="profile-header">
+        <div class="avatar">AT</div>
+        <div><div class="profile-name">Alex Tremblay</div><div class="profile-email">alex@email.com</div></div>
+      </div>
+
+      <div style="padding:0 1rem;margin-bottom:0.75rem;font-size:0.78rem;color:var(--text3)">Your profile — used to personalize results</div>
+      <div class="demo-chips">
+        <span class="demo-chip">26–34</span>
+        <span class="demo-chip">Montréal</span>
+        <span class="demo-chip">Weekly</span>
+        <span class="demo-chip">Français</span>
+      </div>
+
+      <div class="profile-card">
+        <div class="profile-row"><div class="profile-row-label">Preferred stores</div><div class="profile-row-val">3 selected <span class="chevron">›</span></div></div>
+        <div class="profile-row"><div class="profile-row-label">Alert email</div><div class="profile-row-val">alex@email.com <span class="chevron">›</span></div></div>
+        <div class="profile-row"><div class="profile-row-label">Language</div><div class="profile-row-val">Français <span class="chevron">›</span></div></div>
+        <div class="profile-row"><div class="profile-row-label">Visit frequency</div><div class="profile-row-val">Weekly <span class="chevron">›</span></div></div>
+      </div>
+
+      <div class="profile-card">
+        <div class="profile-row"><div class="profile-row-label">Privacy policy</div><div class="profile-row-val"><span class="chevron">›</span></div></div>
+        <div class="profile-row"><div class="profile-row-label">Terms of service</div><div class="profile-row-val"><span class="chevron">›</span></div></div>
+        <div class="profile-row"><div class="profile-row-label">Delete my account</div><div class="profile-row-val" style="color:var(--red)"><span class="chevron">›</span></div></div>
+      </div>
+
+      <button class="signout-btn">Sign out</button>
+      <div style="height:1.5rem"></div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav">
+    <button class="tab-btn active" id="tab-home" onclick="showTab('home')">
+      <span class="tab-icon">🏠</span>Home
+    </button>
+    <button class="tab-btn" id="tab-watchlist" onclick="showTab('watchlist')">
+      <span class="tab-icon">⭐</span>Watchlist
+    </button>
+    <button class="tab-btn" id="tab-alerts" onclick="showTab('alerts')">
+      <span class="tab-icon">🔔</span>Alerts
+    </button>
+    <button class="tab-btn" id="tab-profile" onclick="showTab('profile')">
+      <span class="tab-icon">👤</span>Profile
+    </button>
+  </div>
+
+</div>
+
+<script>
+function showTab(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+  document.getElementById('scroll-area').scrollTop = 0;
+}
+function setChip(el) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+function likeCard(el) {
+  el.classList.toggle('liked');
+  el.textContent = el.classList.contains('liked') ? '♥' : '♡';
+}
+</script>
+</body>
+</html>

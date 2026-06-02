@@ -14,6 +14,36 @@ These files belong together and should be treated as the current web handoff pac
 | `zazasync-watchlist.html` | User watchlist, saved products, alert settings | `zazasync.html`, auth/user database, product inventory data |
 | `zazasync-webmaster-brief.html` | Technical implementation brief for the webmaster | Use as a developer checklist |
 
+## Mobile File Set
+
+These files are the mobile/PWA version of the same product. They should connect to the same backend as the desktop web files, not a separate database.
+
+| File | Role | Connects To |
+|---|---|---|
+| `zazasync-mobile.html` | Mobile app shell with inventory, watchlist, alerts, and profile tabs | Product data, inventory data, watchlist, alerts |
+| `zazasync-mobile-auth.html` | Mobile sign in / create account page | `zazasync-mobile-onboarding.html`, auth provider |
+| `zazasync-mobile-onboarding.html` | Mobile first-time onboarding survey | `zazasync-mobile.html`, user profile database |
+
+Mobile user flow:
+
+```text
+zazasync-mobile.html
+  -> user searches/browses products on phone
+  -> user taps watchlist/alerts/profile or signs up
+  -> zazasync-mobile-auth.html
+  -> new user creates account and confirms 21+
+  -> zazasync-mobile-onboarding.html
+  -> user chooses age range, region, language, shopping frequency, preferred stores
+  -> zazasync-mobile.html
+  -> user manages watchlist, alerts, and profile from tabs
+```
+
+Important: the mobile files are not a separate app yet. They are a mobile-first web/PWA prototype. A webmaster can either:
+
+- keep them as standalone mobile HTML pages,
+- merge them into responsive routes in the main site,
+- or rebuild them as React/Next.js mobile views using the same design and flow.
+
 ## User Flow
 
 The intended user journey is:
@@ -245,3 +275,17 @@ Developer instructions:
 ```
 
 That is the complete handoff set.
+
+## Desktop vs Mobile Relationship
+
+The desktop and mobile files should represent the same product logic:
+
+| Product Concept | Desktop File | Mobile File |
+|---|---|---|
+| Inventory/search | `zazasync.html` | `zazasync-mobile.html` |
+| Auth/signup | `zazasync-auth.html` | `zazasync-mobile-auth.html` |
+| Onboarding/profile setup | `zazasync-onboarding.html` | `zazasync-mobile-onboarding.html` |
+| Watchlist/alerts | `zazasync-watchlist.html` | `zazasync-mobile.html` tabs |
+| Developer notes | `zazasync-webmaster-brief.html` / `WEBMASTER_HANDOFF.md` | Same notes apply |
+
+Build once, share data everywhere. The frontend can have different layouts, but the backend should be one system.

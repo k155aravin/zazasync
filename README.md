@@ -21,9 +21,37 @@ That is the main experience ZazaSync should make effortless.
 | [zazasync-onboarding.html](./zazasync-onboarding.html) | Post-signup onboarding survey for age range, region, language, shopping behavior, and preferred stores |
 | [zazasync-watchlist.html](./zazasync-watchlist.html) | Watchlist page for saved products, alert toggles, recent activity, and notification settings |
 | [zazasync-webmaster-brief.html](./zazasync-webmaster-brief.html) | HTML implementation brief for the webmaster/developer |
+| [zazasync-mobile.html](./zazasync-mobile.html) | Mobile/PWA-style version of the inventory, watchlist, alerts, and profile experience |
+| [zazasync-mobile-auth.html](./zazasync-mobile-auth.html) | Mobile sign-in/create-account page |
+| [zazasync-mobile-onboarding.html](./zazasync-mobile-onboarding.html) | Mobile onboarding survey after account creation |
 | [WEBMASTER_HANDOFF.md](./WEBMASTER_HANDOFF.md) | File map explaining which pages belong together and what each page should become |
 | [zazasync-web-v2.html](./zazasync-web-v2.html) | Latest preferred visual direction: clean search-first desktop web prototype |
 | [TEAM_BRIEF.md](./TEAM_BRIEF.md) | Team product brief with strategy, UX flow, MVP priorities, and next decisions |
+
+## Mobile Handoff
+
+The mobile files are the phone/PWA version of the same product flow:
+
+```text
+zazasync-mobile.html
+  -> main mobile app shell
+  -> inventory search
+  -> watchlist tab
+  -> alerts tab
+  -> profile tab
+
+zazasync-mobile-auth.html
+  -> mobile login/signup
+  -> 21+ confirmation
+  -> email/password or future OAuth
+
+zazasync-mobile-onboarding.html
+  -> first-time profile setup
+  -> age range, region, language, frequency, preferred stores
+  -> redirects back to zazasync-mobile.html
+```
+
+The webmaster should treat the desktop and mobile packages as the same product expressed in two layouts. They should share the same future backend data: users, profiles, products, stores, inventory, watchlist, alerts, and notification logs.
 
 ## Preferred UX
 
