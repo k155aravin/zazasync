@@ -1,44 +1,130 @@
 # ZazaSync
 
-> Quebec cannabis. Synchronized.
+> Find SQDC products near you, check availability, and get alerted when they come back in stock.
 
-ZazaSync is a mobile-first cannabis inventory intelligence concept for Quebec SQDC shoppers. The goal is similar to Weedcrawler: track store stock, product freshness, best sellers, restocks, and availability signals across Quebec locations, then present that data in a fast app-like experience.
+ZazaSync is a Quebec cannabis inventory intelligence concept for adults 21+. The product direction is inspired by WeedCrawler, but the goal is not to copy it directly. ZazaSync should be more product-first, simpler to understand, and built around search, availability, watchlists, and alerts.
 
-## Current Prototype
+## Current Direction
 
-| Version | File |
+The clearest user promise is:
+
+> I am looking for a product. Is it available near me? If not, alert me.
+
+That is the main experience ZazaSync should make effortless.
+
+## Prototype Files
+
+| File | Purpose |
 |---|---|
-| Desktop concept | [zazasync-desktop-v1.html](./zazasync-desktop-v1.html) |
-| Mobile app prototype | [zazasync-mobile-v1.html](./zazasync-mobile-v1.html) |
+| [zazasync-web-v2.html](./zazasync-web-v2.html) | Latest preferred visual direction: clean search-first desktop web prototype |
+| [zazasync-desktop-v1.html](./zazasync-desktop-v1.html) | Earlier desktop concept retained for history |
+| [zazasync-mobile-v1.html](./zazasync-mobile-v1.html) | Mobile app-style prototype with tabs, product browsing, stores, watchlist, and alerts |
+| [TEAM_BRIEF.md](./TEAM_BRIEF.md) | Team product brief with strategy, UX flow, MVP priorities, and next decisions |
 
-## Mobile App Direction
+## Preferred UX
 
-The mobile prototype is built with local mock data shaped like future live inventory records. It currently includes:
+The new web direction should feel like a focused product marketplace:
 
-- Home dashboard with sync status, Quebec coverage stats, nearby stores, and restocked products
-- Browse screen with search, category chips, type filters, sorting, and product detail sheets
-- Store radar with mock map pins, stock freshness, category counts, and inventory totals
-- Best-seller screen with 7, 30, and 90 day ranking windows
-- Alerts/watchlist screen for restocks, low stock, and saved products
-- Profile/data screen showing the live inventory entities the app expects later
+- Big search bar on the homepage
+- Quick filters such as `In stock`, `New drops`, `Back in stock`, `Under $25`, `Pre-rolls`, and `CBD`
+- Product cards with brand, product name, format, price, THC/CBD, and stock status
+- Recently restocked products
+- Email/SMS alert capture for out-of-stock products
+- Stores with the most availability
+- Clear 21+ and SQDC independence disclaimer
 
-## Planned Data Model
+## Main User Flow
 
-The mock frontend is ready to swap in real data from:
+1. User lands on ZazaSync.
+2. User searches by product, brand, price, potency, or category.
+3. ZazaSync shows simple product cards.
+4. User opens a product to see availability by SQDC store.
+5. If the product is out of stock, user taps `Alert me`.
+6. User chooses email, SMS, or both.
+7. ZazaSync notifies the user when the product appears available again.
+
+## Features That Make ZazaSync Different
+
+These are simple but important features that can make ZazaSync more useful than a basic inventory browser:
+
+- Back-in-stock alerts
+- Saved product watchlist
+- Preferred SQDC stores
+- Price drop alerts
+- Recently restocked page
+- New drops by category
+- Best value score based on price, format, potency, and availability
+- Product comparison
+
+## Recommended MVP
+
+Start simple. Build the useful loop first:
+
+1. Search and browse inventory
+2. Product detail pages
+3. Store availability evidence
+4. Back-in-stock email alerts
+5. Saved products
+6. Preferred stores
+7. SMS alerts after email alerts are working
+
+## Suggested Navigation
+
+```text
+Inventory
+New Drops
+Back in Stock
+Stores
+Watchlist
+```
+
+Future sections can include:
+
+```text
+Trends
+Brands
+Categories
+Profile
+```
+
+## Data Model Direction
+
+The app should eventually work from real inventory records:
 
 - `products`: name, brand, format, category, type, strain, THC/CBD, price
-- `stores`: city, SQDC location name, opened date, latest sync time, category count
-- `inventory`: product-store stock state, low stock flag, restock age, availability
-- `rankings`: best sellers by category and time window
-- `alerts`: saved products, preferred stores, restock and price-drop triggers
+- `stores`: SQDC store name, city, region, latest check time
+- `inventory`: product-store stock state, availability evidence, restock status
+- `alerts`: user contact, product, store/region preference, notification channel
+- `watchlist`: saved products and preferred stores
 
-## Planned Platform
+## Product Positioning
 
-- SQDC product and store inventory sync
-- Normalized product/store/inventory database
-- Price and restock history
-- Push notifications
-- Store map with real coordinates
+ZazaSync does not sell cannabis. It helps users understand public SQDC product availability.
+
+Keep the experience customer-facing:
+
+- Product discovery
+- Store availability
+- New drops
+- Back-in-stock alerts
+- Saved products
+- Market intelligence later
+
+Avoid positioning it as:
+
+- A developer API
+- A scraper terminal
+- A technical data dashboard
+
+## Team Notes
+
+The strongest first demo is not a complex backend. It is a clear experience:
+
+```text
+Search product -> See availability -> If unavailable, set alert
+```
+
+That is easy for the team to understand, easy for users to value, and useful enough to justify accounts/profiles later.
 
 ## Disclaimer
 
