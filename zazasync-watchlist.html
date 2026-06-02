@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ZazaSync — My Watchlist</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0d0f0e; --bg2: #141714; --bg3: #1c1f1c;
+    --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.14);
+    --green: #4ade80; --green-bg: rgba(74,222,128,0.08);
+    --text: #f0f2f0; --text2: #9ba89b; --text3: #6b786b;
+    --amber: #fbbf24; --amber-bg: rgba(251,191,36,0.08);
+    --red: #f87171; --red-bg: rgba(248,113,113,0.08);
+    --radius: 10px; --radius-lg: 16px;
+  }
+  body { font-family: 'DM Sans', -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  nav { display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; height: 60px; border-bottom: 1px solid var(--border); background: rgba(13,15,14,0.95); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; }
+  .logo { font-weight: 700; font-size: 1.15rem; color: var(--green); display: flex; align-items: center; gap: 8px; text-decoration: none; }
+  .logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .nav-links { display: flex; align-items: center; gap: 0.25rem; list-style: none; }
+  .nav-links a { text-decoration: none; color: var(--text2); font-size: 0.875rem; padding: 6px 12px; border-radius: 8px; transition: all 0.15s; }
+  .nav-links a:hover { color: var(--text); background: var(--bg3); }
+  .nav-links a.active { color: var(--green); }
+  .nav-right { display: flex; align-items: center; gap: 8px; }
+  .btn-ghost { background: none; border: 1px solid var(--border2); color: var(--text2); font-size: 0.8rem; padding: 7px 16px; border-radius: 8px; cursor: pointer; transition: all 0.15s; font-family: inherit; }
+  .btn-ghost:hover { color: var(--text); background: var(--bg3); }
+  .btn-green { background: var(--green); border: none; color: #0a1a0a; font-size: 0.8rem; font-weight: 700; padding: 7px 16px; border-radius: 8px; cursor: pointer; font-family: inherit; transition: background 0.15s; }
+  .btn-green:hover { background: #6ee7a0; }
+  .main { max-width: 1000px; margin: 0 auto; padding: 2.5rem 2rem; }
+  .page-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 2rem; }
+  .page-title { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.03em; }
+  .page-sub { font-size: 0.82rem; color: var(--text3); margin-top: 4px; }
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 2.5rem; }
+  .stat-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; }
+  .stat-label { font-size: 0.72rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+  .stat-num { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
+  .stat-num.green { color: var(--green); }
+  .stat-num.amber { color: var(--amber); }
+  .section { margin-bottom: 2.5rem; }
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+  .section-title { font-size: 0.92rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .badge { font-size: 0.68rem; font-weight: 600; padding: 2px 8px; border-radius: 999px; }
+  .badge-green { background: var(--green-bg); color: var(--green); border: 1px solid rgba(74,222,128,0.2); }
+  .badge-amber { background: var(--amber-bg); color: var(--amber); border: 1px solid rgba(251,191,36,0.2); }
+  .badge-red { background: var(--red-bg); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
+  .section-link { font-size: 0.8rem; color: var(--text3); text-decoration: none; transition: color 0.15s; }
+  .section-link:hover { color: var(--green); }
+  .watchlist-table { width: 100%; border-collapse: collapse; }
+  .watchlist-table th { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text3); font-weight: 500; text-align: left; padding: 0 1rem 0.75rem; border-bottom: 1px solid var(--border); }
+  .watchlist-table th:last-child { text-align: right; }
+  .watchlist-table td { padding: 0.9rem 1rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  .watchlist-table tr:last-child td { border-bottom: none; }
+  .watchlist-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .product-cell { display: flex; align-items: center; gap: 12px; }
+  .product-emoji { width: 36px; height: 36px; background: var(--bg3); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+  .product-name-cell { font-size: 0.875rem; font-weight: 500; color: var(--text); }
+  .product-brand-cell { font-size: 0.73rem; color: var(--text3); margin-top: 2px; }
+  .price-cell { font-size: 0.875rem; font-weight: 600; color: var(--text); }
+  .alert-toggle { display: flex; align-items: center; gap: 8px; }
+  .toggle { width: 36px; height: 20px; background: var(--bg3); border: 1px solid var(--border2); border-radius: 999px; cursor: pointer; position: relative; transition: background 0.2s; flex-shrink: 0; }
+  .toggle.on { background: var(--green); border-color: var(--green); }
+  .toggle-thumb { width: 14px; height: 14px; background: var(--text3); border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: all 0.2s; }
+  .toggle.on .toggle-thumb { background: #0a1a0a; left: 18px; }
+  .alert-label { font-size: 0.75rem; color: var(--text3); }
+  .toggle.on + .alert-label { color: var(--green); }
+  .action-btn { background: none; border: 1px solid var(--border); color: var(--text3); font-size: 0.75rem; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+  .action-btn:hover { border-color: var(--red); color: var(--red); }
+  .actions-cell { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+  .view-btn { background: none; border: 1px solid var(--border2); color: var(--text2); font-size: 0.75rem; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-family: inherit; transition: all 0.15s; text-decoration: none; display: inline-block; }
+  .view-btn:hover { border-color: rgba(74,222,128,0.4); color: var(--green); }
+  .alert-settings-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; }
+  .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .setting-row { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
+  .setting-row:last-child { border-bottom: none; }
+  .setting-label { font-size: 0.85rem; font-weight: 500; color: var(--text); }
+  .setting-sub { font-size: 0.73rem; color: var(--text3); margin-top: 2px; }
+  .empty-state { text-align: center; padding: 3rem 1rem; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); }
+  .empty-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+  .empty-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+  .empty-sub { font-size: 0.82rem; color: var(--text3); margin-bottom: 1.5rem; }
+  .activity-list { display: flex; flex-direction: column; gap: 8px; }
+  .activity-item { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.8rem 1rem; display: flex; align-items: center; gap: 12px; }
+  .activity-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .activity-dot.green { background: var(--green); }
+  .activity-dot.amber { background: var(--amber); }
+  .activity-text { font-size: 0.82rem; color: var(--text2); flex: 1; }
+  .activity-text b { color: var(--text); }
+  .activity-time { font-size: 0.72rem; color: var(--text3); }
+  footer { border-top: 1px solid var(--border); padding: 1.5rem 2rem; display: flex; align-items: center; justify-content: space-between; color: var(--text3); font-size: 0.78rem; }
+  footer a { color: var(--text3); text-decoration: none; }
+  @media(max-width:700px) { .stats-row { grid-template-columns: 1fr 1fr; } .settings-grid { grid-template-columns: 1fr; } .nav-links { display: none; } }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="zazasync.html"><div class="logo-dot"></div>ZazaSync</a>
+  <ul class="nav-links">
+    <li><a href="zazasync.html">Inventory</a></li>
+    <li><a href="#">New Drops</a></li>
+    <li><a href="#">Back in Stock</a></li>
+    <li><a href="#">Stores</a></li>
+    <li><a href="#" class="active">Watchlist</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="btn-ghost">Settings</button>
+    <button class="btn-green">+ Add product</button>
+  </div>
+</nav>
+
+<div class="main">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div>
+      <div class="page-title">My Watchlist</div>
+      <div class="page-sub">Products you're tracking — alerts fire the moment stock changes.</div>
+    </div>
+    <a href="zazasync.html" class="btn-green" style="text-decoration:none;padding:9px 18px;border-radius:8px;font-weight:700;font-size:0.85rem;">+ Add product</a>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Watching</div>
+      <div class="stat-num">6</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">In stock now</div>
+      <div class="stat-num green">3</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Out of stock</div>
+      <div class="stat-num amber">3</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Alerts sent</div>
+      <div class="stat-num">12</div>
+    </div>
+  </div>
+
+  <!-- IN STOCK -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">In stock now <span class="badge badge-green">3</span></div>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;">
+      <table class="watchlist-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Alert</th>
+            <th style="text-align:right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="product-cell"><div class="product-emoji">🌿</div><div><div class="product-name-cell">Pineapple Punch Pre-Roll 3×0.5g</div><div class="product-brand-cell">Rose Highway · Sativa · THC 24%</div></div></div></td>
+            <td><div class="price-cell">$18.95</div></td>
+            <td><span class="badge badge-green">In stock</span></td>
+            <td><div class="alert-toggle"><div class="toggle on" onclick="toggleAlert(this)"><div class="toggle-thumb"></div></div><span class="alert-label">On</span></div></td>
+            <td><div class="actions-cell"><a href="#" class="view-btn">View →</a><button class="action-btn" onclick="removeItem(this)">Remove</button></div></td>
+          </tr>
+          <tr>
+            <td><div class="product-cell"><div class="product-emoji">🍃</div><div><div class="product-name-cell">Balance CBD Oil 30ml</div><div class="product-brand-cell">Solei · CBD · 25mg/ml</div></div></div></td>
+            <td><div class="price-cell">$54.99</div></td>
+            <td><span class="badge badge-green">In stock</span></td>
+            <td><div class="alert-toggle"><div class="toggle on" onclick="toggleAlert(this)"><div class="toggle-thumb"></div></div><span class="alert-label">On</span></div></td>
+            <td><div class="actions-cell"><a href="#" class="view-btn">View →</a><button class="action-btn" onclick="removeItem(this)">Remove</button></div></td>
+          </tr>
+          <tr>
+            <td><div class="product-cell"><div class="product-emoji">🌱</div><div><div class="product-name-cell">Jean Guy Flower 28g</div><div class="product-brand-cell">7ACRES · Sativa · THC 20%</div></div></div></td>
+            <td><div class="price-cell">$149.99</div></td>
+            <td><span class="badge badge-green">In stock</span></td>
+            <td><div class="alert-toggle"><div class="toggle" onclick="toggleAlert(this)"><div class="toggle-thumb"></div></div><span class="alert-label">Off</span></div></td>
+            <td><div class="actions-cell"><a href="#" class="view-btn">View →</a><button class="action-btn" onclick="removeItem(this)">Remove</button></div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- OUT OF STOCK -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Waiting for restock <span class="badge badge-amber">3</span></div>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;">
+      <table class="watchlist-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Alert</th>
+            <th style="text-align:right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="product-cell"><div class="product-emoji">🔥</div><div><div class="product-name-cell">Reign Drops 10:10 30ml</div><div class="product-brand-cell">Redecan · Hybrid · THC+CBD</div></div></div></td>
+            <td><div class="price-cell">$39.00</div></td>
+            <td><span class="badge badge-red">Out of stock</span></td>
+            <td><div class="alert-toggle"><div class="toggle on" onclick="toggleAlert(this)"><div class="toggle-thumb"></div></div><span class="alert-label">On</span></div></td>
+            <td><div class="actions-cell"><a href="#" class="view-btn">View →</a><button class="action-btn" onclick="removeItem(this)">Remove</button></div></td>
+          </tr>
+          <tr>
+            <td><div class="product-cell"><div class="product-emoji">💚</div><div><div class="product-name-cell">Kush Mints Flower 3.5g</div><div class="product-brand-cell">Tremblant Cannabis · Indica · THC 28%</div></div></div></td>
+            <td><div class="price-cell">$32.50</div></td>
+            <td><span class="badge badge-red">Out of stock</span></td>
+            <td><div class="alert-toggle"><div class="toggle on" onclick="toggleAlert(this)"><div class="toggle-thumb"></div></div><span class="alert-label">On</span></div></td>
+            <td><div class="actions-cell"><a href="#" class="view-btn">View →</a><button class="action-btn" onclick="removeItem(this)">Remove</button></div></td>
+          </tr>
+          <tr>
+            <td><div class="product-cell"><div class="product-emoji">💨</div><div><div class="product-name-cell">Era Pod — Mango Haze</div><div class="product-brand-cell">PAX · Vape · THC 76%</div></div></div></td>
+            <td><div class="price-cell">$44.95</div></td>
+            <td><span class="badge badge-red">Out of stock</span></td>
+            <td><div class="alert-toggle"><div class="toggle on" onclick="toggleAlert(this)"><div class="toggle-thumb"></div></div><span class="alert-label">On</span></div></td>
+            <td><div class="actions-cell"><a href="#" class="view-btn">View →</a><button class="action-btn" onclick="removeItem(this)">Remove</button></div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ALERT SETTINGS + ACTIVITY -->
+  <div class="settings-grid" style="margin-bottom:2.5rem;">
+
+    <!-- ALERT SETTINGS -->
+    <div>
+      <div class="section-header"><div class="section-title">Alert settings</div></div>
+      <div class="alert-settings-card">
+        <div class="setting-row">
+          <div><div class="setting-label">Email alerts</div><div class="setting-sub">yourname@email.com</div></div>
+          <div class="toggle on" onclick="toggleAlert(this)"><div class="toggle-thumb"></div></div>
+        </div>
+        <div class="setting-row">
+          <div><div class="setting-label">SMS alerts</div><div class="setting-sub">Coming soon</div></div>
+          <div class="toggle" style="opacity:0.4;cursor:not-allowed;"><div class="toggle-thumb"></div></div>
+        </div>
+        <div class="setting-row">
+          <div><div class="setting-label">Price drop alerts</div><div class="setting-sub">Alert when price falls</div></div>
+          <div class="toggle on" onclick="toggleAlert(this)"><div class="toggle-thumb"></div></div>
+        </div>
+        <div class="setting-row">
+          <div><div class="setting-label">Preferred stores only</div><div class="setting-sub">Only alert for your 3 stores</div></div>
+          <div class="toggle on" onclick="toggleAlert(this)"><div class="toggle-thumb"></div></div>
+        </div>
+        <div style="margin-top:1.25rem;">
+          <button class="btn-green" style="width:100%;padding:10px;font-size:0.85rem;">Update email / stores</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECENT ACTIVITY -->
+    <div>
+      <div class="section-header"><div class="section-title">Recent alert activity</div></div>
+      <div class="activity-list">
+        <div class="activity-item">
+          <div class="activity-dot green"></div>
+          <div class="activity-text"><b>Blue Dream Flower 3.5g</b> came back in stock at SQDC Ste-Catherine</div>
+          <div class="activity-time">12m ago</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot amber"></div>
+          <div class="activity-text"><b>Kush Mints 3.5g</b> went out of stock at all tracked stores</div>
+          <div class="activity-time">2h ago</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot green"></div>
+          <div class="activity-text"><b>Balance CBD Oil</b> price dropped from $59.99 to <b>$54.99</b></div>
+          <div class="activity-time">Yesterday</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot green"></div>
+          <div class="activity-text"><b>Reign Drops 10:10</b> was spotted at SQDC Laval</div>
+          <div class="activity-time">2 days ago</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-dot amber"></div>
+          <div class="activity-text"><b>Jean Guy 28g</b> stock is running low at SQDC St-Laurent</div>
+          <div class="activity-time">3 days ago</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div>© 2026 ZazaSync · Not affiliated with SQDC · 21+ Quebec</div>
+  <div style="display:flex;gap:1.5rem;"><a href="#">Privacy</a><a href="#">Terms</a></div>
+</footer>
+
+<script>
+function toggleAlert(el) {
+  el.classList.toggle('on');
+  const label = el.nextElementSibling;
+  if (label && label.classList.contains('alert-label')) {
+    label.textContent = el.classList.contains('on') ? 'On' : 'Off';
+  }
+}
+function removeItem(btn) {
+  const row = btn.closest('tr');
+  if (confirm('Remove this product from your watchlist?')) {
+    row.style.transition = 'opacity 0.3s';
+    row.style.opacity = '0';
+    setTimeout(() => row.remove(), 300);
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ZazaSync — Webmaster Brief</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'DM Sans',-apple-system,sans-serif;background:#0d0f0e;color:#f0f2f0;padding:3rem 1.5rem;line-height:1.7}
+  .wrap{max-width:820px;margin:0 auto}
+  .logo{font-size:1.2rem;font-weight:700;color:#4ade80;display:flex;align-items:center;gap:8px;margin-bottom:3rem}
+  .logo-dot{width:8px;height:8px;border-radius:50%;background:#4ade80}
+  h1{font-size:2rem;font-weight:700;letter-spacing:-0.03em;margin-bottom:0.5rem}
+  .sub{color:#6b786b;font-size:0.9rem;margin-bottom:3rem}
+  h2{font-size:1.1rem;font-weight:700;color:#4ade80;margin:2.5rem 0 1rem;display:flex;align-items:center;gap:10px}
+  h2 span{background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.2);border-radius:999px;font-size:0.72rem;padding:2px 10px;color:#4ade80}
+  h3{font-size:0.95rem;font-weight:600;color:#f0f2f0;margin:1.25rem 0 0.5rem}
+  p{font-size:0.88rem;color:#9ba89b;margin-bottom:0.75rem}
+  .card{background:#141714;border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:1.5rem;margin-bottom:1rem}
+  .card-title{font-size:0.85rem;font-weight:600;color:#f0f2f0;margin-bottom:0.75rem}
+  .row{display:flex;align-items:flex-start;gap:12px;padding:0.6rem 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:0.83rem}
+  .row:last-child{border-bottom:none}
+  .row-label{color:#6b786b;min-width:160px;flex-shrink:0}
+  .row-val{color:#f0f2f0}
+  code{background:#1c1f1c;border:1px solid rgba(255,255,255,0.1);border-radius:5px;font-family:monospace;font-size:0.8rem;padding:2px 7px;color:#4ade80}
+  .file-list{display:flex;flex-direction:column;gap:8px}
+  .file-item{background:#1c1f1c;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:0.75rem 1rem;display:flex;align-items:center;gap:12px}
+  .file-icon{font-size:1.1rem;width:28px;text-align:center}
+  .file-name{font-size:0.85rem;font-weight:500;color:#f0f2f0}
+  .file-desc{font-size:0.75rem;color:#6b786b;margin-top:2px}
+  .tag{display:inline-block;font-size:0.68rem;font-weight:600;padding:2px 8px;border-radius:999px;margin-left:6px}
+  .tag-green{background:rgba(74,222,128,0.1);color:#4ade80;border:1px solid rgba(74,222,128,0.2)}
+  .tag-amber{background:rgba(251,191,36,0.08);color:#fbbf24;border:1px solid rgba(251,191,36,0.2)}
+  .tag-red{background:rgba(248,113,113,0.08);color:#f87171;border:1px solid rgba(248,113,113,0.2)}
+  .priority-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .priority-card{background:#1c1f1c;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:1rem}
+  .priority-label{font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px}
+  .priority-label.high{color:#f87171}
+  .priority-label.med{color:#fbbf24}
+  .priority-label.low{color:#4ade80}
+  .priority-item{font-size:0.8rem;color:#9ba89b;padding:3px 0;display:flex;align-items:center;gap:6px}
+  .priority-item::before{content:'→';color:#6b786b;font-size:0.7rem}
+  .supabase-table{width:100%;border-collapse:collapse;font-size:0.8rem}
+  .supabase-table th{text-align:left;padding:8px 12px;background:#1c1f1c;color:#6b786b;font-size:0.72rem;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid rgba(255,255,255,0.08)}
+  .supabase-table td{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.05);color:#9ba89b}
+  .supabase-table td:first-child{color:#4ade80;font-family:monospace}
+  .supabase-table tr:last-child td{border-bottom:none}
+  .divider{height:1px;background:rgba(255,255,255,0.06);margin:2.5rem 0}
+  @media(max-width:600px){.priority-grid{grid-template-columns:1fr}.row-label{min-width:120px}}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="wrap">
+
+  <div class="logo"><div class="logo-dot"></div>ZazaSync</div>
+
+  <h1>Webmaster Implementation Brief</h1>
+  <p class="sub">Prepared June 1, 2026 · Confidential · For your developer in Manila</p>
+
+  <div class="card">
+    <div class="card-title">Project summary</div>
+    <div class="row"><span class="row-label">Live site</span><span class="row-val">zazasync.com</span></div>
+    <div class="row"><span class="row-label">What it is</span><span class="row-val">SQDC Quebec cannabis inventory intelligence platform — tracks 289+ products across 106 stores in real time</span></div>
+    <div class="row"><span class="row-label">Backend already done</span><span class="row-val">Supabase on VPS, SQDC data crawler live, real product + store data flowing</span></div>
+    <div class="row"><span class="row-label">What needs building</span><span class="row-val">User account layer, watchlist, back-in-stock alerts, demographic data capture, user event tracking</span></div>
+    <div class="row"><span class="row-label">Goal</span><span class="row-val">Collect user demographic + behavioral data to monetize via market intelligence reports sold to cannabis brands</span></div>
+    <div class="row"><span class="row-label">Age restriction</span><span class="row-val">21+ only — Quebec law. Must be enforced at signup.</span></div>
+  </div>
+
+  <h2>Pages to integrate <span>5 HTML files delivered</span></h2>
+  <div class="file-list">
+    <div class="file-item"><div class="file-icon">🏠</div><div><div class="file-name">zazasync.html <span class="tag tag-green">Already live</span></div><div class="file-desc">Homepage — hero search, product grid, back-in-stock feed, stores, alert banner</div></div></div>
+    <div class="file-item"><div class="file-icon">🔐</div><div><div class="file-name">zazasync-auth.html <span class="tag tag-amber">Connect to Supabase Auth</span></div><div class="file-desc">Sign in + Create account — tabs, Google OAuth button, age confirmation checkbox, password strength meter</div></div></div>
+    <div class="file-item"><div class="file-icon">👋</div><div><div class="file-name">zazasync-onboarding.html <span class="tag tag-amber">Save to Supabase DB</span></div><div class="file-desc">4-step onboarding survey — age range, region, visit frequency, language, preferred stores. Shows after first signup.</div></div></div>
+    <div class="file-item"><div class="file-icon">⭐</div><div><div class="file-name">zazasync-watchlist.html <span class="tag tag-amber">Connect to Supabase DB</span></div><div class="file-desc">Personal watchlist — in stock / out of stock sections, alert toggles, alert settings panel, recent activity feed</div></div></div>
+    <div class="file-item"><div class="file-icon">📋</div><div><div class="file-name">zazasync-webmaster-brief.html <span class="tag tag-green">This document</span></div><div class="file-desc">Full implementation guide for the developer</div></div></div>
+  </div>
+
+  <h2>Auth setup <span>Supabase Auth</span></h2>
+  <div class="card">
+    <div class="card-title">Connect zazasync-auth.html to Supabase</div>
+    <p>The sign-in and sign-up forms are fully designed. Wire them to Supabase Auth:</p>
+    <h3>Sign up flow</h3>
+    <div class="row"><span class="row-label">Library</span><span class="row-val"><code>@supabase/supabase-js</code></span></div>
+    <div class="row"><span class="row-label">Method</span><span class="row-val"><code>supabase.auth.signUp({ email, password })</code></span></div>
+    <div class="row"><span class="row-label">After signup</span><span class="row-val">Redirect to <code>/onboarding</code> — do NOT skip this step, it captures monetization data</span></div>
+    <div class="row"><span class="row-label">Age gate</span><span class="row-val">The 21+ checkbox must be checked or form does not submit — already in HTML, just enforce server-side too</span></div>
+    <h3>Sign in flow</h3>
+    <div class="row"><span class="row-label">Method</span><span class="row-val"><code>supabase.auth.signInWithPassword({ email, password })</code></span></div>
+    <div class="row"><span class="row-label">Google OAuth</span><span class="row-val"><code>supabase.auth.signInWithOAuth({ provider: 'google' })</code> — enable Google provider in Supabase dashboard</span></div>
+    <div class="row"><span class="row-label">After signin</span><span class="row-val">Redirect to <code>/watchlist</code> if onboarding done, else redirect to <code>/onboarding</code></span></div>
+  </div>
+
+  <h2>Database tables <span>Add to existing Supabase</span></h2>
+  <div class="card" style="overflow-x:auto">
+    <div class="card-title">Table: <code>user_profiles</code> — one row per user</div>
+    <table class="supabase-table">
+      <thead><tr><th>Column</th><th>Type</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>id</td><td>uuid</td><td>References auth.users.id</td></tr>
+        <tr><td>age_range</td><td>text</td><td>21-25 / 26-34 / 35-44 / 45-54 / 55+ / prefer-not</td></tr>
+        <tr><td>region</td><td>text</td><td>montreal / quebec-city / laval-rive-nord / rive-sud / other-quebec</td></tr>
+        <tr><td>visit_frequency</td><td>text</td><td>weekly / biweekly / monthly / rarely</td></tr>
+        <tr><td>language</td><td>text</td><td>fr / en / both</td></tr>
+        <tr><td>preferred_stores</td><td>text[]</td><td>Array of store names, max 3</td></tr>
+        <tr><td>email_alerts</td><td>boolean</td><td>Default true</td></tr>
+        <tr><td>onboarding_done</td><td>boolean</td><td>False until survey complete</td></tr>
+        <tr><td>created_at</td><td>timestamptz</td><td>Auto</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card" style="overflow-x:auto">
+    <div class="card-title">Table: <code>watchlist</code> — saved products per user</div>
+    <table class="supabase-table">
+      <thead><tr><th>Column</th><th>Type</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>id</td><td>uuid</td><td>Primary key</td></tr>
+        <tr><td>user_id</td><td>uuid</td><td>References user_profiles.id</td></tr>
+        <tr><td>product_id</td><td>text</td><td>SQDC product slug/id from existing crawler</td></tr>
+        <tr><td>alert_enabled</td><td>boolean</td><td>Default true</td></tr>
+        <tr><td>added_at</td><td>timestamptz</td><td>Auto</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card" style="overflow-x:auto">
+    <div class="card-title">Table: <code>user_events</code> — CRITICAL for monetization</div>
+    <p style="margin-bottom:0.75rem">Log every user action. This is the raw data that becomes market intelligence reports.</p>
+    <table class="supabase-table">
+      <thead><tr><th>Column</th><th>Type</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>id</td><td>uuid</td><td>Primary key</td></tr>
+        <tr><td>user_id</td><td>uuid</td><td>References user_profiles.id</td></tr>
+        <tr><td>event_type</td><td>text</td><td>search / product_view / watchlist_add / alert_set / filter_click</td></tr>
+        <tr><td>event_data</td><td>jsonb</td><td>e.g. {"query":"blue dream","category":"flower","price_max":25}</td></tr>
+        <tr><td>product_id</td><td>text</td><td>Nullable — fill when event is product-specific</td></tr>
+        <tr><td>region</td><td>text</td><td>Copy from user_profile for fast aggregation</td></tr>
+        <tr><td>age_range</td><td>text</td><td>Copy from user_profile for fast aggregation</td></tr>
+        <tr><td>created_at</td><td>timestamptz</td><td>Auto — always index this column</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card" style="overflow-x:auto">
+    <div class="card-title">Table: <code>alert_log</code> — record every alert sent</div>
+    <table class="supabase-table">
+      <thead><tr><th>Column</th><th>Type</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>id</td><td>uuid</td><td>Primary key</td></tr>
+        <tr><td>user_id</td><td>uuid</td><td>Who got the alert</td></tr>
+        <tr><td>product_id</td><td>text</td><td>Which product triggered it</td></tr>
+        <tr><td>alert_type</td><td>text</td><td>back_in_stock / price_drop</td></tr>
+        <tr><td>channel</td><td>text</td><td>email / sms</td></tr>
+        <tr><td>sent_at</td><td>timestamptz</td><td>Auto</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Alerts system <span>Email first, SMS later</span></h2>
+  <div class="card">
+    <h3>Email alerts — how it works</h3>
+    <div class="row"><span class="row-label">Trigger</span><span class="row-val">When the SQDC crawler detects a product flipping from out-of-stock → in-stock</span></div>
+    <div class="row"><span class="row-label">Logic</span><span class="row-val">Query <code>watchlist</code> table for all users watching that product_id with <code>alert_enabled = true</code></span></div>
+    <div class="row"><span class="row-label">Email service</span><span class="row-val">Use <code>Resend.com</code> — free tier, simple API, works perfectly with Supabase Edge Functions</span></div>
+    <div class="row"><span class="row-label">Log it</span><span class="row-val">Write a row to <code>alert_log</code> every time an alert fires</span></div>
+    <h3>SMS alerts — phase 2</h3>
+    <div class="row"><span class="row-label">Service</span><span class="row-val">Twilio — only add after email alerts are stable and user demand confirmed</span></div>
+    <div class="row"><span class="row-label">UI</span><span class="row-val">Already grayed out in the watchlist settings panel — just enable the toggle when ready</span></div>
+  </div>
+
+  <h2>Event tracking <span>Do not skip — this is the money</span></h2>
+  <div class="card">
+    <p>Install <code>PostHog</code> (free, self-hostable) alongside the existing Supabase setup. Track these events at minimum:</p>
+    <div class="row"><span class="row-label"><code>search</code></span><span class="row-val">Every search query + filters used + result count</span></div>
+    <div class="row"><span class="row-label"><code>product_view</code></span><span class="row-val">Every product detail page opened</span></div>
+    <div class="row"><span class="row-label"><code>watchlist_add</code></span><span class="row-val">Product added to watchlist — highest purchase intent signal</span></div>
+    <div class="row"><span class="row-label"><code>alert_set</code></span><span class="row-val">User sets a back-in-stock alert</span></div>
+    <div class="row"><span class="row-label"><code>filter_used</code></span><span class="row-val">Which filter chips get clicked (In stock / Pre-rolls / Under $25 etc)</span></div>
+    <div class="row"><span class="row-label"><code>store_view</code></span><span class="row-val">Which store pages get viewed</span></div>
+    <p style="margin-top:0.75rem">All events must include: <code>user_id</code>, <code>age_range</code>, <code>region</code>, <code>language</code>, <code>timestamp</code>. This is what gets exported monthly for brand intelligence reports.</p>
+  </div>
+
+  <h2>Monthly data export <span>Owner uses this to make money</span></h2>
+  <div class="card">
+    <p>The owner needs to export data monthly to analyze and sell to cannabis brands. Set up a simple Supabase SQL view or scheduled export:</p>
+    <div class="row"><span class="row-label">Export format</span><span class="row-val">CSV downloadable from Supabase Table Editor — no custom dashboard needed at first</span></div>
+    <div class="row"><span class="row-label">Key queries</span><span class="row-val">Top searched products by region / age range · Most watchlisted products · Alert volume by product · Visit frequency breakdown</span></div>
+    <div class="row"><span class="row-label">Access</span><span class="row-val">Owner logs into Supabase dashboard → Table Editor → Export to CSV. Done.</span></div>
+  </div>
+
+  <h2>Priority order <span>Build in this sequence</span></h2>
+  <div class="priority-grid">
+    <div class="priority-card">
+      <div class="priority-label high">🔴 Week 1–2 — Must have</div>
+      <div class="priority-item">Supabase Auth connected to auth page</div>
+      <div class="priority-item">Google OAuth working</div>
+      <div class="priority-item">Onboarding survey saves to DB</div>
+      <div class="priority-item">user_events table + PostHog installed</div>
+      <div class="priority-item">21+ age gate enforced server-side</div>
+    </div>
+    <div class="priority-card">
+      <div class="priority-label med">🟡 Week 3–4 — Important</div>
+      <div class="priority-item">Watchlist page connected to real DB</div>
+      <div class="priority-item">Add/remove products from watchlist</div>
+      <div class="priority-item">Email alerts via Resend.com</div>
+      <div class="priority-item">Alert log table populated</div>
+      <div class="priority-item">Preferred stores filter working</div>
+    </div>
+    <div class="priority-card">
+      <div class="priority-label low">🟢 Week 5–6 — Nice to have</div>
+      <div class="priority-item">Price drop alerts</div>
+      <div class="priority-item">Monthly CSV export view in Supabase</div>
+      <div class="priority-item">French / English language toggle</div>
+      <div class="priority-item">Account settings page</div>
+    </div>
+    <div class="priority-card">
+      <div class="priority-label" style="color:#9ba89b">⚪ Phase 2 — Later</div>
+      <div class="priority-item">SMS alerts via Twilio</div>
+      <div class="priority-item">B2B brand intelligence dashboard</div>
+      <div class="priority-item">Sponsored product placements</div>
+      <div class="priority-item">Mobile app (React Native)</div>
+    </div>
+  </div>
+
+  <h2>Legal requirements <span>Quebec Law 25 — mandatory</span></h2>
+  <div class="card">
+    <div class="row"><span class="row-label">Privacy policy</span><span class="row-val">Must state that anonymized, aggregated behavioral data may be shared with third parties for market research. Already linked in footer of all pages.</span></div>
+    <div class="row"><span class="row-label">Consent at signup</span><span class="row-val">The "I agree to Terms" checkbox at signup counts as consent. Keep a timestamp of when user agreed.</span></div>
+    <div class="row"><span class="row-label">Law 25</span><span class="row-val">Quebec's privacy law — stricter than federal PIPEDA. Users can request deletion of their data. Add a "Delete my account" option in settings.</span></div>
+    <div class="row"><span class="row-label">Age verification</span><span class="row-val">Self-declared 21+ checkbox is sufficient for MVP. Do not store government ID data.</span></div>
+    <div class="row"><span class="row-label">Data sold</span><span class="row-val">Only sell AGGREGATED and ANONYMIZED data. Never sell individual user profiles. This protects both the business and users.</span></div>
+  </div>
+
+  <h2>Tech stack summary</h2>
+  <div class="card">
+    <div class="row"><span class="row-label">Frontend</span><span class="row-val">HTML / CSS / JS — 5 pages delivered as files, integrate into existing site</span></div>
+    <div class="row"><span class="row-label">Backend / DB</span><span class="row-val">Supabase — already live on VPS</span></div>
+    <div class="row"><span class="row-label">Auth</span><span class="row-val">Supabase Auth + Google OAuth</span></div>
+    <div class="row"><span class="row-label">Email alerts</span><span class="row-val">Resend.com (free tier to start)</span></div>
+    <div class="row"><span class="row-label">Event tracking</span><span class="row-val">PostHog (free, can self-host on same VPS)</span></div>
+    <div class="row"><span class="row-label">SMS (phase 2)</span><span class="row-val">Twilio</span></div>
+    <div class="row"><span class="row-label">Data export</span><span class="row-val">Supabase built-in CSV export — no extra tool needed</span></div>
+  </div>
+
+  <div class="divider"></div>
+  <p style="text-align:center;font-size:0.78rem;color:#6b786b">ZazaSync · Confidential product brief · Prepared June 1, 2026</p>
+
+</div>
+</body>
+</html>

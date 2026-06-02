@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ZazaSync — Welcome</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0d0f0e; --bg2: #141714; --bg3: #1c1f1c;
+    --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.14);
+    --green: #4ade80; --green-bg: rgba(74,222,128,0.08); --green-bg2: rgba(74,222,128,0.14);
+    --text: #f0f2f0; --text2: #9ba89b; --text3: #6b786b;
+    --radius: 10px; --radius-lg: 16px;
+  }
+  body { font-family: 'DM Sans', -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+  nav { display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; height: 60px; border-bottom: 1px solid var(--border); background: rgba(13,15,14,0.95); }
+  .logo { font-weight: 700; font-size: 1.15rem; color: var(--green); display: flex; align-items: center; gap: 8px; text-decoration: none; }
+  .logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .step-indicator { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--text3); }
+  .step-pip { width: 6px; height: 6px; border-radius: 50%; background: var(--border2); transition: background 0.3s; }
+  .step-pip.done { background: var(--green); }
+  .step-pip.active { background: var(--green); box-shadow: 0 0 0 3px rgba(74,222,128,0.2); }
+  .page { flex: 1; display: flex; align-items: center; justify-content: center; padding: 3rem 1.5rem; }
+  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); width: 100%; max-width: 480px; padding: 2.5rem; }
+  .step { display: none; }
+  .step.active { display: block; }
+  .step-label { font-size: 0.72rem; font-weight: 600; color: var(--green); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+  .step-title { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .step-sub { font-size: 0.83rem; color: var(--text3); margin-bottom: 2rem; line-height: 1.6; }
+  .options-grid { display: grid; gap: 10px; margin-bottom: 2rem; }
+  .opt { background: var(--bg3); border: 1px solid var(--border2); border-radius: var(--radius); padding: 1rem 1.25rem; cursor: pointer; transition: all 0.18s; display: flex; align-items: center; gap: 14px; }
+  .opt:hover { border-color: rgba(74,222,128,0.3); background: var(--bg2); }
+  .opt.selected { border-color: var(--green); background: var(--green-bg); }
+  .opt-icon { font-size: 1.4rem; width: 32px; text-align: center; flex-shrink: 0; }
+  .opt-label { font-size: 0.9rem; font-weight: 500; color: var(--text); }
+  .opt-sub { font-size: 0.75rem; color: var(--text3); margin-top: 2px; }
+  .opt-check { margin-left: auto; width: 20px; height: 20px; border-radius: 50%; border: 1px solid var(--border2); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: transparent; transition: all 0.18s; flex-shrink: 0; }
+  .opt.selected .opt-check { background: var(--green); border-color: var(--green); color: #0a1a0a; }
+  .options-grid.two-col { grid-template-columns: 1fr 1fr; }
+  .btn-primary { width: 100%; background: var(--green); border: none; color: #0a1a0a; font-size: 0.92rem; font-weight: 700; font-family: inherit; padding: 13px; border-radius: var(--radius); cursor: pointer; transition: all 0.15s; letter-spacing: -0.01em; }
+  .btn-primary:hover { background: #6ee7a0; }
+  .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-ghost { width: 100%; background: none; border: 1px solid var(--border2); color: var(--text3); font-size: 0.85rem; font-family: inherit; padding: 11px; border-radius: var(--radius); cursor: pointer; transition: all 0.15s; margin-top: 10px; }
+  .btn-ghost:hover { color: var(--text2); border-color: var(--border); }
+  .progress-bar { height: 3px; background: var(--bg3); border-radius: 2px; margin-bottom: 2rem; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--green); border-radius: 2px; transition: width 0.4s ease; }
+  .lang-row { display: flex; gap: 10px; margin-bottom: 2rem; }
+  .lang-btn { flex: 1; background: var(--bg3); border: 1px solid var(--border2); border-radius: var(--radius); padding: 0.9rem; cursor: pointer; font-family: inherit; font-size: 0.9rem; font-weight: 500; color: var(--text2); transition: all 0.18s; text-align: center; }
+  .lang-btn:hover { border-color: rgba(74,222,128,0.3); color: var(--text); }
+  .lang-btn.selected { border-color: var(--green); background: var(--green-bg); color: var(--text); }
+  .store-search { width: 100%; background: var(--bg3); border: 1px solid var(--border2); border-radius: var(--radius); color: var(--text); font-size: 0.88rem; font-family: inherit; padding: 10px 14px; outline: none; margin-bottom: 10px; transition: border-color 0.2s; }
+  .store-search:focus { border-color: rgba(74,222,128,0.4); }
+  .store-search::placeholder { color: var(--text3); }
+  .store-list { display: flex; flex-direction: column; gap: 8px; max-height: 240px; overflow-y: auto; margin-bottom: 1.5rem; }
+  .store-item { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 0.7rem 1rem; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: space-between; }
+  .store-item:hover { border-color: var(--border2); }
+  .store-item.selected { border-color: var(--green); background: var(--green-bg); }
+  .store-item-name { font-size: 0.85rem; font-weight: 500; color: var(--text); }
+  .store-item-city { font-size: 0.75rem; color: var(--text3); }
+  .store-check { width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--border2); display: flex; align-items: center; justify-content: center; font-size: 0.65rem; color: transparent; transition: all 0.15s; }
+  .store-item.selected .store-check { background: var(--green); border-color: var(--green); color: #0a1a0a; }
+  .success-icon { width: 64px; height: 64px; background: var(--green-bg); border: 1px solid rgba(74,222,128,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto 1.5rem; }
+  .summary-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.82rem; }
+  .summary-row:last-child { border-bottom: none; }
+  .summary-label { color: var(--text3); }
+  .summary-val { color: var(--text); font-weight: 500; }
+  footer { border-top: 1px solid var(--border); padding: 1rem 2rem; display: flex; justify-content: center; font-size: 0.75rem; color: var(--text3); gap: 1.5rem; }
+  footer a { color: var(--text3); text-decoration: none; }
+  footer a:hover { color: var(--text2); }
+  @media(max-width:520px) { .card { padding: 1.75rem 1.25rem; } .options-grid.two-col { grid-template-columns: 1fr; } }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="zazasync.html"><div class="logo-dot"></div>ZazaSync</a>
+  <div class="step-indicator">
+    <div class="step-pip active" id="pip1"></div>
+    <div class="step-pip" id="pip2"></div>
+    <div class="step-pip" id="pip3"></div>
+    <div class="step-pip" id="pip4"></div>
+    <span id="step-counter">Step 1 of 4</span>
+  </div>
+</nav>
+
+<div class="page">
+<div class="card">
+  <div class="progress-bar"><div class="progress-fill" id="progress" style="width:25%"></div></div>
+
+  <!-- STEP 1: AGE -->
+  <div class="step active" id="step1">
+    <div class="step-label">Step 1 of 4</div>
+    <div class="step-title">How old are you?</div>
+    <p class="step-sub">Helps us understand who uses ZazaSync. This is anonymous and never shared individually.</p>
+    <div class="options-grid two-col" id="age-opts">
+      <div class="opt" data-val="21-25" onclick="selectOpt(this,'age-opts')">
+        <div><div class="opt-label">21 – 25</div></div>
+        <div class="opt-check">✓</div>
+      </div>
+      <div class="opt" data-val="26-34" onclick="selectOpt(this,'age-opts')">
+        <div><div class="opt-label">26 – 34</div></div>
+        <div class="opt-check">✓</div>
+      </div>
+      <div class="opt" data-val="35-44" onclick="selectOpt(this,'age-opts')">
+        <div><div class="opt-label">35 – 44</div></div>
+        <div class="opt-check">✓</div>
+      </div>
+      <div class="opt" data-val="45-54" onclick="selectOpt(this,'age-opts')">
+        <div><div class="opt-label">45 – 54</div></div>
+        <div class="opt-check">✓</div>
+      </div>
+      <div class="opt" data-val="55+" onclick="selectOpt(this,'age-opts')">
+        <div><div class="opt-label">55+</div></div>
+        <div class="opt-check">✓</div>
+      </div>
+      <div class="opt" data-val="prefer-not" onclick="selectOpt(this,'age-opts')">
+        <div><div class="opt-label">Prefer not</div></div>
+        <div class="opt-check">✓</div>
+      </div>
+    </div>
+    <button class="btn-primary" id="btn1" onclick="goStep(2)" disabled>Continue →</button>
+  </div>
+
+  <!-- STEP 2: REGION -->
+  <div class="step" id="step2">
+    <div class="step-label">Step 2 of 4</div>
+    <div class="step-title">Where are you in Quebec?</div>
+    <p class="step-sub">We use this to surface the most relevant stores and availability near you.</p>
+    <div class="options-grid" id="region-opts">
+      <div class="opt" data-val="montreal" onclick="selectOpt(this,'region-opts')">
+        <div class="opt-icon">🏙️</div>
+        <div><div class="opt-label">Montréal</div><div class="opt-sub">Island + surrounding areas</div></div>
+        <div class="opt-check">✓</div>
+      </div>
+      <div class="opt" data-val="quebec-city" onclick="selectOpt(this,'region-opts')">
+        <div class="opt-icon">🏰</div>
+        <div><div class="opt-label">Québec City</div><div class="opt-sub">Capitale-Nationale</div></div>
+        <div class="opt-check">✓</div>
+      </div>
+      <div class="opt" data-val="laval-rive-nord" onclick="selectOpt(this,'region-opts')">
+        <div class="opt-icon">🌆</div>
+        <div><div class="opt-label">Laval / Rive-Nord</div><div class="opt-sub">Laval, Mirabel, Blainville</div></div>
+        <div class="opt-check">✓</div>
+      </div>
+      <div class="opt" data-val="rive-sud" onclick="selectOpt(this,'region-opts')">
+        <div class="opt-icon">🌉</div>
+        <div><div class="opt-label">Rive-Sud</div><div class="opt-sub">Longueuil, Brossard, St-Bruno</div></div>
+        <div class="opt-check">✓</div>
+      </div>
+      <div class="opt" data-val="other-quebec" onclick="selectOpt(this,'region-opts')">
+        <div class="opt-icon">🗺️</div>
+        <div><div class="opt-label">Other Quebec region</div><div class="opt-sub">Gatineau, Saguenay, Sherbrooke…</div></div>
+        <div class="opt-check">✓</div>
+      </div>
+    </div>
+    <button class="btn-primary" id="btn2" onclick="goStep(3)" disabled>Continue →</button>
+    <button class="btn-ghost" onclick="goStep(1)">← Back</button>
+  </div>
+
+  <!-- STEP 3: VISIT FREQUENCY + LANGUAGE -->
+  <div class="step" id="step3">
+    <div class="step-label">Step 3 of 4</div>
+    <div class="step-title">A couple quick questions</div>
+    <p class="step-sub">Helps us understand how people use SQDC. Takes 10 seconds.</p>
+
+    <div style="margin-bottom:1.5rem;">
+      <div style="font-size:0.82rem;font-weight:500;color:var(--text2);margin-bottom:10px;">How often do you visit SQDC?</div>
+      <div class="options-grid two-col" id="freq-opts">
+        <div class="opt" data-val="weekly" onclick="selectOpt(this,'freq-opts');checkStep3()">
+          <div><div class="opt-label">Weekly</div></div><div class="opt-check">✓</div>
+        </div>
+        <div class="opt" data-val="biweekly" onclick="selectOpt(this,'freq-opts');checkStep3()">
+          <div><div class="opt-label">Every 2 weeks</div></div><div class="opt-check">✓</div>
+        </div>
+        <div class="opt" data-val="monthly" onclick="selectOpt(this,'freq-opts');checkStep3()">
+          <div><div class="opt-label">Monthly</div></div><div class="opt-check">✓</div>
+        </div>
+        <div class="opt" data-val="rarely" onclick="selectOpt(this,'freq-opts');checkStep3()">
+          <div><div class="opt-label">Rarely</div></div><div class="opt-check">✓</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:1.75rem;">
+      <div style="font-size:0.82rem;font-weight:500;color:var(--text2);margin-bottom:10px;">Preferred language</div>
+      <div class="lang-row">
+        <button class="lang-btn" onclick="selectLang(this,'fr')" data-lang="fr">🇫🇷 Français</button>
+        <button class="lang-btn" onclick="selectLang(this,'en')" data-lang="en">🇬🇧 English</button>
+        <button class="lang-btn" onclick="selectLang(this,'both')" data-lang="both">Both</button>
+      </div>
+    </div>
+
+    <button class="btn-primary" id="btn3" onclick="goStep(4)" disabled>Continue →</button>
+    <button class="btn-ghost" onclick="goStep(2)">← Back</button>
+  </div>
+
+  <!-- STEP 4: PREFERRED STORES -->
+  <div class="step" id="step4">
+    <div class="step-label">Step 4 of 4</div>
+    <div class="step-title">Pick your stores</div>
+    <p class="step-sub">Choose up to 3 SQDC locations. We'll highlight their availability first.</p>
+    <input class="store-search" type="text" placeholder="Search by store name or city…" oninput="filterStores(this.value)" />
+    <div class="store-list" id="store-list"></div>
+    <button class="btn-primary" onclick="goStep(5)">Finish setup →</button>
+    <button class="btn-ghost" onclick="goStep(3)">← Back</button>
+  </div>
+
+  <!-- STEP 5: SUCCESS -->
+  <div class="step" id="step5">
+    <div style="text-align:center;padding:0.5rem 0;">
+      <div class="success-icon">🎉</div>
+      <div style="font-size:1.4rem;font-weight:700;letter-spacing:-0.03em;margin-bottom:0.5rem;">You're all set!</div>
+      <p style="font-size:0.82rem;color:var(--text3);margin-bottom:1.75rem;line-height:1.6;">Your profile is saved. Here's what we collected to personalize your experience.</p>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;text-align:left;margin-bottom:1.75rem;">
+        <div class="summary-row"><span class="summary-label">Age range</span><span class="summary-val" id="sum-age">—</span></div>
+        <div class="summary-row"><span class="summary-label">Region</span><span class="summary-val" id="sum-region">—</span></div>
+        <div class="summary-row"><span class="summary-label">Visit frequency</span><span class="summary-val" id="sum-freq">—</span></div>
+        <div class="summary-row"><span class="summary-label">Language</span><span class="summary-val" id="sum-lang">—</span></div>
+        <div class="summary-row"><span class="summary-label">Preferred stores</span><span class="summary-val" id="sum-stores">—</span></div>
+      </div>
+      <button class="btn-primary" onclick="window.location.href='zazasync.com'">Go to inventory →</button>
+      <button class="btn-ghost" onclick="window.location.href='zazasync-watchlist.html'">Set up my watchlist →</button>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<footer>
+  <a href="#">Privacy</a>
+  <a href="#">Terms</a>
+  <span>ZazaSync · 21+ Quebec only</span>
+</footer>
+
+<script>
+const stores = [
+  {name:'SQDC Ste-Catherine Ouest',city:'Montréal'},{name:'SQDC St-Laurent',city:'Montréal'},
+  {name:'SQDC Acadie',city:'Montréal'},{name:'SQDC St-Hubert',city:'Montréal'},
+  {name:'SQDC Côte-des-Neiges',city:'Montréal'},{name:'SQDC Verdun',city:'Montréal'},
+  {name:'SQDC Rosemont',city:'Montréal'},{name:'SQDC Anjou',city:'Montréal'},
+  {name:'SQDC Laval — Carrefour',city:'Laval'},{name:'SQDC Laval — Centropolis',city:'Laval'},
+  {name:'SQDC Brossard',city:'Brossard'},{name:'SQDC Longueuil',city:'Longueuil'},
+  {name:'SQDC Saint-Bruno',city:'Saint-Bruno'},{name:'SQDC Mirabel',city:'Mirabel'},
+  {name:'SQDC Blainville',city:'Blainville'},{name:'SQDC Sainte-Thérèse',city:'Sainte-Thérèse'},
+  {name:'SQDC Québec — Laurier',city:'Québec City'},{name:'SQDC Québec — Lebourgneuf',city:'Québec City'},
+  {name:'SQDC Québec — Ste-Foy',city:'Québec City'},{name:'SQDC Gatineau',city:'Gatineau'},
+  {name:'SQDC Sherbrooke',city:'Sherbrooke'},{name:'SQDC Trois-Rivières',city:'Trois-Rivières'},
+  {name:'SQDC Saguenay',city:'Saguenay'},
+];
+
+let selected = { age:'', region:'', freq:'', lang:'', stores:[] };
+
+function renderStores(list) {
+  const el = document.getElementById('store-list');
+  el.innerHTML = list.map(s => `
+    <div class="store-item ${selected.stores.includes(s.name)?'selected':''}" onclick="toggleStore(this,'${s.name}')">
+      <div><div class="store-item-name">${s.name}</div><div class="store-item-city">${s.city}</div></div>
+      <div class="store-check">✓</div>
+    </div>`).join('');
+}
+
+function filterStores(q) {
+  const filtered = stores.filter(s => (s.name+s.city).toLowerCase().includes(q.toLowerCase()));
+  renderStores(filtered);
+}
+
+function toggleStore(el, name) {
+  if (el.classList.contains('selected')) {
+    el.classList.remove('selected');
+    selected.stores = selected.stores.filter(s => s !== name);
+  } else {
+    if (selected.stores.length >= 3) { alert('Max 3 stores. Deselect one first.'); return; }
+    el.classList.add('selected');
+    selected.stores.push(name);
+  }
+}
+
+function selectOpt(el, groupId) {
+  document.querySelectorAll('#'+groupId+' .opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  const val = el.dataset.val;
+  if (groupId==='age-opts') { selected.age=val; document.getElementById('btn1').disabled=false; }
+  if (groupId==='region-opts') { selected.region=val; document.getElementById('btn2').disabled=false; }
+  if (groupId==='freq-opts') { selected.freq=val; checkStep3(); }
+}
+
+function selectLang(el, lang) {
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  selected.lang = lang;
+  checkStep3();
+}
+
+function checkStep3() {
+  document.getElementById('btn3').disabled = !(selected.freq && selected.lang);
+}
+
+function updatePips(step) {
+  for (let i=1;i<=4;i++) {
+    const p = document.getElementById('pip'+i);
+    if (!p) continue;
+    p.className = 'step-pip' + (i<step?' done':i===step?' active':'');
+  }
+  const counter = document.getElementById('step-counter');
+  if (counter && step <= 4) counter.textContent = 'Step '+step+' of 4';
+  if (counter && step === 5) counter.textContent = 'Complete ✓';
+  const pct = Math.min(step/4*100, 100);
+  document.getElementById('progress').style.width = pct+'%';
+}
+
+function goStep(n) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step'+n).classList.add('active');
+  updatePips(n);
+  if (n===5) fillSummary();
+}
+
+function fillSummary() {
+  const regionMap = {'montreal':'Montréal','quebec-city':'Québec City','laval-rive-nord':'Laval / Rive-Nord','rive-sud':'Rive-Sud','other-quebec':'Other Quebec region'};
+  const freqMap = {'weekly':'Weekly','biweekly':'Every 2 weeks','monthly':'Monthly','rarely':'Rarely'};
+  const langMap = {'fr':'Français','en':'English','both':'Both'};
+  document.getElementById('sum-age').textContent = selected.age || '—';
+  document.getElementById('sum-region').textContent = regionMap[selected.region] || '—';
+  document.getElementById('sum-freq').textContent = freqMap[selected.freq] || '—';
+  document.getElementById('sum-lang').textContent = langMap[selected.lang] || '—';
+  document.getElementById('sum-stores').textContent = selected.stores.length ? selected.stores.map(s=>s.replace('SQDC ','')).join(', ') : 'None selected';
+}
+
+renderStores(stores);
+</script>
+</body>
+</html>
