@@ -53,6 +53,7 @@ These files are the future product/monetization layer. They are not a separate p
 | `zazasync-age-gate.html` | 21+ gate before cannabis inventory access | Keep before public/mobile cannabis inventory views |
 | `zazasync-mobile-product.html` | Mobile product detail page | Connect to real product, store availability, watchlist, and alert data |
 | `zazasync-sms-upsell.html` | Future SMS alert monetization concept | Keep as `coming soon`; do not connect Stripe/Twilio yet |
+| `zazasync-b2b.html` | Future B2B sales page for reports/dashboard subscriptions | Keep internal/demo until aggregated demand data exists |
 | `zazasync-pwa-manifest.json` | PWA install manifest | Requires missing `/icons/icon-192.png` and `/icons/icon-512.png` assets |
 | `zazasync-sw.js` | Service worker for cache and push notification behavior | Register only after production routes and cache paths are confirmed |
 | `FUTURE_PRODUCT_README.md` | Full notes for the monetizable package | Read before implementation |
@@ -75,6 +76,8 @@ Important for the webmaster:
 - Do not build SMS, Stripe, or Twilio now.
 - Keep SMS as `coming soon` in the UI.
 - The current build should support email alerts only.
+- Treat `zazasync-b2b.html` as a future brand-facing pitch page, not the current public homepage.
+- Do not promise live B2B reporting until real event tracking, aggregation, privacy review, and report generation exist.
 - SMS alerts are a future phase because they need paid billing, phone verification, consent, STOP handling, throttling, and notification logs.
 - If SMS is built later, use Stripe Billing with Checkout Sessions and Stripe Prices for recurring premium plans.
 - The PWA manifest references icon files that are not currently included.
@@ -329,3 +332,24 @@ The desktop and mobile files should represent the same product logic:
 | Developer notes | `zazasync-webmaster-brief.html` / `WEBMASTER_HANDOFF.md` | Same notes apply |
 
 Build once, share data everywhere. The frontend can have different layouts, but the backend should be one system.
+
+## B2B Sales Page Relationship
+
+`zazasync-b2b.html` is the future monetization sales page. It is meant to show cannabis brands, producers, and agencies what ZazaSync could sell later:
+
+- aggregated market intelligence reports,
+- private B2B dashboard access,
+- SKU/category demand trends,
+- regional and age-range demand summaries,
+- competitor/context reports.
+
+This page should only use aggregated and anonymized reporting. It should never expose names, emails, phone numbers, exact user profiles, or individual browsing history.
+
+Build sequence for this part:
+
+1. Launch the consumer product first.
+2. Log searches, product views, watchlist saves, alert requests, filter clicks, and onboarding answers.
+3. Aggregate the data into safe internal summaries.
+4. Create the first manual sample reports.
+5. Use `zazasync-b2b.html` as the sales/demo page once the reports can be supported by real data.
+6. Build a private B2B dashboard only after reports prove there is buyer demand.

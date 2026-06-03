@@ -128,6 +128,8 @@ What it is:
 
 A private login dashboard where brands can view aggregated demand signals for their products and categories.
 
+The prototype sales page for this future offer is [`zazasync-b2b.html`](./zazasync-b2b.html). Keep that page as an internal/demo pitch until the consumer site has enough real tracked events to support honest reports.
+
 Possible dashboard modules:
 
 - Search interest by product

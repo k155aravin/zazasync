@@ -27,6 +27,7 @@ That is the main experience ZazaSync should make effortless.
 | [zazasync-age-gate.html](./zazasync-age-gate.html) | Future 21+ age verification entry page for the mobile/PWA product |
 | [zazasync-mobile-product.html](./zazasync-mobile-product.html) | Future mobile product detail page with availability and alert options |
 | [zazasync-sms-upsell.html](./zazasync-sms-upsell.html) | Future-only SMS alert upsell page; do not wire payments/SMS yet |
+| [zazasync-b2b.html](./zazasync-b2b.html) | Future B2B sales-page concept for reports and dashboard subscriptions; use after real aggregated demand data exists |
 | [zazasync-pwa-manifest.json](./zazasync-pwa-manifest.json) | Future PWA manifest for installable mobile web app behavior |
 | [zazasync-sw.js](./zazasync-sw.js) | Future service worker for caching and push-notification behavior |
 | [FUTURE_PRODUCT_README.md](./FUTURE_PRODUCT_README.md) | Notes for the monetizable mobile-first product package |
@@ -81,6 +82,8 @@ zazasync-pwa-manifest.json + zazasync-sw.js
 Read [FUTURE_PRODUCT_README.md](./FUTURE_PRODUCT_README.md) before building this part. For the current build, SMS, Stripe, and Twilio should remain `coming soon`; the webmaster should focus on email alerts first.
 
 For the business model, read [MONETIZATION_PLAN.md](./MONETIZATION_PLAN.md). The recommended monetization path is aggregated market intelligence reports first, not SMS.
+
+[zazasync-b2b.html](./zazasync-b2b.html) is the future sales page for brands, producers, and agencies. Keep it as a demo/internal pitch page until ZazaSync has enough real search, watchlist, profile, and alert data to support honest aggregated reporting.
 
 ## Preferred UX
 
