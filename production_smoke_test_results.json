@@ -1,0 +1,169 @@
+{
+  "base_url": "https://zazasync.k155-aravin.workers.dev",
+  "generated_at": "2026-06-04T10:49:57Z",
+  "passed": 21,
+  "failed": 0,
+  "results": [
+    {
+      "name": "route /",
+      "ok": true,
+      "status": 200,
+      "ms": 1315,
+      "title": "ZazaSync \u2014 Find SQDC Products Near You",
+      "url": "https://zazasync.k155-aravin.workers.dev/"
+    },
+    {
+      "name": "route /signin",
+      "ok": true,
+      "status": 200,
+      "ms": 1785,
+      "title": "ZazaSync \u2014 Sign In / Create Account",
+      "url": "https://zazasync.k155-aravin.workers.dev/signin"
+    },
+    {
+      "name": "route /auth",
+      "ok": true,
+      "status": 200,
+      "ms": 2213,
+      "title": "ZazaSync \u2014 Sign In / Create Account",
+      "url": "https://zazasync.k155-aravin.workers.dev/auth"
+    },
+    {
+      "name": "route /onboarding",
+      "ok": true,
+      "status": 200,
+      "ms": 1783,
+      "title": "ZazaSync \u2014 Welcome",
+      "url": "https://zazasync.k155-aravin.workers.dev/onboarding"
+    },
+    {
+      "name": "route /watchlist",
+      "ok": true,
+      "status": 200,
+      "ms": 1406,
+      "title": "ZazaSync \u2014 My Watchlist",
+      "url": "https://zazasync.k155-aravin.workers.dev/watchlist"
+    },
+    {
+      "name": "route /inventory",
+      "ok": true,
+      "status": 200,
+      "ms": 1299,
+      "title": "ZazaSync \u2014 Find SQDC Products Near You",
+      "url": "https://zazasync.k155-aravin.workers.dev/inventory"
+    },
+    {
+      "name": "route /new-drops",
+      "ok": true,
+      "status": 200,
+      "ms": 1280,
+      "title": "ZazaSync \u2014 Find SQDC Products Near You",
+      "url": "https://zazasync.k155-aravin.workers.dev/new-drops"
+    },
+    {
+      "name": "route /back-in-stock",
+      "ok": true,
+      "status": 200,
+      "ms": 1804,
+      "title": "ZazaSync \u2014 Find SQDC Products Near You",
+      "url": "https://zazasync.k155-aravin.workers.dev/back-in-stock"
+    },
+    {
+      "name": "route /stores",
+      "ok": true,
+      "status": 200,
+      "ms": 2064,
+      "title": "ZazaSync \u2014 Find SQDC Products Near You",
+      "url": "https://zazasync.k155-aravin.workers.dev/stores"
+    },
+    {
+      "name": "route /privacy",
+      "ok": true,
+      "status": 200,
+      "ms": 2017,
+      "title": "Privacy Policy \u2014 ZazaSync",
+      "url": "https://zazasync.k155-aravin.workers.dev/privacy"
+    },
+    {
+      "name": "route /terms",
+      "ok": true,
+      "status": 200,
+      "ms": 1321,
+      "title": "Terms of Service \u2014 ZazaSync",
+      "url": "https://zazasync.k155-aravin.workers.dev/terms"
+    },
+    {
+      "name": "route /contact",
+      "ok": true,
+      "status": 200,
+      "ms": 1952,
+      "title": "ZazaSync \u2014 Find SQDC Products Near You",
+      "url": "https://zazasync.k155-aravin.workers.dev/contact"
+    },
+    {
+      "name": "route /responsible-use",
+      "ok": true,
+      "status": 200,
+      "ms": 2035,
+      "title": "ZazaSync \u2014 Find SQDC Products Near You",
+      "url": "https://zazasync.k155-aravin.workers.dev/responsible-use"
+    },
+    {
+      "name": "api products list",
+      "ok": true,
+      "status": 200,
+      "count": 10,
+      "url": "https://zazasync.k155-aravin.workers.dev/api/products?limit=10&smoke=1780570174"
+    },
+    {
+      "name": "api product detail",
+      "ok": true,
+      "status": 200,
+      "slug": "fleurs-tout-usage",
+      "inventory_count": 4,
+      "url": "https://zazasync.k155-aravin.workers.dev/api/products/fleurs-tout-usage"
+    },
+    {
+      "name": "api auth local",
+      "ok": true,
+      "status": 200,
+      "email": "staging-smoke-1780570178@example.com",
+      "url": "https://zazasync.k155-aravin.workers.dev/api/auth/local"
+    },
+    {
+      "name": "api profile save",
+      "ok": true,
+      "status": 200,
+      "url": "https://zazasync.k155-aravin.workers.dev/api/profile"
+    },
+    {
+      "name": "api watchlist add idempotent",
+      "ok": true,
+      "status1": 201,
+      "status2": 201,
+      "watchlist_id_1": 1,
+      "watchlist_id_2": 1
+    },
+    {
+      "name": "api watchlist load",
+      "ok": true,
+      "status": 200,
+      "items": 1,
+      "watchlist_id": 1,
+      "onboarding_saved": true,
+      "url": "https://zazasync.k155-aravin.workers.dev/api/watchlist?email=staging-smoke-1780570178%40example.com"
+    },
+    {
+      "name": "api watchlist alert toggle",
+      "ok": true,
+      "status": 200,
+      "patched_alert_on_restock": 0
+    },
+    {
+      "name": "api watchlist delete",
+      "ok": true,
+      "status": 200,
+      "remaining": 0
+    }
+  ]
+}

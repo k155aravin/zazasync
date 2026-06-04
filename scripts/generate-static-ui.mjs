@@ -145,10 +145,10 @@ const apiHydrationScript = `
     const navRight = document.querySelector('.nav-right');
     if (user && user.email && navRight) {
       navRight.innerHTML = '<span style="font-size:0.85rem;color:var(--text2);margin-right:0.75rem">' + escapeHtml(user.email) + '</span>'
-        + '<button class="btn-ghost" onclick="localStorage.removeItem(\'zazasyncUser\');window.location.reload()">Sign out</button>';
+        + '<button class="btn-ghost" onclick="localStorage.removeItem(\\\'zazasyncUser\\\');window.location.reload()">Sign out</button>';
     } else if (navRight) {
-      navRight.innerHTML = '<button class="btn-ghost" onclick="window.location.href=\'/signin\'">Sign in</button>'
-        + '<button class="btn-green" onclick="document.querySelector(\'.alert-banner\')?.scrollIntoView({behavior:\'smooth\'})">Get alerts</button>';
+      navRight.innerHTML = '<button class="btn-ghost" onclick="window.location.href=\\\'/signin\\\'">Sign in</button>'
+        + '<button class="btn-green" onclick="document.querySelector(\\\'.alert-banner\\\')?.scrollIntoView({behavior:\\\'smooth\\\'})">Get alerts</button>';
     }
   }
 
@@ -191,7 +191,7 @@ const apiHydrationScript = `
     document.querySelectorAll('.nav-links a').forEach(link => {
       const href = link.getAttribute('href');
       if (href === path) {
-        document.querySelectorAll('.nav-links a').forEach(l => c.classList.remove('active'));
+        document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
         link.classList.add('active');
       }
     });
