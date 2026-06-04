@@ -5,8 +5,9 @@ import time
 from pathlib import Path
 from urllib import request, parse, error
 
-BASE_URL = "https://zazasync-staging.k155-aravin.workers.dev"
-OUT_PATH = Path("/home/ubuntu/zazasync_repo/staging_smoke_test_results.json")
+import os
+BASE_URL = os.environ.get("BASE_URL", "https://zazasync-staging.k155-aravin.workers.dev")
+OUT_PATH = Path(os.environ.get("OUT_PATH", "/home/ubuntu/zazasync_repo/staging_smoke_test_results.json"))
 
 def http(method, path, body=None, expected=(200,), timeout=15):
     url = BASE_URL + path
