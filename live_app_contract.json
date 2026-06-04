@@ -1,0 +1,118 @@
+{
+  "home": {
+    "status": 200,
+    "final_url": "https://zazasync.com/",
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 1390367,
+    "title_match": [
+      "ZazaSync - Quebec Cannabis Intelligence"
+    ]
+  },
+  "assets": [
+    "https://zazasync.com/assets/format-B-HdqrBc.js",
+    "https://zazasync.com/assets/index-BjXoaOj9.js",
+    "https://zazasync.com/assets/index-EClZ8mj9.js",
+    "https://zazasync.com/assets/product-card-BspdXRwe.js",
+    "https://zazasync.com/assets/search-CKKvPMBF.js",
+    "https://zazasync.com/assets/styles-CgrCGq-w.css"
+  ],
+  "endpoints_in_html": [],
+  "assets_scanned": [
+    {
+      "url": "https://zazasync.com/assets/format-B-HdqrBc.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "bytes": 192,
+      "markers": [],
+      "endpoints": [],
+      "sample_endpoint_contexts": []
+    },
+    {
+      "url": "https://zazasync.com/assets/index-BjXoaOj9.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "bytes": 12694,
+      "markers": [
+        "inventory",
+        "product",
+        "sqdc",
+        "store",
+        "search"
+      ],
+      "endpoints": [],
+      "sample_endpoint_contexts": [
+        "tatusLabel}),u=s.products.filter(r=>N(r)>0),z=U(s.products),S=s.products.length>0?Math.round(u.length/s.products.length*100):0,k=r=>{r.preventDefault(),o({to:\"/inventory\",search:{q:n.trim(),page:1,perPage:24}})};return a.jsxs(\"div\",{className:\"zaza-shell\",children:[a.jsxs(\"section\",{className:\"relative min-h-[calc(100vh-4rem)] overflow-hidden px-5 py-20 sm:px-8 lg:px-12 lg:py-28\",children:[a.jsxs(\"div\",{className:\"relative z-10 max-w-7xl\",children:[a.jsx(\"div\",{className:\"zaza-eyebrow mb-6\",children:\"Quebec Cannabi",
+        "napshot:s,latestRun:t}=C.useLoaderData(),l=P(s),o=D(),[n,d]=T.useState(\"\"),x=e.categorySummaries.slice(0,6),y=e.radarPicks.slice(0,5),w=A({productCount:e.stats.productsTracked,snapshotFreshnessLabel:l.headerStatusLabel}),u=s.products.filter(r=>N(r)>0),z=U(s.products),S=s.products.length>0?Math.round(u.length/s.products.length*100):0,k=r=>{r.preventDefault(),o({to:\"/inventory\",search:{q:n.trim(),page:1,perPage:24}})};return a.jsxs(\"div\",{className:\"zaza-shell\",children:[a.jsxs(\"section\",{className:\"relative min-h-[c",
+        "aza-eyebrow mb-6\",children:\"Quebec Cannabis Marketplace\"}),a.jsxs(\"h1\",{className:\"zaza-display text-[clamp(72px,10vw,140px)]\",children:[\"FIND\",a.jsx(\"br\",{}),\"SQDC\",a.jsx(\"br\",{}),a.jsx(\"span\",{className:\"text-[var(--zaza)] drop-shadow-[0_0_36px_rgba(57,255,20,0.35)]\",children:\"PRODUCTS.\"})]}),a.jsx(\"div\",{className:\"zaza-display mt-2 text-[clamp(30px,4vw,56px)] text-[var(--fog)]\",children:\"Searchable. Fresh. Source aware.\"}),a.jsxs(\"p\",{className:\"mt-8 max-w-xl text-base font-light leading-7 text-[var(--mist)]\",c"
+      ]
+    },
+    {
+      "url": "https://zazasync.com/assets/index-EClZ8mj9.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "bytes": 460830,
+      "markers": [
+        "d1",
+        "inventory",
+        "product",
+        "sqdc",
+        "store",
+        "search",
+        "tanstack",
+        "supabase"
+      ],
+      "endpoints": [
+        "a",
+        "n,a",
+        "void 0,s",
+        "{cancelRefetch:!1}"
+      ],
+      "sample_endpoint_contexts": [
+        ".data===void 0?!0:n===\"static\"?!1:this.state.isInvalidated?!0:!MR(this.state.dataUpdatedAt,n)}onFocus(){this.observers.find(a=>a.shouldFetchOnWindowFocus())?.refetch({cancelRefetch:!1}),this.#a?.continue()}onOnline(){this.observers.find(a=>a.shouldFetchOnReconnect())?.refetch({cancelRefetch:!1}),this.#a?.continue()}addObserver(n){this.observers.includes(n)||(this.observers.push(n),this.clearGcTimeout(),this.#r.notify({type:\"observerAdded\",query:this,observer:n}))}removeObserver(n){this.observers.includes(n)&&(this.",
+        "ield-check-Dd8BHPMU.js\",\"assets/triangle-alert-BUqCxl4g.js\",\"assets/new-drops-vP_Z1EOR.js\",\"assets/product-card-BspdXRwe.js\",\"assets/login-CfCn9xXA.js\",\"assets/inventory-4P5sAjjW.js\",\"assets/file-text-D5KKwhrL.js\",\"assets/best-sellers-BPZ2MCdV.js\",\"assets/index-BjXoaOj9.js\",\"assets/products._slug-BllMR_nC.js\",\"assets/image-FJHCxB79.js\",\"assets/admin.sync-DWqvMx6a.js\",\"assets/stores._slug-BkMsPwrp.js\"])))=>i.map(i=>d[i]);\nfunction GS(n){return n&&n.__esModule&&Object.prototype.hasOwnProperty.call(n,\"default\")?n.defa",
+        "\",\"assets/login-CfCn9xXA.js\",\"assets/inventory-4P5sAjjW.js\",\"assets/file-text-D5KKwhrL.js\",\"assets/best-sellers-BPZ2MCdV.js\",\"assets/index-BjXoaOj9.js\",\"assets/products._slug-BllMR_nC.js\",\"assets/image-FJHCxB79.js\",\"assets/admin.sync-DWqvMx6a.js\",\"assets/stores._slug-BkMsPwrp.js\"])))=>i.map(i=>d[i]);\nfunction GS(n){return n&&n.__esModule&&Object.prototype.hasOwnProperty.call(n,\"default\")?n.default:n}var af={exports:{}},pi={};var sy;function IS(){if(sy)return pi;sy=1;var n=Symbol.for(\"react.transitional.element\"),a=",
+        "in-quebec/legislation-cannabis-brief\",Eo={legalAgeLabel:\"21+ Quebec\",noSalesShortLabel:\"We do not sell cannabis\",noSalesDescription:\"ZazaSync is an independent SQDC product discovery and data platform. We do not sell cannabis.\"};function nT({productCount:n,snapshotFreshnessLabel:a}){return[{label:\"Products tracked\",value:String(n)},{label:\"Snapshot freshness\",value:a},{label:\"Age gate\",value:Eo.legalAgeLabel},{label:\"Platform\",value:Eo.noSalesShortLabel}]}const mg=[{to:\"/inventory\",label:\"Inventory\"},{to:\"/new-drop"
+      ]
+    },
+    {
+      "url": "https://zazasync.com/assets/product-card-BspdXRwe.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "bytes": 8881,
+      "markers": [
+        "product",
+        "sqdc",
+        "store"
+      ],
+      "endpoints": [],
+      "sample_endpoint_contexts": [
+        "th;l++)t=(t+a.slug.charCodeAt(l))%s.length;return s[t]};function q({product:a}){const s=p(a.brand),t=Math.min(...a.stock.map(l=>l.price));return e.jsxs(d,{to:\"/products/$slug\",params:{slug:a.slug},className:\"group surface-card rounded-2xl overflow-hidden transition hover:-translate-y-0.5 hover:border-white/15 flex flex-col\",children:[e.jsxs(\"div\",{className:`relative aspect-[4/3] bg-gradient-to-br ${$(a)} overflow-hidden`,children:[e.jsx(\"div\",{className:\"absolute inset-0 opacity-30 mix-blend-overlay\",style:{backgr",
+        ",children:[e.jsx(\"span\",{className:\"rounded border border-white/10 bg-black/20 px-2 py-1 text-[10px] uppercase tracking-[0.12em] text-[var(--paper)]\",children:\"SQDC\"}),e.jsx(l,{className:\"h-5 w-5 text-[var(--zaza)]\"})]}),e.jsxs(\"div\",{className:r?\"relative my-auto text-center\":\"relative\",children:[e.jsx(\"div\",{className:\"text-[10px] uppercase tracking-[0.2em] text-[var(--mist)]\",children:\"Product category\"}),e.jsx(\"div\",{className:`mt-1 font-display leading-none text-[#e8f0e8] ${r?\"text-6xl\":\"text-3xl\"}`,children:a"
+      ]
+    },
+    {
+      "url": "https://zazasync.com/assets/search-CKKvPMBF.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "bytes": 175,
+      "markers": [
+        "search"
+      ],
+      "endpoints": [],
+      "sample_endpoint_contexts": []
+    },
+    {
+      "url": "https://zazasync.com/assets/styles-CgrCGq-w.css",
+      "status": 200,
+      "content_type": "text/css",
+      "bytes": 118537,
+      "markers": [
+        "d1",
+        "store",
+        "search"
+      ],
+      "endpoints": [],
+      "sample_endpoint_contexts": []
+    }
+  ]
+}

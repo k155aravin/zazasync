@@ -1,0 +1,51 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "zazasync",
+  "main": "src/worker.ts",
+  "compatibility_date": "2026-06-01",
+  "workers_dev": true,
+  "observability": {
+    "enabled": true
+  },
+  "triggers": {
+    "crons": [
+      "17 */2 * * *"
+    ]
+  },
+  "vars": {
+    "PUBLIC_SITE_ORIGIN": "https://zazasync.com",
+    "SQDC_BASE_URL": "https://www.sqdc.ca",
+    "CRAWL_MAX_PAGES_PER_RUN": "20",
+    "CRAWL_MIN_INTERVAL_MINUTES": "120",
+    "ALERT_FROM_EMAIL": "alerts@zazasync.com",
+    "ALERT_FROM_NAME": "ZazaSync Alerts"
+  },
+  "d1_databases": [
+    {
+      "binding": "ZAZASYNC_DB",
+      "database_name": "zazasync_snapshot",
+      "database_id": "4d5892cf-a50c-4465-bed7-1174849169c9"
+    }
+  ],
+  "env": {
+    "staging": {
+      "name": "zazasync-staging",
+      "workers_dev": true,
+      "vars": {
+        "PUBLIC_SITE_ORIGIN": "https://staging.zazasync.com",
+        "SQDC_BASE_URL": "https://www.sqdc.ca",
+        "CRAWL_MAX_PAGES_PER_RUN": "8",
+        "CRAWL_MIN_INTERVAL_MINUTES": "240",
+        "ALERT_FROM_EMAIL": "alerts@zazasync.com",
+        "ALERT_FROM_NAME": "ZazaSync Alerts"
+      },
+      "d1_databases": [
+        {
+          "binding": "ZAZASYNC_DB",
+          "database_name": "zazasync_snapshot_staging",
+          "database_id": "f950ef1a-d8ac-4cb4-8cea-3ff13afacbb6"
+        }
+      ]
+    }
+  }
+}
