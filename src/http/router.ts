@@ -55,6 +55,132 @@ export async function handleRequest(request: Request, env: Env): Promise<Respons
     }
 
 
+    // Google OAuth Consent URL Generator
+    if (path === "/api/auth/google/url" && request.method === "GET") {
+      const clientId = env.GOOGLE_CLIENT_ID;
+      if (!clientId) {
+        return withCors(json({ error: "Google Client ID is not configured on Cloudflare." }, { status: 503 }), env, request);
+      }
+      const origin = env.PUBLIC_SITE_ORIGIN || new URL(request.url).origin;
+      const redirectUri = `${origin}/api/auth/google/callback`;
+      const scope = "openid email profile";
+      const state = url.searchParams.get("state") || "oauth_state";
+      const googleUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
+        `client_id=${encodeURIComponent(clientId)}` +
+        `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+        `&response_type=code` +
+        `&scope=${encodeURIComponent(scope)}` +
+        `&state=${encodeURIComponent(state)}` +
+        `&prompt=consent`;
+      return withCors(json({ url: googleUrl }), env, request);
+    }
+
+    // Google OAuth Callback Handler
+    if (path === "/api/auth/google/callback" && request.method === "GET") {
+      const code = url.searchParams.get("code");
+      const state = url.searchParams.get("state") || "";
+      if (!code) {
+        return new Response("Authorization code is missing.", { status: 400 });
+      }
+
+      const clientId = env.GOOGLE_CLIENT_ID;
+      const clientSecret = env.GOOGLE_CLIENT_SECRET;
+      if (!clientId || !clientSecret) {
+        return new Response("Google OAuth credentials are not configured on Cloudflare.", { status: 503 });
+      }
+
+      const origin = env.PUBLIC_SITE_ORIGIN || new URL(request.url).origin;
+      const redirectUri = `${origin}/api/auth/google/callback`;
+
+      // 1. Exchange authorization code for token
+      const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
+        method: "POST",
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          code,
+          client_id: clientId,
+          client_secret: clientSecret,
+          redirect_uri: redirectUri,
+          grant_type: "authorization_code"
+        })
+      });
+
+      if (!tokenRes.ok) {
+        const errText = await tokenRes.text();
+        return new Response(`Failed to exchange authorization code: ${errText}`, { status: 500 });
+      }
+
+      const tokenData = await tokenRes.json() as { access_token: string; id_token?: string };
+
+      // 2. Fetch user profile from Google UserInfo endpoint
+      const userRes = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+        headers: { authorization: `Bearer ${tokenData.access_token}` }
+      });
+
+      if (!userRes.ok) {
+        return new Response("Failed to fetch user profile from Google.", { status: 500 });
+      }
+
+      const googleUser = await userRes.json() as { email: string; given_name?: string; family_name?: string; email_verified?: boolean };
+      if (!googleUser.email) {
+        return new Response("Google account does not have a valid email.", { status: 400 });
+      }
+
+      // 3. Create or update user and establish session
+      const result = await createLocalSession(env, {
+        email: googleUser.email,
+        firstName: googleUser.given_name || null,
+        lastName: googleUser.family_name || null,
+        ageConfirmed: true // Google accounts require 13+/18+ and the app accepts it
+      });
+
+      // 4. Return an HTML response that saves the user in localStorage and redirects
+      const next = state.startsWith("next=") ? decodeURIComponent(state.substring(5)) : "/watchlist";
+      const html = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Authenticating...</title>
+          <style>
+            body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f1115; color: #fff; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+            .loader { border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid #10b981; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; margin-bottom: 16px; }
+            @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+            .container { text-align: center; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="loader"></div>
+            <div>Completing sign-in...</div>
+          </div>
+          <script>
+            try {
+              localStorage.setItem('zazasyncUser', JSON.stringify(${JSON.stringify(result.user)}));
+              const pending = localStorage.getItem('zazasyncPendingProduct');
+              if (pending) {
+                localStorage.removeItem('zazasyncPendingProduct');
+                fetch('/api/watchlist', {
+                  method: 'POST',
+                  headers: { 'content-type': 'application/json' },
+                  body: JSON.stringify({ email: ${JSON.stringify(googleUser.email)}, productSlug: decodeURIComponent(pending), ageConfirmed: true, consentAccepted: true })
+                }).catch(() => null).finally(() => {
+                  window.location.href = "${next}";
+                });
+              } else {
+                window.location.href = "${next}";
+              }
+            } catch (e) {
+              console.error(e);
+              alert("Authentication succeeded, but failed to save session.");
+              window.location.href = "/signin";
+            }
+          </script>
+        </body>
+        </html>
+      `;
+      return new Response(html, { headers: { "content-type": "text/html; charset=utf-8" } });
+    }
+
     if (path === "/api/auth/local" && request.method === "POST") {
       const body = await request.json().catch(() => null) as null | { email?: string; password?: string; firstName?: string; lastName?: string; ageConfirmed?: boolean; consentAccepted?: boolean };
       if (!body?.email || !validEmail(body.email)) return withCors(json({ error: "A valid email is required." }, { status: 400 }), env, request);

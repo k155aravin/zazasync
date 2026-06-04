@@ -1,14 +1,14 @@
 {
   "base_url": "https://zazasync-staging.k155-aravin.workers.dev",
-  "generated_at": "2026-06-04T04:00:24Z",
-  "passed": 21,
+  "generated_at": "2026-06-04T11:17:52Z",
+  "passed": 22,
   "failed": 0,
   "results": [
     {
       "name": "route /",
       "ok": true,
       "status": 200,
-      "ms": 6660,
+      "ms": 5172,
       "title": "ZazaSync \u2014 Find SQDC Products Near You",
       "url": "https://zazasync-staging.k155-aravin.workers.dev/"
     },
@@ -16,7 +16,7 @@
       "name": "route /signin",
       "ok": true,
       "status": 200,
-      "ms": 2674,
+      "ms": 5074,
       "title": "ZazaSync \u2014 Sign In / Create Account",
       "url": "https://zazasync-staging.k155-aravin.workers.dev/signin"
     },
@@ -24,7 +24,7 @@
       "name": "route /auth",
       "ok": true,
       "status": 200,
-      "ms": 7807,
+      "ms": 3524,
       "title": "ZazaSync \u2014 Sign In / Create Account",
       "url": "https://zazasync-staging.k155-aravin.workers.dev/auth"
     },
@@ -32,7 +32,7 @@
       "name": "route /onboarding",
       "ok": true,
       "status": 200,
-      "ms": 1916,
+      "ms": 5133,
       "title": "ZazaSync \u2014 Welcome",
       "url": "https://zazasync-staging.k155-aravin.workers.dev/onboarding"
     },
@@ -40,7 +40,7 @@
       "name": "route /watchlist",
       "ok": true,
       "status": 200,
-      "ms": 10307,
+      "ms": 5072,
       "title": "ZazaSync \u2014 My Watchlist",
       "url": "https://zazasync-staging.k155-aravin.workers.dev/watchlist"
     },
@@ -48,7 +48,7 @@
       "name": "route /inventory",
       "ok": true,
       "status": 200,
-      "ms": 2462,
+      "ms": 5124,
       "title": "ZazaSync \u2014 Find SQDC Products Near You",
       "url": "https://zazasync-staging.k155-aravin.workers.dev/inventory"
     },
@@ -56,7 +56,7 @@
       "name": "route /new-drops",
       "ok": true,
       "status": 200,
-      "ms": 4488,
+      "ms": 5116,
       "title": "ZazaSync \u2014 Find SQDC Products Near You",
       "url": "https://zazasync-staging.k155-aravin.workers.dev/new-drops"
     },
@@ -64,7 +64,7 @@
       "name": "route /back-in-stock",
       "ok": true,
       "status": 200,
-      "ms": 3656,
+      "ms": 5103,
       "title": "ZazaSync \u2014 Find SQDC Products Near You",
       "url": "https://zazasync-staging.k155-aravin.workers.dev/back-in-stock"
     },
@@ -72,7 +72,7 @@
       "name": "route /stores",
       "ok": true,
       "status": 200,
-      "ms": 3294,
+      "ms": 6026,
       "title": "ZazaSync \u2014 Find SQDC Products Near You",
       "url": "https://zazasync-staging.k155-aravin.workers.dev/stores"
     },
@@ -80,7 +80,7 @@
       "name": "route /privacy",
       "ok": true,
       "status": 200,
-      "ms": 4328,
+      "ms": 6218,
       "title": "Privacy Policy \u2014 ZazaSync",
       "url": "https://zazasync-staging.k155-aravin.workers.dev/privacy"
     },
@@ -88,7 +88,7 @@
       "name": "route /terms",
       "ok": true,
       "status": 200,
-      "ms": 2313,
+      "ms": 5144,
       "title": "Terms of Service \u2014 ZazaSync",
       "url": "https://zazasync-staging.k155-aravin.workers.dev/terms"
     },
@@ -96,7 +96,7 @@
       "name": "route /contact",
       "ok": true,
       "status": 200,
-      "ms": 2093,
+      "ms": 5121,
       "title": "ZazaSync \u2014 Find SQDC Products Near You",
       "url": "https://zazasync-staging.k155-aravin.workers.dev/contact"
     },
@@ -104,7 +104,7 @@
       "name": "route /responsible-use",
       "ok": true,
       "status": 200,
-      "ms": 2212,
+      "ms": 5035,
       "title": "ZazaSync \u2014 Find SQDC Products Near You",
       "url": "https://zazasync-staging.k155-aravin.workers.dev/responsible-use"
     },
@@ -113,7 +113,7 @@
       "ok": true,
       "status": 200,
       "count": 10,
-      "url": "https://zazasync-staging.k155-aravin.workers.dev/api/products?limit=10&smoke=1780545599"
+      "url": "https://zazasync-staging.k155-aravin.workers.dev/api/products?limit=10&smoke=1780571811"
     },
     {
       "name": "api product detail",
@@ -124,10 +124,16 @@
       "url": "https://zazasync-staging.k155-aravin.workers.dev/api/products/fleurs-tout-usage"
     },
     {
+      "name": "api auth google url generator",
+      "ok": true,
+      "status": 503,
+      "has_url": true
+    },
+    {
       "name": "api auth local",
       "ok": true,
       "status": 200,
-      "email": "staging-smoke-1780545603@example.com",
+      "email": "staging-smoke-1780571827@example.com",
       "url": "https://zazasync-staging.k155-aravin.workers.dev/api/auth/local"
     },
     {
@@ -141,17 +147,17 @@
       "ok": true,
       "status1": 201,
       "status2": 201,
-      "watchlist_id_1": 11,
-      "watchlist_id_2": 11
+      "watchlist_id_1": 12,
+      "watchlist_id_2": 12
     },
     {
       "name": "api watchlist load",
       "ok": true,
       "status": 200,
       "items": 1,
-      "watchlist_id": 11,
+      "watchlist_id": 12,
       "onboarding_saved": true,
-      "url": "https://zazasync-staging.k155-aravin.workers.dev/api/watchlist?email=staging-smoke-1780545603%40example.com"
+      "url": "https://zazasync-staging.k155-aravin.workers.dev/api/watchlist?email=staging-smoke-1780571827%40example.com"
     },
     {
       "name": "api watchlist alert toggle",

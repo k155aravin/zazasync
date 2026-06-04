@@ -294,7 +294,22 @@ const authScript = `
   }
   window.doSignIn = function () { submitAuth('signin'); };
   window.doSignUp = function () { submitAuth('signup'); };
-  window.oauthClick = function () { alert('Google sign-in still needs the Supabase/Firebase OAuth public client config. Email sign-in is wired for staging now.'); };
+  window.oauthClick = async function () {
+    try {
+      const nextParam = new URLSearchParams(window.location.search).get('next') || '/watchlist';
+      const state = 'next=' + encodeURIComponent(nextParam);
+      const response = await fetch('/api/auth/google/url?state=' + encodeURIComponent(state));
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to generate Google Sign-In URL.');
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('Google Sign-In URL is empty.');
+      }
+    } catch (err) {
+      alert(err.message || 'Google Sign-In is temporarily unavailable.');
+    }
+  };
   if (window.location.pathname === '/signup') switchTab('signup');
 })();
 </script>`;

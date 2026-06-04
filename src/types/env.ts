@@ -9,6 +9,8 @@ export interface Env {
   RESEND_API_KEY?: string;
   ALERTS_ENABLED?: string;
   ADMIN_API_TOKEN?: string;
+  GOOGLE_CLIENT_ID?: string;
+  GOOGLE_CLIENT_SECRET?: string;
 }
 
 export interface ProductSnapshot {

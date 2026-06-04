@@ -94,6 +94,13 @@ def main():
             "status": detail_step["status"], "slug": slug, "inventory_count": len(detail.get("inventory") or []), "url": detail_step["url"]
         })
 
+        print("Testing Google Auth URL generator...")
+        google_url_step = http("GET", "/api/auth/google/url", expected=(200, 503))
+        google_url_data = parse_json(google_url_step)
+        assert_condition(results, "api auth google url generator", google_url_step["ok"], {
+            "status": google_url_step["status"], "has_url": "url" in google_url_data or "error" in google_url_data
+        })
+
         email = f"staging-smoke-{int(time.time())}@example.com"
         print(f"Testing auth API with email: {email}")
         auth_step = http("POST", "/api/auth/local", {
