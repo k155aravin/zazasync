@@ -387,6 +387,73 @@ support@zazasync.com
 - The sitemap contains valid production URLs.
 - Private account or administration routes are not included in the sitemap.
 
+## 13. Remove Technical Language from the Public Experience
+
+### Goal
+
+ZazaSync must feel like a professional consumer product-search service. Public visitors should understand what ZazaSync helps them do, without seeing or needing to understand the infrastructure behind it.
+
+The scraper, crawler, server, database, synchronization, and hosting systems should continue working normally in the background. This requirement changes only the public wording and presentation.
+
+### Keep these terms out of public pages
+
+Do not show customers implementation terms such as:
+
+```text
+VPS
+scraper
+scraping
+crawler
+Supabase
+database
+API
+backend
+snapshot
+sync run
+storage driver
+extracted rows
+coverage rows
+```
+
+These terms may remain in private administration tools, server logs, GitHub documentation, monitoring, and internal technical reports.
+
+### Customer-friendly replacements
+
+| Internal or technical wording | Public customer wording |
+|---|---|
+| Store coverage rows | SQDC stores |
+| Availability evidence | Latest availability |
+| Live snapshot | Last checked |
+| Crawler detected a restock | ZazaSync detected availability |
+| Products extracted | Products tracked |
+| Data platform | Product discovery service |
+| Sync completed | Availability updated |
+| 110 store rows | Checked at 110 stores |
+
+For example, replace:
+
+> SMS fires within 60 seconds of our crawler detecting a restock.
+
+With:
+
+> Get notified shortly after ZazaSync detects that a watched product is available again.
+
+### Required result
+
+- Audit every public route, heading, button, label, footer, notice, empty state, and error message.
+- Replace internal system terminology with clear customer language.
+- Keep the wording consistent across desktop and mobile.
+- Keep availability explanations honest without exposing technical implementation details.
+- Never show raw API, database, server, stack-trace, or provider errors to customers.
+- Use a friendly public error message and record technical details only in private logs.
+
+### Acceptance evidence
+
+- Search all production-facing source and rendered pages for the prohibited terms.
+- Provide before-and-after examples of corrected wording.
+- Confirm that technical language remains available only in authenticated admin or internal documentation.
+- Demonstrate that a failed public request shows a helpful customer message rather than a raw system error.
+
 ## Final Acceptance Package
 
 After completing the corrections, provide:
