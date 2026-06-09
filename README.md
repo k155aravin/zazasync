@@ -2,6 +2,17 @@
 
 > Find SQDC products near you, check availability, and get alerted when they come back in stock.
 
+## Production Sync Backend
+
+The new Supabase production sync package is documented in
+**[backend/sqdc_sync/README.md](./backend/sqdc_sync/README.md)**. It contains the
+database schema, SQDC inventory sync, restock detection, email alert processor,
+vision fallback, VPS setup, and operational checklist.
+
+The webmaster must choose this Supabase pipeline as the authoritative inventory
+source before deployment and must not run it ambiguously beside the older
+Cloudflare Worker/D1 prototype.
+
 ## Webmaster Pre-Payment Corrections
 
 The current production acceptance and correction list is documented in:
