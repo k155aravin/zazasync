@@ -2,6 +2,14 @@
 
 > Find SQDC products near you, check availability, and get alerted when they come back in stock.
 
+## Webmaster Pre-Payment Corrections
+
+The current production acceptance and correction list is documented in:
+
+**[WEBMASTER_PRE_PAYMENT_CORRECTIONS.md](./WEBMASTER_PRE_PAYMENT_CORRECTIONS.md)**
+
+The webmaster should complete all numbered items, deploy them to `zazasync.com`, and provide the requested acceptance evidence before final approval/payment.
+
 ZazaSync is a Quebec cannabis inventory intelligence concept for adults 21+. The product direction is inspired by WeedCrawler, but the goal is not to copy it directly. ZazaSync should be more product-first, simpler to understand, and built around search, availability, watchlists, and alerts.
 
 ## Current Direction
